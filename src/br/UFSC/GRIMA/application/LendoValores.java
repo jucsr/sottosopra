@@ -1,18 +1,13 @@
 package br.UFSC.GRIMA.application;
 
-import java.awt.FileDialog;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
-import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
+import br.UFSC.GRIMA.application.entities.streams.StreamsType;
 import br.UFSC.GRIMA.application.visual.TesteValores;
 
 public class LendoValores extends TesteValores
@@ -36,34 +31,12 @@ public class LendoValores extends TesteValores
 		in.close();
 		System.out.println(ler);
 		System.out.println("\n" + "XML from probe command printed above");
-		salvar(ler);
-//		JAXBContext context = JAXBContext.newInstance("br.ufsc.GRIMA.application.entities.streams");
-//		Unmarshaller unmarshaller = context.createUnmarshaller();
-//		JAXBElement<MTConnectStreamsType> element = (JAXBElement<MTConnectStreamsType>) unmarshaller.unmarshal(new File());
-//		MTConnectStreamsType p1 = element.getValue();
-	}
-	
-	public void salvar(String entrada) {
-		FileDialog fd = new FileDialog(this, "Salvar", FileDialog.SAVE);
-		
-		fd.setFile(entrada);
-		fd.setVisible(true);
-		String dir = fd.getDirectory();
-		String file = fd.getFile();
-		String filePath = dir + file + ".xml";
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(
-					new FileOutputStream(filePath, false));
-			out.writeObject(entrada);
-			out.flush();
-			out.close();
-
-			// arquivo vai estar salvo
-			// this.salvo = true;//global
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
+		//////////////
+//		JAXBContext jc = JAXBContext.newInstance( "br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType.class" );
+		JAXBContext jc = JAXBContext.newInstance(StreamsType.class);
+	    Unmarshaller u = jc.createUnmarshaller();
+	    URL url = new URL( "http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']" );
+	    StreamsType mt = (StreamsType)u.unmarshal(url);
 	}
 }
 
