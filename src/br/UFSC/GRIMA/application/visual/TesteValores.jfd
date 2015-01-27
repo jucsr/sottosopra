@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.7.0_51" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -51,14 +51,14 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "textField2"
-					"enabled": false
+					"editable": false
 					"text": "0.0000"
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
 					}
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 2
 					"gridy": 2
+					"gridx": 2
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label3"
@@ -69,7 +69,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "textField3"
-					"enabled": false
+					"editable": false
 					"text": "0.0000"
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
@@ -79,14 +79,9 @@ new FormModel {
 					"gridy": 3
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane1"
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-				"gridwidth": 3
-			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 565, 280 )
+			"size": new java.awt.Dimension( 340, 210 )
 		} )
 	}
 }
