@@ -22,7 +22,7 @@ public class LendoValores extends TesteValores
 		
 		//		System.out.println("Your Fisrt Hello World Program" + "\n");
 //		 URL MTConnect = new URL("http://agent.MTConnect.org/probe");
-		URL MTConnect = new URL("http://agent.mtconnect.org/current?path=//Axes//Rotary//DataItem[@subType='ACTUAL']");
+		URL MTConnect = new URL("http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']");
 		BufferedReader in = new BufferedReader(new InputStreamReader(MTConnect.openStream()));
 		String inputLine;
 		String ler = "";
@@ -34,26 +34,15 @@ public class LendoValores extends TesteValores
 		System.out.println(ler);
 		System.out.println("\n" + "XML from probe command printed above");
 //		//////////////////////////////////////////////////////////////////////
-//		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-//	    Unmarshaller u = jc.createUnmarshaller();
-//	    URL url = new URL( "http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']" );
-//	    JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url) ;
-//	    MTConnectStreamsType teste = element.getValue();
-//	    System.out.println(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue()); //  pega a posição do eixo y!
-//		JAXBElement<MTConnectStreamsType> element = (JAXBElement<MTConnectStreamsType>) unmarshaller.unmarshal(new File("test\\carro.xml"));
-		/////////////////////////
-//		JAXBContext context = JAXBContext.newInstance("br.UFSC.GRIMA.application.teste");
-//		Unmarshaller unmarshaller = context.createUnmarshaller();
-//		JAXBElement<Carro> element = (JAXBElement<Carro>) unmarshaller.unmarshal(new File("test\\carro.xml"));
-//		Carro carro = element.getValue();
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-		URL url = new URL( "http://agent.mtconnect.org/current?path=//Axes//Rotary//DataItem[@subType='ACTUAL']" );
+		URL url = new URL( "http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url) ;
 		MTConnectStreamsType teste = element.getValue();
 		textField1.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(0).getValue().getValue());
-		//textField2.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue());
-		//textField3.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
+		textField2.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue());
+		textField3.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
+		System.err.println(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
 		
 	}
 }
