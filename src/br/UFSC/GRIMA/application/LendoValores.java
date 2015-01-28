@@ -22,7 +22,7 @@ public class LendoValores extends TesteValores
 		
 		//		System.out.println("Your Fisrt Hello World Program" + "\n");
 //		 URL MTConnect = new URL("http://agent.MTConnect.org/probe");
-		URL MTConnect = new URL("http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']");
+		URL MTConnect = new URL("http://agent.mtconnect.org/sample?path=//Axes//Linear//DataItem[@subType='ACTUAL']");
 		BufferedReader in = new BufferedReader(new InputStreamReader(MTConnect.openStream()));
 		String inputLine;
 		String ler = "";
@@ -43,7 +43,7 @@ public class LendoValores extends TesteValores
 		textField2.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue());
 		textField3.setText(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
 		System.err.println(teste.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
-		
+		this.setVisible(true);	
 	}
 }
 
