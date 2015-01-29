@@ -36,7 +36,8 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JComboBox" ) {
 					name: "comboBox1"
 					"model": new javax.swing.DefaultComboBoxModel {
-						selectedItem: "Assets"
+						selectedItem: " "
+						addElement( " " )
 						addElement( "Assets" )
 						addElement( "Current" )
 						addElement( "Probe" )
@@ -66,7 +67,7 @@ new FormModel {
 				"gridy": 1
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "0, 140:1.0"
+				"$columnSpecs": "0, 400:1.0"
 				"$rowSpecs": "0, 0, 0, 0, 0, 0"
 				"$hGap": 5
 				"$vGap": 5
@@ -113,36 +114,6 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 					"gridy": 2
 				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "toggleButton1"
-					"text": "AXES"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 3
-					"gridx": 1
-				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "toggleButton2"
-					"text": "MAGAZINE"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-					"gridy": 4
-				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "toggleButton3"
-					"text": "FEED"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-					"gridy": 5
-				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridy": 2
 				"gridwidth": 2
@@ -162,39 +133,7 @@ new FormModel {
 				"gridy": 2
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "100, 0"
-				"$rowSpecs": "0, 0, 0"
-				"$hGap": 5
-				"$vGap": 5
-				"$alignLeft": true
-				"$alignTop": true
-			} ) {
-				name: "panel5"
-				"border": #EtchedBorder0
-				add( new FormComponent( "javax.swing.JToggleButton" ) {
-					name: "toggleButton4"
-					"text": "LINEAR"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 1
-				} )
-				add( new FormComponent( "javax.swing.JToggleButton" ) {
-					name: "toggleButton5"
-					"text": "ROTARY"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 2
-				} )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-				"gridx": 3
-				"gridy": 2
-			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "50, 120"
+				"$columnSpecs": "50, 400"
 				"$rowSpecs": "0, 0, 0, 0"
 				"$hGap": 5
 				"$vGap": 5
@@ -203,79 +142,6 @@ new FormModel {
 			} ) {
 				name: "panel6"
 				"border": #EtchedBorder0
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label6"
-					"text": "Position X:"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField3"
-					"editable": false
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label7"
-					"text": "Position Y:"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 1
-				} )
-				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField4"
-					"editable": false
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 4
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-					"gridy": 1
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label8"
-					"text": "Position Z:"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 2
-				} )
-				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField5"
-					"editable": false
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 4
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-					"gridy": 2
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label9"
-					"text": "Speed:"
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 1
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 3
-				} )
-				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField6"
-					"editable": false
-					auxiliary() {
-						"JavaCodeGenerator.variableModifiers": 4
-					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 1
-					"gridy": 3
-				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridx": 4
 				"gridy": 2
