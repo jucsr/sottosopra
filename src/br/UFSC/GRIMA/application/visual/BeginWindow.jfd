@@ -115,7 +115,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "toggleButton1"
-					"text": "AXIS"
+					"text": "AXES"
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
 					}

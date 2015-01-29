@@ -143,7 +143,7 @@ public class BeginWindow extends JFrame {
 				new Insets(0, 0, 5, 5), 0, 0));
 
 			//---- toggleButton1 ----
-			toggleButton1.setText("AXIS");
+			toggleButton1.setText("AXES");
 			panel3.add(toggleButton1, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
