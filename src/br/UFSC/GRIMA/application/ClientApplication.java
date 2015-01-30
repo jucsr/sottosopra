@@ -7,21 +7,21 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import javax.swing.JLabel;
+
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
 
 public class ClientApplication extends BeginWindow implements ActionListener
 {
-	private double x;
-	private double y;
-	private double z;
-	private double speed;
+	int conterC = 0; // --> Coluna, Column
 	public ClientApplication()
 	{
 		this.comboBox1.addActionListener(this);
@@ -51,7 +51,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		Unmarshaller u = jc.createUnmarshaller();
 		URL url = new URL( "http://agent.mtconnect.org/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-		MTConnectStreamsType current = element.getValue();
+		final MTConnectStreamsType current = element.getValue();
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrão pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
@@ -59,7 +59,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
-			toggleTemp.setName("i");
+			toggleTemp.setName(""+i);
 			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
 			panel3.add(toggleTemp, new GridBagConstraints(1, 3+i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -72,14 +72,88 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					if(toggleTemp.isSelected())
 					{
-						
+						int conterR = 0; // --> Linha, Row
+						int j = Integer.parseInt(toggleTemp.getName());
+						JLabel label6 = new JLabel();
+						label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
+						panel6.add(label6, new GridBagConstraints(1 + conterC, 0, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 0), 0, 0));
+						try
+						{
+						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size() >= 1)
+						{
+							//---- label7 ----
+							JLabel label7 = new JLabel();
+							label7.setText("Samples:");
+							panel6.add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
+							{ 
+								//---- label8 ----
+								JLabel label8 = new JLabel();
+								JTextField textField3 = new JTextField();
+								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
+								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue());
+								textField3.setEditable(false);
+								panel6.add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+								panel6.add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+								conterR++;
+								
+							}
+							revalidate();
+							repaint();
+						}
+						}
+						catch(Exception sampleError)
+						{
+							System.out.println("No Samples");
+						}
+						try
+						{
+						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size() >= 1)
+						{
+							//---- label7 ----
+							JLabel label7 = new JLabel();
+							label7.setText("Condition:");
+							panel6.add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+							conterR++;
+							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size(); i++)
+							{
+								//---- label8 ----
+								JLabel label8 = new JLabel();
+								JTextField textField3 = new JTextField();
+								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
+								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType());
+								textField3.setEditable(false);
+								panel6.add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+								panel6.add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+								conterR++;
+							}
+							revalidate();
+							repaint();
+						}
+						}
+						catch(Exception conditionsError)
+						{
+							System.out.println("No Conditions");
+						}
+						conterC = conterC+2;
 					}
 				}
 				
 			});
-			
+		
 		}
-		panel3.repaint();
 	}
 	
 	
