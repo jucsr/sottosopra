@@ -1,0 +1,42 @@
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.7.0_51" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.GridBagLayout ) {
+			"$columnSpecs": "0, 0, 0, 0"
+			"$rowSpecs": "0, 0, 0, 0, 0, 0"
+			"$hGap": 5
+			"$vGap": 5
+			"$alignLeft": true
+			"$alignTop": true
+		} ) {
+			name: "this"
+			"title": "About"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/3_EMC_logo.gif" )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridx": 3
+				"gridy": 3
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Desenvolvedor: Igor Benincá - Metido Engenheiro de Controle e Automação."
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridx": 3
+				"gridy": 4
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Pós Doutorando: Julio - Engenheiro Mecânico."
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridx": 3
+				"gridy": 5
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 455, 290 )
+		} )
+	}
+}
