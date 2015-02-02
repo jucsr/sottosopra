@@ -1,8 +1,10 @@
 package br.UFSC.GRIMA.application;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -33,10 +35,26 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
+		this.adjustJFrame();
 		//////Visibles
 		this.setVisible(true);
 		
 	}
+	public void adjustJFrame() {
+		// this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		Toolkit toolkit = this.getToolkit();
+
+//		this.setResizable(false);
+		this.pack();
+
+		Dimension windowDimension = toolkit.getScreenSize();
+		Dimension thisDimension = this.getPreferredSize();
+		this.setSize(new Dimension((int)(windowDimension.width/2), (int)(windowDimension.height / 2)));
+		this.setLocation((int) (windowDimension.getWidth() - thisDimension.getWidth()) / 2, (int) (windowDimension.getHeight() - thisDimension.getHeight()) / 2);
+
+	}
+
 	public void actionPerformed(ActionEvent event)
 	{
 		Object source = event.getSource();
