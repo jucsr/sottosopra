@@ -1,30 +1,38 @@
 package br.UFSC.GRIMA.application;
 
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import javax.swing.JLabel;
-
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
+import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
 
 public class ClientApplication extends BeginWindow implements ActionListener
 {
 	int conterC = 0; // --> Coluna, Column
+	public ArrayList<JPanel> panelList = new ArrayList<JPanel>();
 	public ClientApplication()
 	{
 		this.comboBox1.addActionListener(this);
+		this.menuItem1.addActionListener(this);
 		//////Visibles
 		this.setVisible(true);
 		
@@ -41,6 +49,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			} catch (MalformedURLException | JAXBException e) {
 				e.printStackTrace();
 			}
+		}
+		if (source == menuItem1)
+		{
+			AboutWindow nojaJanela = new AboutWindow(this);
+			nojaJanela.setVisible(true);
 		}
 	}
 		
@@ -61,7 +74,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			//---- toggleButton1 ----
 			toggleTemp.setName(""+i);
 			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
-			panel3.add(toggleTemp, new GridBagConstraints(1, 3+i, 1, 1, 0.0, 0.0,
+			JPanel panel5 = new JPanel();
+			panelList.add(panel5);
+			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
@@ -74,11 +89,27 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					{
 						int conterR = 0; // --> Linha, Row
 						int j = Integer.parseInt(toggleTemp.getName());
-						JLabel label6 = new JLabel();
-						label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
-						panel6.add(label6, new GridBagConstraints(1 + conterC, 0, 1, 1, 0.0, 0.0,
+						//JLabel label6 = new JLabel();
+						///////////////////////////////////
+						{
+							panelList.get(j).setLayout(new GridBagLayout());
+							((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
+							((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+						}
+						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 0), 0, 0));
+							new Insets(0, 0, 5, 5), 0, 0));
+						panelList.get(j).setBorder(new CompoundBorder(
+								new TitledBorder(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
+								new EmptyBorder(5, 5, 5, 5)));
+						
+						//////////////////////////
+						//label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
+						//panel5.add(label6, new GridBagConstraints(1 + conterC, 0, 1, 1, 0.0, 0.0,
+						//	GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						//	new Insets(0, 0, 5, 0), 0, 0));
 						try
 						{
 						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size() >= 1)
@@ -86,7 +117,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText("Samples:");
-							panel6.add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
+							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
 							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
@@ -97,10 +128,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue());
 								textField3.setEditable(false);
-								panel6.add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 5), 0, 0));
-								panel6.add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 								conterR++;
 								
@@ -112,6 +143,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						catch(Exception sampleError)
 						{
 							System.out.println("No Samples");
+							conterR= conterR -1;
 						}
 						try
 						{
@@ -120,7 +152,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText("Condition:");
-							panel6.add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
+							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
 							conterR++;
@@ -132,10 +164,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType());
 								textField3.setEditable(false);
-								panel6.add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 5), 0, 0));
-								panel6.add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 								conterR++;
 							}
@@ -147,7 +179,50 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						{
 							System.out.println("No Conditions");
 						}
-						conterC = conterC+2;
+						try
+						{
+						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size() >= 1)
+						{
+							//---- label7 ----
+							JLabel label7 = new JLabel();
+							label7.setText("Events:");
+							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+							conterR++;
+							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size(); i++)
+							{
+								//---- label8 ----
+								JLabel label8 = new JLabel();
+								JTextField textField3 = new JTextField();
+								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
+								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
+								textField3.setEditable(false);
+								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+								conterR++;
+							}
+							revalidate();
+							repaint();
+						}
+						}
+						catch(Exception conditionsError)
+						{
+							System.out.println("No Events");
+						}
+						conterC = conterC+1;
+					}
+					else if (!toggleTemp.isSelected())
+					{
+						int j = Integer.parseInt(toggleTemp.getName());
+						panelList.get(j).removeAll();
+						panel6.remove(panelList.get(j));
+						//conterC = conterC -1;
+						revalidate();
+						repaint();
 					}
 				}
 				
@@ -155,60 +230,4 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	//	public void linear() throws Exception
-//	{
-//		if (1 == comboBox1.getSelectedIndex()) // Modo Current
-//		{
-//			int cont;
-//			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-//			Unmarshaller u = jc.createUnmarshaller();
-//			URL url = new URL( "http://agent.mtconnect.org/current?path=//Axes//Linear//DataItem[@subType='ACTUAL']" );
-//			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-//			MTConnectStreamsType linear1 = element.getValue();
-//			cont = linear1.getStreams().getDeviceStream().get(0).getComponentStream().size();
-//			if (cont == 2)
-//			{
-//				label6.setText("Position "+ linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getName()+ ":");
-//				label7.setText("Position "+ linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getName()+ ":");
-//				textField3.setText(linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(0).getValue().getValue());
-//				textField4.setText(linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue());
-//			}
-//			if (cont == 3)
-//			{
-//				label6.setText("Position "+ linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getName()+ ":");
-//				label7.setText("Position "+ linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getName()+ ":");
-//				label8.setText("Position "+ linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getName()+ ":");
-//				textField3.setText(linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(0).getValue().getValue());
-//				textField4.setText(linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(1).getSamples().getSample().get(0).getValue().getValue());
-//				textField5.setText(linear1.getStreams().getDeviceStream().get(0).getComponentStream().get(2).getSamples().getSample().get(0).getValue().getValue());
-//			}
-//			textField1.setText(linear1.getStreams().getDeviceStream().get(0).getName());
-//			textField2.setText(linear1.getStreams().getDeviceStream().get(0).getUuid());
-//			
-//			
-//		}
-//	}
-//	public void rotary() throws JAXBException, Exception
-//	{
-//		if (1 == comboBox1.getSelectedIndex()) // Modo Current
-//		{
-//			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-//			Unmarshaller u = jc.createUnmarshaller();
-//			URL url = new URL ( "http://agent.mtconnect.org/current?path=//Axes//Rotary//DataItem[@subType='ACTUAL']");
-//			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-//			MTConnectStreamsType rotary1 = element.getValue();
-//			textField1.setText(rotary1.getStreams().getDeviceStream().get(0).getName());
-//			textField2.setText(rotary1.getStreams().getDeviceStream().get(0).getUuid());
-//			label9.setText(""+ rotary1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(0).getValue().getName()+":");
-//			textField6.setText(rotary1.getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(0).getValue().getValue());
-//		}
-//	}
 }
