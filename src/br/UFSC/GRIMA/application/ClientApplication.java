@@ -1,5 +1,6 @@
 package br.UFSC.GRIMA.application;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,6 +24,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
@@ -61,10 +63,35 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		if ( 2 == comboBox1.getSelectedIndex()) // Modo Current 
 		{
 			try {
+				panel4.removeAll();
+				for (int i = 0 ; i < panelList.size(); i++)
+				{
+					panelList.get(i).removeAll();
+					panel6.remove(panelList.get(i));
+				}
+				panelList.removeAll(panelList);
 				current();
 				this.revalidate();
 				this.repaint();
 			} catch (MalformedURLException | JAXBException e) {
+				e.printStackTrace();
+			}
+		}
+		if (3 == comboBox1.getSelectedIndex())
+		{
+			try {
+				panel4.removeAll();
+				for (int i = 0 ; i < panelList.size(); i++)
+				{
+					panelList.get(i).removeAll();
+					panel6.remove(panelList.get(i));
+				}
+				panelList.removeAll(panelList);
+				probe();
+				this.revalidate();
+				this.repaint();
+			} catch (MalformedURLException | JAXBException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -83,6 +110,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		URL url = new URL( "http://agent.mtconnect.org/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType current = element.getValue();
+		System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrão pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
@@ -180,7 +208,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
-								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType());
+								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -248,4 +276,105 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		
 		}
 	}
+	public void probe() throws JAXBException, MalformedURLException
+	{
+		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
+		Unmarshaller u = jc.createUnmarshaller();
+		URL url = new URL( "http://agent.mtconnect.org/probe" );
+		JAXBElement<MTConnectDevicesType> element = extracted(u, url);
+		final MTConnectDevicesType probe = element.getValue();
+		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
+		textField2.setText(""+ probe.getDevices().getDevice().get(0).getUuid());
+		int cont  = probe.getDevices().getDevice().get(0).getComponents().getComponent().size();
+		for (int i = 0; i < cont ; i++) //---> Quantos Botões deve colocar devido aos dados de ComponentStream
+		{
+			final JToggleButton toggleTemp = new JToggleButton();
+			//---- toggleButton1 ----
+			toggleTemp.setName(""+i);
+			toggleTemp.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(i).getName().getLocalPart());
+			JPanel panel5 = new JPanel();
+			panelList.add(panel5);
+			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 0), 0, 0));
+		
+			toggleTemp.addActionListener(new ActionListener() 
+			{
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					if(toggleTemp.isSelected())
+					{
+						int conterR = 0; // --> Linha, Row
+						int j = Integer.parseInt(toggleTemp.getName());
+						//JLabel label6 = new JLabel();
+						///////////////////////////////////
+						{
+							panelList.get(j).setLayout(new GridBagLayout());
+							((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
+							((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+						}
+						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 5), 0, 0));
+						panelList.get(j).setBorder(new CompoundBorder(
+								new TitledBorder(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart()),
+								new EmptyBorder(5, 5, 5, 5)));
+						for (int i = 0; i < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().size(); i++)
+						{
+							//---- label7 ----
+							JLabel label7 = new JLabel();
+							label7.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getName().getLocalPart()+"-"+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getId());
+							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+							conterR++;
+							for (int z = 0; z < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().size(); z++)
+							{
+								//---- label8 ----
+								JLabel label8 = new JLabel();
+								JTextField textField3 = new JTextField();
+								if (probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName() != null)
+									label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName());
+								else
+									label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getId());
+								if(probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits() != null)
+									textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits());
+								else
+									textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getType());
+								textField3.setEditable(false);
+								panelList.get(j).add(label8, new GridBagConstraints(conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+								conterR++;
+							}	
+						}
+						conterC++;
+						revalidate();
+						repaint();
+					}
+					else if (!toggleTemp.isSelected())
+					{
+						int j = Integer.parseInt(toggleTemp.getName());
+						panelList.get(j).removeAll();
+						panel6.remove(panelList.get(j));
+						//conterC = conterC -1;
+						revalidate();
+						repaint();
+					}
+				}
+			
+			});
+		}
+	}
+	private JAXBElement<MTConnectDevicesType> extracted(Unmarshaller u, URL url)
+			throws JAXBException {
+		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
+	}
+	
 }
