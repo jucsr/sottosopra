@@ -22,7 +22,7 @@ public class LendoValores extends TesteValores
 		
 		//		System.out.println("Your Fisrt Hello World Program" + "\n");
 //		 URL MTConnect = new URL("http://agent.MTConnect.org/probe");
-		URL MTConnect = new URL("http://agent.mtconnect.org/current");
+		URL MTConnect = new URL("http://agent.mtconnect.org/sample");
 		BufferedReader in = new BufferedReader(new InputStreamReader(MTConnect.openStream()));
 		String inputLine;
 		String ler = "";

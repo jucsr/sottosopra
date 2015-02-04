@@ -24,6 +24,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.geronimo.mail.util.ASCIIUtil;
+
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
@@ -59,10 +61,47 @@ public class ClientApplication extends BeginWindow implements ActionListener
 
 	public void actionPerformed(ActionEvent event)
 	{
+		int index = comboBox1.getSelectedIndex();
 		Object source = event.getSource();
-		if ( 2 == comboBox1.getSelectedIndex()) // Modo Current 
+		if(source == comboBox1)
 		{
-			try {
+			if ( 2 == index) // Current 
+			{
+				try {
+					panel4.removeAll();
+					for (int i = 0 ; i < panelList.size(); i++)
+					{
+						panelList.get(i).removeAll();
+						panel6.remove(panelList.get(i));
+					}
+					panelList.removeAll(panelList);
+					current();
+					this.revalidate();
+					this.repaint();
+				} catch (MalformedURLException | JAXBException e) {
+					e.printStackTrace();
+				}
+			}
+			if (3 == index) // Probe
+			{
+				try {
+					panel4.removeAll();
+					for (int i = 0 ; i < panelList.size(); i++)
+					{
+						panelList.get(i).removeAll();
+						panel6.remove(panelList.get(i));
+					}
+					panelList.removeAll(panelList);
+					probe();
+					this.revalidate();
+					this.repaint();
+				} catch (MalformedURLException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (4 == index) // Sample
+			{
 				panel4.removeAll();
 				for (int i = 0 ; i < panelList.size(); i++)
 				{
@@ -70,31 +109,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					panel6.remove(panelList.get(i));
 				}
 				panelList.removeAll(panelList);
-				current();
-				this.revalidate();
-				this.repaint();
-			} catch (MalformedURLException | JAXBException e) {
-				e.printStackTrace();
-			}
-		}
-		if (3 == comboBox1.getSelectedIndex())
-		{
-			try {
-				panel4.removeAll();
-				for (int i = 0 ; i < panelList.size(); i++)
-				{
-					panelList.get(i).removeAll();
-					panel6.remove(panelList.get(i));
+				try {
+					sample();
+				} catch (MalformedURLException | JAXBException e) {
+					e.printStackTrace();
 				}
-				panelList.removeAll(panelList);
-				probe();
 				this.revalidate();
 				this.repaint();
-			} catch (MalformedURLException | JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		}
+	}
 		if (source == menuItem1)
 		{
 			AboutWindow nojaJanela = new AboutWindow(this);
@@ -166,13 +189,23 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
+							
 							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
 							{ 
 								//---- label8 ----
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
-								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue());
+								String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
+								if (string.toUpperCase().equals("AVAILABLE"))
+								{
+									textField3.setForeground(new Color(0,128,0));
+								}
+									else if(string.toUpperCase().equals("UNAVAILABLE"))
+								{
+									textField3.setForeground(Color.RED);	
+								}
+								textField3.setText(string);
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -208,6 +241,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
+								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
+									textField3.setForeground(new Color(0,128,0));
+								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
+									textField3.setForeground(Color.RED);
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
@@ -242,6 +279,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
+								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON"))
+									textField3.setForeground(new Color(0,128,0));
+								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE"))
+									textField3.setForeground(Color.RED);
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
@@ -369,6 +410,89 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					}
 				}
 			
+			});
+		}
+	}
+	public void sample() throws JAXBException, MalformedURLException
+	{
+		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+		Unmarshaller u = jc.createUnmarshaller();
+		URL url = new URL( "http://agent.mtconnect.org/sample" );
+		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+		final MTConnectStreamsType sample = element.getValue();
+		textField1.setText(""+sample.getStreams().getDeviceStream().get(0).getName());
+		textField2.setText(""+sample.getStreams().getDeviceStream().get(0).getUuid());
+		int cont = sample.getStreams().getDeviceStream().get(0).getComponentStream().size();
+		for (int i = 0 ; i < cont ; i++)
+		{
+			final JToggleButton toggleTemp = new JToggleButton();
+			//---- toggleButton1 ----
+			toggleTemp.setName(""+i);
+			toggleTemp.setText(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName() );
+			JPanel panel5 = new JPanel();
+			panelList.add(panel5);
+			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 0), 0, 0));
+			toggleTemp.addActionListener(new ActionListener() 
+			{
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					if(toggleTemp.isSelected())
+					{
+						int conterR = 0; // --> Linha, Row
+						int j = Integer.parseInt(toggleTemp.getName());
+						///////////////////////////////////
+					{
+					panelList.get(j).setLayout(new GridBagLayout());
+					((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
+					((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+					((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+					((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+					}
+				panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 5), 0, 0));
+				panelList.get(j).setBorder(new CompoundBorder(
+						new TitledBorder(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
+						new EmptyBorder(5, 5, 5, 5)));
+				try
+				{
+				JLabel label7 = new JLabel();
+				label7.setText("Samples:");
+				panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 0), 0, 0));
+				conterR++;
+				for (int i = 0 ; i < sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size() ; i++)
+				{
+					//---- label8 ----
+					JLabel label8 = new JLabel();
+					JTextField textField3 = new JTextField();
+					if (sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName()!= null)
+						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
+					else
+						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getDataItemId());
+					String string = sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
+					textField3.setText(string+"---"+"Time:"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getTimestamp());
+					textField3.setEditable(false);
+					panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 5), 0, 0));
+					panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
+					conterR++;
+					
+				}
+				}
+				catch(Exception sampleError)
+				{
+					System.out.println("No Samples");
+				}
+					}
+				}
 			});
 		}
 	}
