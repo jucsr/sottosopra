@@ -186,6 +186,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText("Samples:");
+							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
@@ -195,9 +196,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								//---- label8 ----
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
-								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
+								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName()!=null)
+									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
+								else
+									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getDataItemId());
 								String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
-								if (string.toUpperCase().equals("AVAILABLE"))
+								if (string.toUpperCase().equals("AVAILABLE") || string.toUpperCase().equals("ACTIVE"))
 								{
 									textField3.setForeground(new Color(0,128,0));
 								}
@@ -231,6 +235,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText("Condition:");
+							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
@@ -245,6 +250,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									textField3.setForeground(new Color(0,128,0));
 								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
 									textField3.setForeground(Color.RED);
+								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
+								{
+									JLabel label9 = new JLabel();
+									label9.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getQualifier().getDeclaringClass().getField(getName()));
+									panelList.get(j).add(label9, new GridBagConstraints(2 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+											GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+											new Insets(0, 0, 5, 5), 0, 0));
+									
+								}
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
@@ -269,6 +283,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText("Events:");
+							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
@@ -279,7 +294,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								JLabel label8 = new JLabel();
 								JTextField textField3 = new JTextField();
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
-								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON"))
+								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
 									textField3.setForeground(new Color(0,128,0));
 								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE"))
 									textField3.setForeground(Color.RED);
@@ -369,6 +384,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							//---- label7 ----
 							JLabel label7 = new JLabel();
 							label7.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getName().getLocalPart()+"-"+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getId());
+							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
@@ -462,6 +478,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 				JLabel label7 = new JLabel();
 				label7.setText("Samples:");
+				label7.setForeground(new Color(25, 25, 112));
 				panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
@@ -470,28 +487,100 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					//---- label8 ----
 					JLabel label8 = new JLabel();
+					JLabel label9 = new JLabel();
+					JTextField textField4 = new JTextField();
 					JTextField textField3 = new JTextField();
 					if (sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName()!= null)
 						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
 					else
 						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getDataItemId());
+					label9.setText("Time: ");
 					String string = sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
-					textField3.setText(string+"---"+"Time:"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getTimestamp());
+					textField3.setText(string);
+					textField4.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getTimestamp());
 					textField3.setEditable(false);
+					textField4.setEditable(false);
 					panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 5), 0, 0));
+					panelList.get(j).add(label9, new GridBagConstraints(2 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 5), 0, 0));
 					panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
+					panelList.get(j).add(textField4, new GridBagConstraints(3 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 0), 0, 0));
 					conterR++;
 					
 				}
+				revalidate();
+				repaint();
 				}
 				catch(Exception sampleError)
 				{
 					System.out.println("No Samples");
 				}
+				
+				try
+				{
+					int conter = sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size();
+					JLabel label7 = new JLabel();
+					label7.setText("Events:");
+					label7.setForeground(new Color(25, 25, 112));
+					panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 3+conterR, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
+					conterR++;
+				for (int i = 0 ; i < conter ; i++)
+				{
+					//---- label8 ----
+					JLabel label8 = new JLabel();
+					JLabel label9 = new JLabel();
+					JTextField textField4 = new JTextField();
+					JTextField textField3 = new JTextField();
+					if (sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getName()!= null)
+						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getName());
+					else
+						label8.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
+					label9.setText("Time: ");
+					String string = sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+					textField3.setText(string);
+					textField4.setText(""+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+					textField3.setEditable(false);
+					textField4.setEditable(false);
+					panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 4+ conterR, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 5), 0, 0));
+					panelList.get(j).add(label9, new GridBagConstraints(2 + conterC, 4+ conterR, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 5), 0, 0));
+					panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 4+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
+					panelList.get(j).add(textField4, new GridBagConstraints(3 + conterC, 4+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 0), 0, 0));
+					conterR++;
+					
+				}
+				
+				revalidate();
+				repaint();
+				}
+				catch (Exception NoEvents)
+				{
+					System.out.println("No Events");
+				}
+					
+					
 					}
+					else if (!toggleTemp.isSelected())
+					{
+						int j = Integer.parseInt(toggleTemp.getName());
+						panelList.get(j).removeAll();
+						panel6.remove(panelList.get(j));
+						revalidate();
+						repaint();
+					}
+					
 				}
 			});
 		}
