@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingWorker;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -23,8 +24,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-import org.apache.geronimo.mail.util.ASCIIUtil;
 
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
@@ -34,7 +33,10 @@ import br.UFSC.GRIMA.application.visual.BeginWindow;
 public class ClientApplication extends BeginWindow implements ActionListener
 {
 	int conterC = 0; // --> Coluna, Column
+	boolean b = true;
 	public ArrayList<JPanel> panelList = new ArrayList<JPanel>();
+	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
+	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ClientApplication()
 	{
 		this.comboBox1.addActionListener(this);
@@ -42,6 +44,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.adjustJFrame();
 		//////Visibles
 		this.setVisible(true);
+		
 		
 	}
 	public void adjustJFrame() {
@@ -68,6 +71,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			if ( 2 == index) // Current 
 			{
 				try {
+					buttons.removeAll(buttons);
+					textFieldList.removeAll(textFieldList);
 					panel4.removeAll();
 					for (int i = 0 ; i < panelList.size(); i++)
 					{
@@ -76,6 +81,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					}
 					panelList.removeAll(panelList);
 					current();
+					worker.execute();
+					b = true;
 					this.revalidate();
 					this.repaint();
 				} catch (MalformedURLException | JAXBException e) {
@@ -85,6 +92,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			if (3 == index) // Probe
 			{
 				try {
+					b = false;
 					panel4.removeAll();
 					for (int i = 0 ; i < panelList.size(); i++)
 					{
@@ -102,6 +110,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			}
 			if (4 == index) // Sample
 			{
+				b = false;
 				panel4.removeAll();
 				for (int i = 0 ; i < panelList.size(); i++)
 				{
@@ -156,8 +165,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					if(toggleTemp.isSelected())
 					{
+						
 						int conterR = 0; // --> Linha, Row
 						int j = Integer.parseInt(toggleTemp.getName());
+						if(!buttons.contains(j))
+						{
 						//JLabel label6 = new JLabel();
 						///////////////////////////////////
 						{
@@ -173,7 +185,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						panelList.get(j).setBorder(new CompoundBorder(
 								new TitledBorder(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
 								new EmptyBorder(5, 5, 5, 5)));
-						
+						buttons.add(j);
 						//////////////////////////
 						//label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
 						//panel5.add(label6, new GridBagConstraints(1 + conterC, 0, 1, 1, 0.0, 0.0,
@@ -216,6 +228,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									new Insets(0, 0, 5, 5), 0, 0));
 								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
+								textFieldList.add(textField3);
 								conterR++;
 								
 							}
@@ -266,6 +279,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									new Insets(0, 0, 5, 5), 0, 0));
 								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
+								//textFieldList.add(textField3);
 								conterR++;
 							}
 							revalidate();
@@ -305,6 +319,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									new Insets(0, 0, 5, 5), 0, 0));
 								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
+								//textFieldList.add(textField3);
 								conterR++;
 							}
 							revalidate();
@@ -317,11 +332,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						}
 						conterC = conterC+1;
 					}
+						else
+						{
+							panelList.get(j).setVisible(true);
+						}
+					}
 					else if (!toggleTemp.isSelected())
 					{
 						int j = Integer.parseInt(toggleTemp.getName());
-						panelList.get(j).removeAll();
-						panel6.remove(panelList.get(j));
+						panelList.get(j).setVisible(false);
+						//panel6.remove(panelList.get(j));
 						//conterC = conterC -1;
 						revalidate();
 						repaint();
@@ -414,6 +434,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						conterC++;
 						revalidate();
 						repaint();
+						
 					}
 					else if (!toggleTemp.isSelected())
 					{
@@ -589,5 +610,72 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			throws JAXBException {
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
+/////////////////////////////////////////- Teste
+	SwingWorker worker = new SwingWorker() 
+	{
+		@Override
+		protected Object doInBackground() throws Exception 
+		{
+			while(true)
+			{
+				while(b)
+				{
+					JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+					Unmarshaller u = jc.createUnmarshaller();
+					URL url = new URL( "http://agent.mtconnect.org/current" );
+					JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+					final MTConnectStreamsType current = element.getValue();
+					int k = 0;
+					while(k < textFieldList.size())
+					{
+						for(int z = 0 ; z < buttons.size() ; z++)
+						{	
+							int j = buttons.get(z);
+							try
+							{
+								for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
+								{
+									String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
+									if (string.toUpperCase().equals("AVAILABLE") || string.toUpperCase().equals("ACTIVE"))
+									{
+										textFieldList.get(k).setForeground(new Color(0,128,0));
+									}
+										else if(string.toUpperCase().equals("UNAVAILABLE"))
+									{
+											textFieldList.get(k).setForeground(Color.RED);	
+									}
+									textFieldList.get(k).setText(string);
+									k++;
+								}
+							}
+							catch (Exception error)
+							{
+								System.out.println(error.getMessage());
+								System.out.println("Fudeu");
+							}
+						}
+					}
+				}
+			}
+			//return null;
+		}
+		protected void done()
+		{
+			System.out.println("Saiu");
+		}
+	};
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+////////////////////////////////////////////////////////////	
 }
