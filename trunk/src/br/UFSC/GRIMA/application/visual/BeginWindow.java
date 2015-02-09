@@ -40,6 +40,7 @@ public class BeginWindow extends JFrame {
 		panel1 = new JPanel();
 		label1 = new JLabel();
 		comboBox1 = new JComboBox<>();
+		button1 = new JToggleButton();
 		splitPane1 = new JSplitPane();
 		scrollPane1 = new JScrollPane();
 		panel2 = new JPanel();
@@ -58,8 +59,8 @@ public class BeginWindow extends JFrame {
 		setIconImage(null);
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
-		((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {6, 125, 0, 1, 0};
-		((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {6, 7, 0, 125, 1, 0};
+		((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {6, 25, 0, 1, 0};
+		((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {7, 6, 0, 125, 1, 0};
 		((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {0.0, 1.0, 0.0, 0.0, 1.0E-4};
 		((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
 
@@ -95,16 +96,16 @@ public class BeginWindow extends JFrame {
 		//======== panel1 ========
 		{
 			panel1.setLayout(new GridBagLayout());
-			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {100, 0};
+			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0};
 			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0};
-			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0E-4};
 
 			//---- label1 ----
 			label1.setText("Requests:");
 			panel1.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 5, 0), 0, 0));
+				new Insets(0, 0, 5, 5), 0, 0));
 
 			//---- comboBox1 ----
 			comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
@@ -115,6 +116,13 @@ public class BeginWindow extends JFrame {
 				"Sample"
 			}));
 			panel1.add(comboBox1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 5), 0, 0));
+
+			//---- button1 ----
+			button1.setText("Pause");
+			button1.setVisible(false);
+			panel1.add(button1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 0), 0, 0));
 		}
@@ -229,6 +237,7 @@ public class BeginWindow extends JFrame {
 	private JPanel panel1;
 	private JLabel label1;
 	public JComboBox<String> comboBox1;
+	public JToggleButton button1;
 	private JSplitPane splitPane1;
 	private JScrollPane scrollPane1;
 	private JPanel panel2;
