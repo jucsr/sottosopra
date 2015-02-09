@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
-			"$columnSpecs": "1, 120:1.0, 0, 1"
-			"$rowSpecs": "1, 2, 0, 120:1.0, 1"
+			"$columnSpecs": "1, 20:1.0, 0, 1"
+			"$rowSpecs": "2, 1, 0, 120:1.0, 1"
 			"$hGap": 5
 			"$vGap": 5
 			"$alignLeft": true
@@ -23,7 +23,7 @@ new FormModel {
 				"gridy": 1
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "100"
+				"$columnSpecs": "100, 0"
 				"$rowSpecs": "0, 0:1.0"
 				"$hGap": 5
 				"$vGap": 5
@@ -49,6 +49,17 @@ new FormModel {
 						"JavaCodeGenerator.variableModifiers": 1
 					}
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+					"gridy": 1
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "button1"
+					"text": "Pause"
+					"visible": false
+					auxiliary() {
+						"JavaCodeGenerator.variableModifiers": 1
+					}
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+					"gridx": 1
 					"gridy": 1
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
