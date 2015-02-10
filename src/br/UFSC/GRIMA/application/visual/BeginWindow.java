@@ -41,6 +41,10 @@ public class BeginWindow extends JFrame {
 		label1 = new JLabel();
 		comboBox1 = new JComboBox<>();
 		button1 = new JToggleButton();
+		panel7 = new JPanel();
+		label6 = new JLabel();
+		textField7 = new JTextField();
+		splitPane2 = new JSplitPane();
 		splitPane1 = new JSplitPane();
 		scrollPane1 = new JScrollPane();
 		panel2 = new JPanel();
@@ -53,6 +57,8 @@ public class BeginWindow extends JFrame {
 		panel4 = new JPanel();
 		scrollPane2 = new JScrollPane();
 		panel6 = new JPanel();
+		scrollPane3 = new JScrollPane();
+		textPane1 = new JTextArea();
 
 		//======== this ========
 		setTitle("Applet");
@@ -60,7 +66,7 @@ public class BeginWindow extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
 		((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {6, 25, 0, 1, 0};
-		((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {7, 6, 0, 125, 1, 0};
+		((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {7, 6, 31, 125, 1, 0};
 		((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {0.0, 1.0, 0.0, 0.0, 1.0E-4};
 		((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
 
@@ -96,10 +102,10 @@ public class BeginWindow extends JFrame {
 		//======== panel1 ========
 		{
 			panel1.setLayout(new GridBagLayout());
-			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0};
-			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0};
-			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0E-4};
+			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 0, 0, 0, 0};
+			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 2, 0};
+			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
 			//---- label1 ----
 			label1.setText("Requests:");
@@ -124,103 +130,143 @@ public class BeginWindow extends JFrame {
 			button1.setVisible(false);
 			panel1.add(button1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 0, 0), 0, 0));
+				new Insets(0, 0, 0, 5), 0, 0));
+
+			//======== panel7 ========
+			{
+				panel7.setLayout(new GridBagLayout());
+				((GridBagLayout)panel7.getLayout()).columnWidths = new int[] {0, 140, 0};
+				((GridBagLayout)panel7.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+				((GridBagLayout)panel7.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+				((GridBagLayout)panel7.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+
+				//---- label6 ----
+				label6.setText("Time:");
+				panel7.add(label6, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 5), 0, 0));
+
+				//---- textField7 ----
+				textField7.setEditable(false);
+				panel7.add(textField7, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 0), 0, 0));
+			}
+			panel1.add(panel7, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 5), 0, 0));
 		}
 		contentPane.add(panel1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 5, 5), 0, 0));
 
-		//======== splitPane1 ========
+		//======== splitPane2 ========
 		{
-			splitPane1.setOneTouchExpandable(true);
-			splitPane1.setAutoscrolls(true);
-			splitPane1.setResizeWeight(0.1);
+			splitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			splitPane2.setResizeWeight(0.9);
 
-			//======== scrollPane1 ========
+			//======== splitPane1 ========
 			{
+				splitPane1.setOneTouchExpandable(true);
+				splitPane1.setAutoscrolls(true);
+				splitPane1.setResizeWeight(0.1);
 
-				//======== panel2 ========
+				//======== scrollPane1 ========
 				{
-					panel2.setLayout(new GridBagLayout());
-					((GridBagLayout)panel2.getLayout()).columnWidths = new int[] {0, 0, 0};
-					((GridBagLayout)panel2.getLayout()).rowHeights = new int[] {0, 0, 0};
-					((GridBagLayout)panel2.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-					((GridBagLayout)panel2.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
-					//======== panel3 ========
+					//======== panel2 ========
 					{
-						panel3.setBorder(new EtchedBorder());
-						panel3.setLayout(new GridBagLayout());
-						((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 110, 0};
-						((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-						((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-						((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+						panel2.setLayout(new GridBagLayout());
+						((GridBagLayout)panel2.getLayout()).columnWidths = new int[] {0, 0, 0};
+						((GridBagLayout)panel2.getLayout()).rowHeights = new int[] {0, 0, 0};
+						((GridBagLayout)panel2.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+						((GridBagLayout)panel2.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
-						//---- label2 ----
-						label2.setText("Name:");
-						panel3.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+						//======== panel3 ========
+						{
+							panel3.setBorder(new EtchedBorder());
+							panel3.setLayout(new GridBagLayout());
+							((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 110, 0};
+							((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+							((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+
+							//---- label2 ----
+							label2.setText("Name:");
+							panel3.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 5), 0, 0));
+
+							//---- textField1 ----
+							textField1.setEditable(false);
+							panel3.add(textField1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+
+							//---- label3 ----
+							label3.setText("ID:");
+							panel3.add(label3, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 5), 0, 0));
+
+							//---- textField2 ----
+							textField2.setEditable(false);
+							panel3.add(textField2, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 0), 0, 0));
+
+							//---- label4 ----
+							label4.setText("Status:");
+							panel3.add(label4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 0, 5), 0, 0));
+						}
+						panel2.add(panel3, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
 
-						//---- textField1 ----
-						textField1.setEditable(false);
-						panel3.add(textField1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 0), 0, 0));
-
-						//---- label3 ----
-						label3.setText("ID:");
-						panel3.add(label3, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 5), 0, 0));
-
-						//---- textField2 ----
-						textField2.setEditable(false);
-						panel3.add(textField2, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 0), 0, 0));
-
-						//---- label4 ----
-						label4.setText("Status:");
-						panel3.add(label4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+						//======== panel4 ========
+						{
+							panel4.setBorder(new EtchedBorder());
+							panel4.setLayout(new GridBagLayout());
+							((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {10, 0, 0};
+							((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+							((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+						}
+						panel2.add(panel4, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 0, 5), 0, 0));
 					}
-					panel2.add(panel3, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 5, 5), 0, 0));
-
-					//======== panel4 ========
-					{
-						panel4.setBorder(new EtchedBorder());
-						panel4.setLayout(new GridBagLayout());
-						((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {10, 0, 0};
-						((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-						((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-						((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
-					}
-					panel2.add(panel4, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 0, 5), 0, 0));
+					scrollPane1.setViewportView(panel2);
 				}
-				scrollPane1.setViewportView(panel2);
-			}
-			splitPane1.setLeftComponent(scrollPane1);
+				splitPane1.setLeftComponent(scrollPane1);
 
-			//======== scrollPane2 ========
+				//======== scrollPane2 ========
+				{
+
+					//======== panel6 ========
+					{
+						panel6.setBorder(new EtchedBorder());
+						panel6.setAlignmentY(0.0F);
+						panel6.setLayout(new FlowLayout(FlowLayout.LEFT));
+					}
+					scrollPane2.setViewportView(panel6);
+				}
+				splitPane1.setRightComponent(scrollPane2);
+			}
+			splitPane2.setTopComponent(splitPane1);
+
+			//======== scrollPane3 ========
 			{
 
-				//======== panel6 ========
-				{
-					panel6.setBorder(new EtchedBorder());
-					panel6.setAlignmentY(0.0F);
-					panel6.setLayout(new FlowLayout(FlowLayout.LEFT));
-				}
-				scrollPane2.setViewportView(panel6);
+				//---- textPane1 ----
+				textPane1.setEditable(false);
+				scrollPane3.setViewportView(textPane1);
 			}
-			splitPane1.setRightComponent(scrollPane2);
+			splitPane2.setBottomComponent(scrollPane3);
 		}
-		contentPane.add(splitPane1, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
+		contentPane.add(splitPane2, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 5, 5), 0, 0));
 		pack();
@@ -238,6 +284,10 @@ public class BeginWindow extends JFrame {
 	private JLabel label1;
 	public JComboBox<String> comboBox1;
 	public JToggleButton button1;
+	private JPanel panel7;
+	private JLabel label6;
+	public JTextField textField7;
+	private JSplitPane splitPane2;
 	private JSplitPane splitPane1;
 	private JScrollPane scrollPane1;
 	private JPanel panel2;
@@ -250,5 +300,7 @@ public class BeginWindow extends JFrame {
 	protected JPanel panel4;
 	protected JScrollPane scrollPane2;
 	public JPanel panel6;
+	private JScrollPane scrollPane3;
+	protected JTextArea textPane1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
