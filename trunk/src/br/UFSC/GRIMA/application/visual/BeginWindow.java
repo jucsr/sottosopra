@@ -164,6 +164,7 @@ public class BeginWindow extends JFrame {
 		{
 			splitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			splitPane2.setResizeWeight(0.9);
+			splitPane2.setOneTouchExpandable(true);
 
 			//======== splitPane1 ========
 			{
