@@ -34,6 +34,9 @@ public class BeginWindow extends JFrame {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		menuBar1 = new JMenuBar();
 		menu1 = new JMenu();
+		menuItem2 = new JMenuItem();
+		menu3 = new JMenu();
+		menuItem3 = new JMenuItem();
 		menu2 = new JMenu();
 		menuItem1 = new JMenuItem();
 		label5 = new JLabel();
@@ -76,8 +79,23 @@ public class BeginWindow extends JFrame {
 			//======== menu1 ========
 			{
 				menu1.setText("File");
+
+				//---- menuItem2 ----
+				menuItem2.setText("exit");
+				menuItem2.setIcon(new ImageIcon(getClass().getResource("/images/process-stop.png")));
+				menu1.add(menuItem2);
 			}
 			menuBar1.add(menu1);
+
+			//======== menu3 ========
+			{
+				menu3.setText("Configure");
+
+				//---- menuItem3 ----
+				menuItem3.setText("Set source agent");
+				menu3.add(menuItem3);
+			}
+			menuBar1.add(menu3);
 
 			//======== menu2 ========
 			{
@@ -278,6 +296,9 @@ public class BeginWindow extends JFrame {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JMenuBar menuBar1;
 	private JMenu menu1;
+	protected JMenuItem menuItem2;
+	private JMenu menu3;
+	protected JMenuItem menuItem3;
 	private JMenu menu2;
 	protected JMenuItem menuItem1;
 	private JLabel label5;

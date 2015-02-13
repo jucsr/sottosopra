@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -47,8 +48,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
 		this.button1.addActionListener(this);
+		this.menuItem2.addActionListener(this);
+		this.menuItem3.addActionListener(this);
 		this.adjustJFrame();
-		//////Visibles
 		this.setVisible(true);
 	}
 	public void adjustJFrame()
@@ -172,9 +174,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			AboutWindow nojaJanela = new AboutWindow(this);
 			nojaJanela.setVisible(true);
 		}
+		else if(source == menuItem2)
+		{
+			System.exit(EXIT_ON_CLOSE);
+		} else if(source == menuItem3)
+		{
+			new ConfigureAgentWindow(this);
+		}
 	}
-		
-	public void current() throws JAXBException, MalformedURLException //--> O Que deve aparecer para o usuário em relação á máquina selecionada.
+	
+	public void current() throws JAXBException, MalformedURLException //--> O Que deve aparecer para o usuï¿½rio em relaï¿½ï¿½o ï¿½ mï¿½quina selecionada.
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
@@ -183,9 +192,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectStreamsType current = element.getValue();
 		System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
-		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrão pra todas
+		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrï¿½o pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
-		for (int i = 0; i < cont ; i++) //---> Quantos Botões deve colocar devido aos dados de ComponentStream
+		for (int i = 0; i < cont ; i++) //---> Quantos Botï¿½es deve colocar devido aos dados de ComponentStream
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
@@ -396,7 +405,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
 		textField2.setText(""+ probe.getDevices().getDevice().get(0).getUuid());
 		int cont  = probe.getDevices().getDevice().get(0).getComponents().getComponent().size();
-		for (int i = 0; i < cont ; i++) //---> Quantos Botões deve colocar devido aos dados de ComponentStream
+		for (int i = 0; i < cont ; i++) //---> Quantos Botï¿½es deve colocar devido aos dados de ComponentStream
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
