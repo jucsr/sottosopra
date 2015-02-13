@@ -168,7 +168,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				this.revalidate();
 				this.repaint();
 			}
-	}
+		}
 		if (source == menuItem1)
 		{
 			AboutWindow nojaJanela = new AboutWindow(this);
@@ -207,13 +207,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
 			{
-				
 				@Override
 				public void actionPerformed(ActionEvent e) 
 				{
 					if(toggleTemp.isSelected())
 					{
-						
 						int conterR = 0; // --> Linha, Row
 						int j = Integer.parseInt(toggleTemp.getName());
 						if(!buttons.contains(j))
@@ -278,7 +276,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									new Insets(0, 0, 5, 0), 0, 0));
 								textFieldList.add(textField3);
 								conterR++;
-								
 							}
 							revalidate();
 							repaint();
@@ -390,7 +387,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						repaint();
 					}
 				}
-				
 			});
 		}
 	}
