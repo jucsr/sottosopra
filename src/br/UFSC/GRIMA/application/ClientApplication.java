@@ -50,22 +50,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.adjustJFrame();
 		//////Visibles
 		this.setVisible(true);
-		
-		
 	}
-	public void adjustJFrame() {
-		// this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+	public void adjustJFrame()
+	{
 		Toolkit toolkit = this.getToolkit();
-
-//		this.setResizable(false);
 		this.pack();
 
 		Dimension windowDimension = toolkit.getScreenSize();
-		Dimension thisDimension = this.getPreferredSize();
 		this.setSize(new Dimension((int)(windowDimension.width/2), (int)(windowDimension.height / 2)));
+		Dimension thisDimension = this.getSize();
 		this.setLocation((int) (windowDimension.getWidth() - thisDimension.getWidth()) / 2, (int) (windowDimension.getHeight() - thisDimension.getHeight()) / 2);
-
 	}
 
 	public void actionPerformed(ActionEvent event)
@@ -145,7 +139,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					this.revalidate();
 					this.repaint();
 				} catch (MalformedURLException | JAXBException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -181,7 +174,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		}
 	}
 		
-	
 	public void current() throws JAXBException, MalformedURLException //--> O Que deve aparecer para o usuário em relação á máquina selecionada.
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
@@ -391,9 +383,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 				
 			});
-		
 		}
 	}
+	
 	public void probe() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
@@ -496,10 +488,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						repaint();
 					}
 				}
-			
 			});
 		}
 	}
+	
 	public void sample() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
@@ -523,7 +515,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
 			{
-				
 				@Override
 				public void actionPerformed(ActionEvent e) 
 				{
@@ -634,7 +625,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					conterR++;
 //					textFieldList.add(textField3);
 //					textFieldTimeList.add(textField4);
-					
 				}
 				
 				revalidate();
@@ -654,13 +644,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					revalidate();
 					repaint();
 				}
-					
 				}
 			});
 		}
 	}
-	private JAXBElement<MTConnectDevicesType> extracted(Unmarshaller u, URL url)
-			throws JAXBException {
+	
+	private JAXBElement<MTConnectDevicesType> extracted(Unmarshaller u, URL url) throws JAXBException 
+	{
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
 /////////////////////////////////////////- Teste
@@ -734,8 +724,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
 										{
 											textPane1.setForeground(Color.RED);
-											textPane1.setText("\n"+"Warning Type:"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
-											
+											textPane1.setText("\n"+"Warning Type:"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
 										}
 										k++;
 									}
