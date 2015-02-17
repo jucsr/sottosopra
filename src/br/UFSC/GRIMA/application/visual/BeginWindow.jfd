@@ -53,7 +53,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JToggleButton" ) {
 					name: "button1"
-					"text": "Pause"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pause.png" )
 					"visible": false
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
@@ -64,7 +64,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0, 140"
-					"$rowSpecs": "0, 0, 0"
+					"$rowSpecs": "0:1.0, 0, 0"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true

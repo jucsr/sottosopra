@@ -144,7 +144,7 @@ public class BeginWindow extends JFrame {
 				new Insets(0, 0, 0, 5), 0, 0));
 
 			//---- button1 ----
-			button1.setText("Pause");
+			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 			button1.setVisible(false);
 			panel1.add(button1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -156,7 +156,7 @@ public class BeginWindow extends JFrame {
 				((GridBagLayout)panel7.getLayout()).columnWidths = new int[] {0, 140, 0};
 				((GridBagLayout)panel7.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 				((GridBagLayout)panel7.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-				((GridBagLayout)panel7.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+				((GridBagLayout)panel7.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
 				//---- label6 ----
 				label6.setText("Time:");
