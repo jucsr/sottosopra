@@ -5,21 +5,22 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
-			"title": "configure agent"
+			"title": "Set new Agent"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				"border": new javax.swing.border.EmptyBorder( 12, 12, 12, 12 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-					"$columnSpecs": "0, 200:1.0"
-					"$rowSpecs": "0, 0:1.0, 0"
+					"$columnSpecs": "0, 350:1.0"
+					"$rowSpecs": "0, 0, 0"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true
 					"$alignTop": true
 				} ) {
 					name: "contentPanel"
+					"border": new javax.swing.border.EtchedBorder( 1, null, null )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-						"$columnSpecs": "0, 0"
+						"$columnSpecs": "0, 0:1.0"
 						"$rowSpecs": "0, 0, 0"
 						"$hGap": 5
 						"$vGap": 5
@@ -27,16 +28,38 @@ new FormModel {
 						"$alignTop": true
 					} ) {
 						name: "panel1"
-						add( new FormComponent( "javax.swing.JComboBox" ) {
-							name: "comboBox1"
-							"model": new javax.swing.DefaultComboBoxModel {
-								selectedItem: "MTConnect Agent"
-								addElement( "MTConnect Agent" )
-							}
-							auxiliary() {
-								"JavaCodeGenerator.variableModifiers": 1
-							}
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "label2"
+							"text": "Name:"
+							"horizontalAlignment": 4
+							"font": &Font0 new java.awt.Font( "Tahoma", 1, 11 )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "textFieldName"
+							"text": "Name"
+							auxiliary() {
+								"JavaCodeGenerator.variableModifiers": 4
+							}
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridx": 1
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "label1"
+							"text": "Set IP address ou web adress:"
+							"font": #Font0
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridy": 1
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "textFieldIP"
+							"text": "http://agent.mtconnect.org/"
+							auxiliary() {
+								"JavaCodeGenerator.variableModifiers": 4
+							}
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridx": 1
+							"gridy": 1
+						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridx": 1
 						"gridy": 1
@@ -78,23 +101,9 @@ new FormModel {
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "Center"
 			} )
-			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
-				name: "menuBar1"
-				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
-					name: "menu1"
-					"text": "add"
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem1"
-						"text": "new Monitoring Agent"
-						auxiliary() {
-							"JavaCodeGenerator.variableModifiers": 4
-						}
-					} )
-				} )
-			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 440, 300 )
 		} )
 	}
 }

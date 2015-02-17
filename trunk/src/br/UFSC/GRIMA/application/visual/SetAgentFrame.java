@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Fri Feb 13 15:22:42 BRST 2015
+ * Created by JFormDesigner on Fri Feb 13 16:17:20 BRST 2015
  */
 
 package br.UFSC.GRIMA.application.visual;
@@ -11,49 +11,34 @@ import javax.swing.border.*;
 /**
  * @author Jc
  */
-public class sourceAgentFrame extends JDialog {
-	public sourceAgentFrame(Frame owner) {
+public class SetAgentFrame extends JDialog {
+	public SetAgentFrame(Frame owner) {
 		super(owner);
 		initComponents();
 	}
 
-	public sourceAgentFrame(Dialog owner) {
+	public SetAgentFrame(Dialog owner) {
 		super(owner);
 		initComponents();
 	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		menuBar1 = new JMenuBar();
-		menu1 = new JMenu();
-		menuItem1 = new JMenuItem();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
 		panel1 = new JPanel();
-		comboBox1 = new JComboBox<>();
+		label2 = new JLabel();
+		textFieldName = new JTextField();
+		label1 = new JLabel();
+		textFieldIP = new JTextField();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
 
 		//======== this ========
-		setTitle("configure agent");
+		setTitle("Set new Agent");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
-
-		//======== menuBar1 ========
-		{
-
-			//======== menu1 ========
-			{
-				menu1.setText("add");
-
-				//---- menuItem1 ----
-				menuItem1.setText("new Monitoring Agent");
-				menu1.add(menuItem1);
-			}
-			menuBar1.add(menu1);
-		}
-		setJMenuBar(menuBar1);
 
 		//======== dialogPane ========
 		{
@@ -62,27 +47,47 @@ public class sourceAgentFrame extends JDialog {
 
 			//======== contentPanel ========
 			{
+				contentPanel.setBorder(new EtchedBorder());
 				contentPanel.setLayout(new GridBagLayout());
-				((GridBagLayout)contentPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+				((GridBagLayout)contentPanel.getLayout()).columnWidths = new int[] {0, 350, 0};
 				((GridBagLayout)contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 				((GridBagLayout)contentPanel.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
-				((GridBagLayout)contentPanel.getLayout()).rowWeights = new double[] {0.0, 1.0, 0.0, 1.0E-4};
+				((GridBagLayout)contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
 				//======== panel1 ========
 				{
 					panel1.setLayout(new GridBagLayout());
 					((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0, 0};
 					((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-					((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+					((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
 					((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
-					//---- comboBox1 ----
-					comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-						"MTConnect Agent"
-					}));
-					panel1.add(comboBox1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+					//---- label2 ----
+					label2.setText("Name:");
+					label2.setHorizontalAlignment(SwingConstants.RIGHT);
+					label2.setFont(new Font("Tahoma", Font.BOLD, 11));
+					panel1.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 5), 0, 0));
+
+					//---- textFieldName ----
+					textFieldName.setText("Name");
+					panel1.add(textFieldName, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
+
+					//---- label1 ----
+					label1.setText("Set IP address ou web adress:");
+					label1.setFont(new Font("Tahoma", Font.BOLD, 11));
+					panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 5), 0, 0));
+
+					//---- textFieldIP ----
+					textFieldIP.setText("http://agent.mtconnect.org/");
+					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
 				}
 				contentPanel.add(panel1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -118,13 +123,13 @@ public class sourceAgentFrame extends JDialog {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JMenuBar menuBar1;
-	private JMenu menu1;
-	protected JMenuItem menuItem1;
 	private JPanel dialogPane;
 	private JPanel contentPanel;
 	private JPanel panel1;
-	protected JComboBox<String> comboBox1;
+	private JLabel label2;
+	protected JTextField textFieldName;
+	private JLabel label1;
+	protected JTextField textFieldIP;
 	private JPanel buttonBar;
 	protected JButton okButton;
 	protected JButton cancelButton;

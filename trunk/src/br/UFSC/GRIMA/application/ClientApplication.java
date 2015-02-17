@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,6 +44,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
+	public Agent agent = new Agent("MTConnect", "http://agent.mtconnect.org/");
 	public ClientApplication()
 	{
 		this.comboBox1.addActionListener(this);
@@ -75,12 +77,18 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				if(button1.isSelected())
 				{
 					b = !b;
-					button1.setText("Play");
+//					button1.setText("Play");
+					button1.setText("");
+					button1.setIcon(new ImageIcon(getClass().getResource("/images/play.png")));
+					button1.setToolTipText("Play");
 				}
 				else if(!button1.isSelected())
 				{
 					b = !b;
-					button1.setText("Stop");
+//					button1.setText("Stop");
+					button1.setText("");
+					button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
+					button1.setToolTipText("Pause");
 				}
 			}
 			else if(comboBox1.getSelectedIndex() == 4)
@@ -179,7 +187,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			System.exit(EXIT_ON_CLOSE);
 		} else if(source == menuItem3)
 		{
-			new ConfigureAgentWindow(this);
+			new ConfigureAgentWindow(this, agent);
 		}
 	}
 	
@@ -187,7 +195,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-		URL url = new URL( "http://agent.mtconnect.org/current" );
+//		URL url = new URL( "http://agent.mtconnect.org/current" );
+		URL url = new URL(agent.getIP() + "/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType current = element.getValue();
 		System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
@@ -395,7 +404,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-		URL url = new URL( "http://agent.mtconnect.org/probe" );
+//		URL url = new URL( "http://agent.mtconnect.org/probe" );
+		URL url = new URL(agent.getIP() + "/probe");
 		JAXBElement<MTConnectDevicesType> element = extracted(u, url);
 		final MTConnectDevicesType probe = element.getValue();
 		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
@@ -501,7 +511,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-		URL url = new URL( "http://agent.mtconnect.org/sample" );
+//		URL url = new URL( "http://agent.mtconnect.org/sample" );
+		URL url = new URL(agent.getIP() + "/sample" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType sample = element.getValue();
 		textField1.setText(""+sample.getStreams().getDeviceStream().get(0).getName());
@@ -668,7 +679,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			{
 				JAXBContext jct = JAXBContext.newInstance(MTConnectStreamsType.class);
 				Unmarshaller ut = jct.createUnmarshaller();
-				URL urlt = new URL( "http://agent.mtconnect.org/current" );
+//				URL urlt = new URL( "http://agent.mtconnect.org/current" );
+				URL urlt = new URL(agent.getIP() + "/current" );
 				JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
 				final MTConnectStreamsType currentt = elementt.getValue();
 				textField7.setText(""+currentt.getHeader().getCreationTime());
@@ -676,7 +688,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 					Unmarshaller u = jc.createUnmarshaller();
-					URL url = new URL( "http://agent.mtconnect.org/current" );
+					URL url = new URL(agent.getIP() +  "/current");
 					JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 					final MTConnectStreamsType current = element.getValue();
 					textField7.setText(""+current.getHeader().getCreationTime());
@@ -874,18 +886,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			System.out.println("Saiu");
 		}
 	};
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public Agent getAgent() 
+	{
+		return agent;
+	}
+	public void setAgent(Agent agent) 
+	{
+		this.agent = agent;
+	}
 ////////////////////////////////////////////////////////////	
 }
