@@ -1,11 +1,8 @@
-/*
- * Created by JFormDesigner on Wed Jan 28 13:52:44 BRST 2015
- */
-
 package br.UFSC.GRIMA.application.visual;
 
-import java.awt.*;
 import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,15 +13,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
-/**
- * @author jc
- */
 public class BeginWindow extends JFrame {
 	public BeginWindow() {
 		initComponents();
@@ -61,11 +62,11 @@ public class BeginWindow extends JFrame {
 		scrollPane2 = new JScrollPane();
 		panel6 = new JPanel();
 		scrollPane3 = new JScrollPane();
-		textPane1 = new JTextArea();
+		textPane1 = new JTextPane();
 
 		//======== this ========
 		setTitle("Applet");
-		setIconImage(null);
+		setIconImage(new ImageIcon(getClass().getResource("/images/iconeLogo.png")).getImage());
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
 		((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {6, 25, 0, 1, 0};
@@ -79,10 +80,12 @@ public class BeginWindow extends JFrame {
 			//======== menu1 ========
 			{
 				menu1.setText("File");
+				menu1.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 				//---- menuItem2 ----
 				menuItem2.setText("exit");
 				menuItem2.setIcon(new ImageIcon(getClass().getResource("/images/process-stop.png")));
+				menuItem2.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu1.add(menuItem2);
 			}
 			menuBar1.add(menu1);
@@ -90,9 +93,11 @@ public class BeginWindow extends JFrame {
 			//======== menu3 ========
 			{
 				menu3.setText("Configure");
+				menu3.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 				//---- menuItem3 ----
 				menuItem3.setText("Set source agent");
+				menuItem3.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu3.add(menuItem3);
 			}
 			menuBar1.add(menu3);
@@ -100,10 +105,12 @@ public class BeginWindow extends JFrame {
 			//======== menu2 ========
 			{
 				menu2.setText("Help");
+				menu2.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 				//---- menuItem1 ----
 				menuItem1.setText("About");
 				menuItem1.setIcon(null);
+				menuItem1.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu2.add(menuItem1);
 			}
 			menuBar1.add(menu2);
@@ -127,6 +134,7 @@ public class BeginWindow extends JFrame {
 
 			//---- label1 ----
 			label1.setText("Requests:");
+			label1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			panel1.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
@@ -139,6 +147,7 @@ public class BeginWindow extends JFrame {
 				"Probe",
 				"Sample"
 			}));
+			comboBox1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			panel1.add(comboBox1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 5), 0, 0));
@@ -146,6 +155,7 @@ public class BeginWindow extends JFrame {
 			//---- button1 ----
 			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 			button1.setVisible(false);
+			button1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			panel1.add(button1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 5), 0, 0));
@@ -153,19 +163,21 @@ public class BeginWindow extends JFrame {
 			//======== panel7 ========
 			{
 				panel7.setLayout(new GridBagLayout());
-				((GridBagLayout)panel7.getLayout()).columnWidths = new int[] {0, 140, 0};
+				((GridBagLayout)panel7.getLayout()).columnWidths = new int[] {0, 160, 0};
 				((GridBagLayout)panel7.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 				((GridBagLayout)panel7.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 				((GridBagLayout)panel7.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
 				//---- label6 ----
 				label6.setText("Time:");
+				label6.setFont(new Font("Verdana", Font.PLAIN, 12));
 				panel7.add(label6, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 
 				//---- textField7 ----
 				textField7.setEditable(false);
+				textField7.setFont(new Font("Verdana", Font.PLAIN, 12));
 				panel7.add(textField7, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
@@ -198,51 +210,56 @@ public class BeginWindow extends JFrame {
 						panel2.setLayout(new GridBagLayout());
 						((GridBagLayout)panel2.getLayout()).columnWidths = new int[] {0, 0, 0};
 						((GridBagLayout)panel2.getLayout()).rowHeights = new int[] {0, 0, 0};
-						((GridBagLayout)panel2.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+						((GridBagLayout)panel2.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
 						((GridBagLayout)panel2.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
 						//======== panel3 ========
 						{
 							panel3.setBorder(new EtchedBorder());
 							panel3.setLayout(new GridBagLayout());
-							((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 110, 0};
+							((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {8, 0, 110, 0};
 							((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-							((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 1.0E-4};
 							((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
 							//---- label2 ----
 							label2.setText("Name:");
-							panel3.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+							label2.setFont(new Font("Verdana", Font.PLAIN, 12));
+							panel3.add(label2, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 5), 0, 0));
 
 							//---- textField1 ----
 							textField1.setEditable(false);
-							panel3.add(textField1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+							textField1.setFont(new Font("Verdana", Font.PLAIN, 12));
+							panel3.add(textField1, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
 
 							//---- label3 ----
 							label3.setText("ID:");
-							panel3.add(label3, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+							label3.setFont(new Font("Verdana", Font.PLAIN, 12));
+							panel3.add(label3, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 5), 0, 0));
 
 							//---- textField2 ----
 							textField2.setEditable(false);
-							panel3.add(textField2, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+							textField2.setFont(new Font("Verdana", Font.PLAIN, 12));
+							panel3.add(textField2, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 0), 0, 0));
 
 							//---- label4 ----
 							label4.setText("Status:");
-							panel3.add(label4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+							label4.setFont(new Font("Verdana", Font.PLAIN, 12));
+							panel3.add(label4, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 0, 5), 0, 0));
 						}
-						panel2.add(panel3, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+						panel2.add(panel3, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 5), 0, 0));
+							new Insets(0, 0, 5, 0), 0, 0));
 
 						//======== panel4 ========
 						{
@@ -253,9 +270,9 @@ public class BeginWindow extends JFrame {
 							((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 							((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 						}
-						panel2.add(panel4, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+						panel2.add(panel4, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 0, 5), 0, 0));
+							new Insets(0, 0, 0, 0), 0, 0));
 					}
 					scrollPane1.setViewportView(panel2);
 				}
@@ -281,6 +298,7 @@ public class BeginWindow extends JFrame {
 
 				//---- textPane1 ----
 				textPane1.setEditable(false);
+				textPane1.setFont(new Font("Verdana", Font.PLAIN, 12));
 				scrollPane3.setViewportView(textPane1);
 			}
 			splitPane2.setBottomComponent(scrollPane3);
@@ -323,6 +341,6 @@ public class BeginWindow extends JFrame {
 	protected JScrollPane scrollPane2;
 	public JPanel panel6;
 	private JScrollPane scrollPane3;
-	protected JTextArea textPane1;
+	protected JTextPane textPane1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

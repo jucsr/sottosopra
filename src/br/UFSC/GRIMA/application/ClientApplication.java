@@ -2,6 +2,7 @@ package br.UFSC.GRIMA.application;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,6 +22,10 @@ import javax.swing.SwingWorker;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -45,6 +49,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
 	public Agent agent = new Agent("MTConnect", "http://agent.mtconnect.org/");
+	private Font buttonsFont = new Font("Verdana", Font.PLAIN, 12);
+	private Font tittlesFont = new Font("Khmer UI", Font.BOLD, 12);
+	private Font subtittlesFont = new Font("Euphemia", Font.BOLD, 12);
+	private Font dataFont = new Font("Verdana", Font.PLAIN, 12);
+	private Font textPaneFont = new Font("Verdana", Font.PLAIN, 12);
+	
 	public ClientApplication()
 	{
 		this.comboBox1.addActionListener(this);
@@ -52,6 +62,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.button1.addActionListener(this);
 		this.menuItem2.addActionListener(this);
 		this.menuItem3.addActionListener(this);
+		this.panel4.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
 	}
@@ -59,7 +70,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		Toolkit toolkit = this.getToolkit();
 		this.pack();
-
 		Dimension windowDimension = toolkit.getScreenSize();
 		this.setSize(new Dimension((int)(windowDimension.width/2), (int)(windowDimension.height / 2)));
 		Dimension thisDimension = this.getSize();
@@ -203,10 +213,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padr�o pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
-		for (int i = 0; i < cont ; i++) //---> Quantos Bot�es deve colocar devido aos dados de ComponentStream
+		panel4.setVisible(true);
+		for (int i = 0; i < cont ; i++) //---> Quantos Botoes deve colocar devido aos dados de ComponentStream
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
+			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);
 			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
 			JPanel panel5 = new JPanel();
@@ -237,9 +249,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
+//						panelList.get(j).setBorder(new CompoundBorder(
+//								new TitledBorder(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
+//								new EmptyBorder(5, 5, 5, 5)));
+						
+						//===========
 						panelList.get(j).setBorder(new CompoundBorder(
-								new TitledBorder(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
-								new EmptyBorder(5, 5, 5, 5)));
+								new TitledBorder(null, "" + ""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+" - "+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+								null));
+						//===========
+						
 						buttons.add(j);
 						//////////////////////////
 						//label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
@@ -252,6 +271,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						{
 							//---- label7 ----
 							JLabel label7 = new JLabel();
+							label7.setFont(tittlesFont);
 							label7.setText("Samples:");
 							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
@@ -262,7 +282,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{ 
 								//---- label8 ----
 								JLabel label8 = new JLabel();
+								label8.setFont(subtittlesFont);
 								JTextField textField3 = new JTextField();
+								textField3.setFont(dataFont);
 								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName()!=null)
 									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
 								else
@@ -301,7 +323,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						{
 							//---- label7 ----
 							JLabel label7 = new JLabel();
-							label7.setText("Condition:");
+							label7.setFont(tittlesFont);
+							label7.setText("Conditions:");
 							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -311,7 +334,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								//---- label8 ----
 								JLabel label8 = new JLabel();
+								label8.setFont(subtittlesFont);
 								JTextField textField3 = new JTextField();
+								textField3.setFont(buttonsFont);
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
 								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
 									textField3.setForeground(new Color(0,128,0));
@@ -319,12 +344,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									textField3.setForeground(Color.RED);
 								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
 								{
-									textPane1.setText("Warning Type:"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue());
-								}
+									textPane1.setText("Warning Type: "+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue());
+								} 
+
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
-									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 5), 0, 0));
 								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
@@ -345,6 +371,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						{
 							//---- label7 ----
 							JLabel label7 = new JLabel();
+							label7.setFont(tittlesFont);
 							label7.setText("Events:");
 							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
@@ -355,12 +382,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								//---- label8 ----
 								JLabel label8 = new JLabel();
+								label8.setFont(subtittlesFont);
 								JTextField textField3 = new JTextField();
+								textField3.setFont(buttonsFont);
 								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
 								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
 									textField3.setForeground(new Color(0,128,0));
 								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
 									textField3.setForeground(Color.RED);
+							
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
 								textField3.setEditable(false);
 								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
@@ -410,11 +440,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectDevicesType probe = element.getValue();
 		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
 		textField2.setText(""+ probe.getDevices().getDevice().get(0).getUuid());
+		panel4.setVisible(true);
 		int cont  = probe.getDevices().getDevice().get(0).getComponents().getComponent().size();
 		for (int i = 0; i < cont ; i++) //---> Quantos Bot�es deve colocar devido aos dados de ComponentStream
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
+			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);
 			toggleTemp.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(i).getName().getLocalPart());
 			JPanel panel5 = new JPanel();
@@ -448,13 +480,21 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
+//						panelList.get(j).setBorder(new CompoundBorder(
+//								new TitledBorder(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart()),
+//								new EmptyBorder(5, 5, 5, 5)));
+						
+						//===========
 						panelList.get(j).setBorder(new CompoundBorder(
-								new TitledBorder(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart()),
-								new EmptyBorder(5, 5, 5, 5)));
+								new TitledBorder(null, "" + probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+								null));
+						//===========
+						
 						for (int i = 0; i < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().size(); i++)
 						{
 							//---- label7 ----
 							JLabel label7 = new JLabel();
+							label7.setFont(tittlesFont);
 							label7.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getName().getLocalPart()+"-"+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getId());
 							label7.setForeground(new Color(25, 25, 112));
 							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
@@ -465,7 +505,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								//---- label8 ----
 								JLabel label8 = new JLabel();
+								label8.setFont(subtittlesFont);
 								JTextField textField3 = new JTextField();
+								textField3.setFont(dataFont);
 								if (probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName() != null)
 									label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName());
 								else
@@ -517,11 +559,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectStreamsType sample = element.getValue();
 		textField1.setText(""+sample.getStreams().getDeviceStream().get(0).getName());
 		textField2.setText(""+sample.getStreams().getDeviceStream().get(0).getUuid());
+		panel4.setVisible(true);
 		int cont = sample.getStreams().getDeviceStream().get(0).getComponentStream().size();
 		for (int i = 0 ; i < cont ; i++)
 		{
 			final JToggleButton toggleTemp = new JToggleButton();
 			//---- toggleButton1 ----
+			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);
 			toggleTemp.setText(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName() );
 			JPanel panel5 = new JPanel();
@@ -549,12 +593,20 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
+//				panelList.get(j).setBorder(new CompoundBorder(
+//						new TitledBorder(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
+//						new EmptyBorder(5, 5, 5, 5)));
+				
+				//===========
 				panelList.get(j).setBorder(new CompoundBorder(
-						new TitledBorder(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
-						new EmptyBorder(5, 5, 5, 5)));
+						new TitledBorder(null, "" + sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+						null));
+				//===========
+				
 				try
 				{
 				JLabel label7 = new JLabel();
+				label7.setFont(tittlesFont);
 				label7.setText("Samples:");
 				label7.setForeground(new Color(25, 25, 112));
 				panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
@@ -565,6 +617,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					//---- label8 ----
 					JLabel label8 = new JLabel();
+					label8.setFont(subtittlesFont);
 					JLabel label9 = new JLabel();
 					JTextField textField4 = new JTextField();
 					JTextField textField3 = new JTextField();
