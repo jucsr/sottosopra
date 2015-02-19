@@ -37,6 +37,7 @@ public class SetAgentFrame extends JDialog {
 
 		//======== this ========
 		setTitle("Set new Agent");
+		setFont(new Font("Verdana", Font.PLAIN, 12));
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -65,26 +66,28 @@ public class SetAgentFrame extends JDialog {
 					//---- label2 ----
 					label2.setText("Name:");
 					label2.setHorizontalAlignment(SwingConstants.RIGHT);
-					label2.setFont(new Font("Tahoma", Font.BOLD, 11));
+					label2.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldName ----
-					textFieldName.setText("Name");
+					textFieldName.setText("New Agent");
+					textFieldName.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldName, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
 
 					//---- label1 ----
 					label1.setText("Set IP address ou web adress:");
-					label1.setFont(new Font("Tahoma", Font.BOLD, 11));
+					label1.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldIP ----
-					textFieldIP.setText("http://agent.mtconnect.org/");
+					textFieldIP.setText("http://myagent.myinstitution.org/");
+					textFieldIP.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
@@ -104,12 +107,14 @@ public class SetAgentFrame extends JDialog {
 
 				//---- okButton ----
 				okButton.setText("OK");
+				okButton.setFont(new Font("Verdana", Font.PLAIN, 12));
 				buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 5), 0, 0));
 
 				//---- cancelButton ----
 				cancelButton.setText("Cancel");
+				cancelButton.setFont(new Font("Verdana", Font.PLAIN, 12));
 				buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));

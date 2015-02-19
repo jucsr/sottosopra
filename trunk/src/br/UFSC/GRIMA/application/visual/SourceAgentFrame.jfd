@@ -6,6 +6,7 @@ new FormModel {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			"title": "configure agent"
+			"font": &Font0 new java.awt.Font( "Verdana", 0, 12 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				"border": new javax.swing.border.EmptyBorder( 12, 12, 12, 12 )
@@ -33,6 +34,7 @@ new FormModel {
 								selectedItem: "MTConnect Agent"
 								addElement( "MTConnect Agent" )
 							}
+							"font": #Font0
 							auxiliary() {
 								"JavaCodeGenerator.variableModifiers": 1
 							}
@@ -55,6 +57,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "okButton"
 						"text": "OK"
+						"font": #Font0
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
@@ -65,6 +68,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "cancelButton"
 						"text": "Cancel"
+						"font": #Font0
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
@@ -83,9 +87,11 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu1"
 					"text": "add"
+					"font": #Font0
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"
 						"text": "new Monitoring Agent"
+						"font": #Font0
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}

@@ -37,6 +37,7 @@ public class SourceAgentFrame extends JDialog {
 
 		//======== this ========
 		setTitle("configure agent");
+		setFont(new Font("Verdana", Font.PLAIN, 12));
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -46,9 +47,11 @@ public class SourceAgentFrame extends JDialog {
 			//======== menu1 ========
 			{
 				menu1.setText("add");
+				menu1.setFont(new Font("Verdana", Font.PLAIN, 12));
 
 				//---- menuItem1 ----
 				menuItem1.setText("new Monitoring Agent");
+				menuItem1.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu1.add(menuItem1);
 			}
 			menuBar1.add(menu1);
@@ -80,6 +83,7 @@ public class SourceAgentFrame extends JDialog {
 					comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
 						"MTConnect Agent"
 					}));
+					comboBox1.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(comboBox1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 5), 0, 0));
@@ -99,12 +103,14 @@ public class SourceAgentFrame extends JDialog {
 
 				//---- okButton ----
 				okButton.setText("OK");
+				okButton.setFont(new Font("Verdana", Font.PLAIN, 12));
 				buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 5), 0, 0));
 
 				//---- cancelButton ----
 				cancelButton.setText("Cancel");
+				cancelButton.setFont(new Font("Verdana", Font.PLAIN, 12));
 				buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
