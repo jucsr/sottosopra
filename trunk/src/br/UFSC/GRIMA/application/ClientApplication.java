@@ -39,7 +39,7 @@ import br.UFSC.GRIMA.application.visual.BeginWindow;
 public class ClientApplication extends BeginWindow implements ActionListener
 {
 	int conterC = 0; // --> Coluna, Column
-	boolean a = true;
+	boolean war = true;
 	boolean b = true;
 	boolean s = true;
 	boolean c = true;
@@ -101,19 +101,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					button1.setToolTipText("Pause");
 				}
 			}
-			else if(comboBox1.getSelectedIndex() == 4)
-			{
-				if(button1.isSelected())
-				{
-					a = !a;
-					button1.setText("Play");
-				}
-				else if(!button1.isSelected())
-				{
-					a = !a;
-					button1.setText("Stop");
-				}
-			}
 		}
 		if(source == comboBox1)
 		{
@@ -124,7 +111,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					textFieldList.removeAll(textFieldList);
 					panel4.removeAll();
 					button1.setVisible(true);
-					a = false;
+					button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
+					button1.setToolTipText("Pause");
 					for (int i = 0 ; i < panelList.size(); i++)
 					{
 						panelList.get(i).removeAll();
@@ -143,10 +131,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			if (3 == index) // Probe
 			{
 				try {
+					b = false;
+					textFieldList.removeAll(textFieldList);
 					button1.setVisible(false);
 					buttons.removeAll(buttons);
-					b = false;
-					a = false;
 					panel4.removeAll();
 					for (int i = 0 ; i < panelList.size(); i++)
 					{
@@ -164,11 +152,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			}
 			if (4 == index) // Sample
 			{
-				button1.setVisible(false);
-//				textFieldList.removeAll(textFieldList);
-//				textFieldTimeList.removeAll(textFieldTimeList);
-				buttons.removeAll(buttons);
 				b = false;
+				textFieldList.removeAll(textFieldList);
+				button1.setVisible(false);
+				buttons.removeAll(buttons);
 				panel4.removeAll();
 				for (int i = 0 ; i < panelList.size(); i++)
 				{
@@ -342,10 +329,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									textField3.setForeground(new Color(0,128,0));
 								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
 									textField3.setForeground(Color.RED);
-								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
-								{
-									textPane1.setText("Warning Type: "+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue());
-								} 
+//								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
+//								{
+//									textPane1.setText("Warning Type: "+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue());
+//								} 
 
 								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
 								textField3.setEditable(false);
@@ -385,7 +372,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								label8.setFont(subtittlesFont);
 								JTextField textField3 = new JTextField();
 								textField3.setFont(buttonsFont);
-								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
+								String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getName();
+								if(name == null)
+									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
+								else
+									label8.setText(""+name);	
 								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
 									textField3.setForeground(new Color(0,128,0));
 								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
@@ -723,7 +714,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
 /////////////////////////////////////////- Teste
-	SwingWorker worker = new SwingWorker() 
+	SwingWorker worker = new SwingWorker()  // Atualizador em Tempo Real!
 	{
 		@Override
 		protected Object doInBackground() throws Exception 
@@ -787,15 +778,24 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									{
 										
 										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
+										{	
 											textFieldList.get(k).setForeground(new Color(0,128,0));
-										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
-											textFieldList.get(k).setForeground(Color.RED);
-										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
-										{
-											textPane1.setForeground(Color.RED);
-											textPane1.setText("\n"+"Warning Type:"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
 										}
+										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
+										{	
+											textFieldList.get(k).setForeground(Color.RED);
+											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()))
+											{
+												textPane1.setForeground(Color.RED);
+												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()+ "\n");
+											}
+										}
+										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
+//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning") && war == true)
+//										{
+//											textPane1.setForeground(Color.RED);
+//											textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()+ "\n");
+//										}
 										k++;
 									}
 								}
@@ -816,6 +816,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
 											textFieldList.get(k).setForeground(Color.RED);
 										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
+										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED"))
+										{
+											textPane1.setForeground(Color.RED);
+											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
+												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+										}		
 										k++;
 									}
 								}
