@@ -12,9 +12,11 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -39,7 +41,7 @@ import br.UFSC.GRIMA.application.visual.BeginWindow;
 public class ClientApplication extends BeginWindow implements ActionListener
 {
 	int conterC = 0; // --> Coluna, Column
-	boolean war = true;
+	boolean flag;
 	boolean b = true;
 	boolean s = true;
 	boolean c = true;
@@ -721,23 +723,41 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 			while(true)
 			{
-				JAXBContext jct = JAXBContext.newInstance(MTConnectStreamsType.class);
-				Unmarshaller ut = jct.createUnmarshaller();
-//				URL urlt = new URL( "http://agent.mtconnect.org/current" );
-				URL urlt = new URL(agent.getIP() + "/current" );
-				JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
-				final MTConnectStreamsType currentt = elementt.getValue();
-				textField7.setText(""+currentt.getHeader().getCreationTime());
+				try
+				{
+					JAXBContext jct = JAXBContext.newInstance(MTConnectStreamsType.class);
+					Unmarshaller ut = jct.createUnmarshaller();
+	//				URL urlt = new URL( "http://agent.mtconnect.org/current" );
+					URL urlt = new URL(agent.getIP() + "/current" );
+					JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
+					final MTConnectStreamsType currentt = elementt.getValue();
+					textField7.setText(""+currentt.getHeader().getCreationTime());
+				}
+				catch(Exception connectionError)
+				{
+				    JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
+
+				}
 				while(b)
 				{
-					JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-					Unmarshaller u = jc.createUnmarshaller();
-					URL url = new URL(agent.getIP() +  "/current");
-					JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-					final MTConnectStreamsType current = element.getValue();
-					textField7.setText(""+current.getHeader().getCreationTime());
+					MTConnectStreamsType current = null;
+					try
+					{
+						JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+						Unmarshaller u = jc.createUnmarshaller();
+						URL url = new URL(agent.getIP() +  "/current");
+						JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+						current = element.getValue();
+						textField7.setText(""+current.getHeader().getCreationTime());
+						flag = true;
+					}
+					catch(Exception connectionError)
+					{
+						JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
+						flag = false;
+					}
 					int k = 0;
-					while(k < textFieldList.size())
+					while(k < textFieldList.size() && flag)
 					{
 						for(int z = 0 ; z < buttons.size() ; z++)
 						{	
@@ -784,10 +804,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
 										{	
 											textFieldList.get(k).setForeground(Color.RED);
-											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()))
+											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()) && current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" )
 											{
-												textPane1.setForeground(Color.RED);
-												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()+ "\n");
+												//textPane1.setForeground(Color.RED);
+												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
 											}
 										}
 										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
@@ -816,13 +836,20 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
 											textFieldList.get(k).setForeground(Color.RED);
 										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED"))
+										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF") )
 										{
-											textPane1.setForeground(Color.RED);
+											//textPane1.setForeground(Color.RED);
 											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
 											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
 												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
-										}		
+										}
+										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE") )
+										{
+											//textPane1.setForeground(Color.GREEN);
+											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
+												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+										}
 										k++;
 									}
 								}
