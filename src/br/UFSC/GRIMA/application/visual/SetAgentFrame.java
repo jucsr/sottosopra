@@ -79,7 +79,7 @@ public class SetAgentFrame extends JDialog {
 						new Insets(0, 0, 5, 0), 0, 0));
 
 					//---- label1 ----
-					label1.setText("Set IP address or web adress:");
+					label1.setText("Set IP address or web address:");
 					label1.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
