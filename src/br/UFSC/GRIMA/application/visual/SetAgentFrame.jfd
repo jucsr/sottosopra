@@ -47,7 +47,7 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label1"
-							"text": "Set IP address ou web adress:"
+							"text": "Set IP address or web adress:"
 							"font": #Font0
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 							"gridy": 1
