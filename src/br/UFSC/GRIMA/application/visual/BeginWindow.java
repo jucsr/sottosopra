@@ -38,6 +38,7 @@ public class BeginWindow extends JFrame {
 		menuItem2 = new JMenuItem();
 		menu3 = new JMenu();
 		menuItem3 = new JMenuItem();
+		menuItem4 = new JMenuItem();
 		menu2 = new JMenu();
 		menuItem1 = new JMenuItem();
 		label5 = new JLabel();
@@ -99,6 +100,11 @@ public class BeginWindow extends JFrame {
 				menuItem3.setText("Set source agent");
 				menuItem3.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu3.add(menuItem3);
+
+				//---- menuItem4 ----
+				menuItem4.setText("Webcam");
+				menuItem4.setFont(new Font("Verdana", Font.PLAIN, 12));
+				menu3.add(menuItem4);
 			}
 			menuBar1.add(menu3);
 
@@ -118,7 +124,7 @@ public class BeginWindow extends JFrame {
 		setJMenuBar(menuBar1);
 
 		//---- label5 ----
-		label5.setIcon(new ImageIcon(getClass().getResource("/images/3_EMC_logo.gif")));
+		label5.setIcon(new ImageIcon(getClass().getResource("/images/logofinal.png")));
 		label5.setOpaque(true);
 		contentPane.add(label5, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -317,6 +323,7 @@ public class BeginWindow extends JFrame {
 	protected JMenuItem menuItem2;
 	private JMenu menu3;
 	protected JMenuItem menuItem3;
+	private JMenuItem menuItem4;
 	private JMenu menu2;
 	protected JMenuItem menuItem1;
 	private JLabel label5;
