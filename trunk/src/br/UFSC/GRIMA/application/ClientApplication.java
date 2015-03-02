@@ -64,6 +64,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.button1.addActionListener(this);
 		this.menuItem2.addActionListener(this);
 		this.menuItem3.addActionListener(this);
+		this.menuItem4.addActionListener(this);
 		this.panel4.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
@@ -188,6 +189,17 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		} else if(source == menuItem3)
 		{
 			new ConfigureAgentWindow(this, agent);
+		}
+		else if(source == menuItem4)
+		{
+			try {
+				Runtime
+						.getRuntime()
+						.exec(
+								"cmd.exe /C start iexplore.exe http://grima.ufsc.br");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
