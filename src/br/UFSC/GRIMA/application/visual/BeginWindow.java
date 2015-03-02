@@ -323,7 +323,7 @@ public class BeginWindow extends JFrame {
 	protected JMenuItem menuItem2;
 	private JMenu menu3;
 	protected JMenuItem menuItem3;
-	private JMenuItem menuItem4;
+	protected JMenuItem menuItem4;
 	private JMenu menu2;
 	protected JMenuItem menuItem1;
 	private JLabel label5;
