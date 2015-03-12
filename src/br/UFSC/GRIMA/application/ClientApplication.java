@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -22,12 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingWorker;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -37,6 +31,8 @@ import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
+import main.java.us.sosia.video.stream.agent.StreamClient;
+
 
 public class ClientApplication extends BeginWindow implements ActionListener
 {
@@ -50,7 +46,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
-	public Agent agent = new Agent("MTConnect", "http://agent.mtconnect.org/");
+	public Agent agent = new Agent("MTConnect", "http://agent.mtconnect.org/" , "150.162.105.71");
 	private Font buttonsFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font tittlesFont = new Font("Khmer UI", Font.BOLD, 12);
 	private Font subtittlesFont = new Font("Euphemia", Font.BOLD, 12);
@@ -192,14 +188,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		}
 		else if(source == menuItem4)
 		{
-			try {
-				Runtime
-						.getRuntime()
-						.exec(
-								"cmd.exe /C start iexplore.exe http://grima.ufsc.br");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			new StreamClient(agent.getIpCamera());
+			
 		}
 	}
 	
