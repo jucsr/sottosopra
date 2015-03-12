@@ -65,6 +65,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.adjustJFrame();
 		this.setVisible(true);
 		this.textPane1.setText("History:");
+		this.setDefaultCloseOperation(ClientApplication.EXIT_ON_CLOSE);
 	}
 	public void adjustJFrame()
 	{
