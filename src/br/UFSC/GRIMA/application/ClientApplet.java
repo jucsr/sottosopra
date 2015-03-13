@@ -6,6 +6,6 @@ public class ClientApplet extends JApplet
 {
 	public void init()
 	{
-		new ClientApplication();
+		new SetAgentFrame();
 	}
 }
