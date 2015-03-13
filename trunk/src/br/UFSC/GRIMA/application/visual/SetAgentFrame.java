@@ -26,11 +26,14 @@ public class SetAgentFrame extends JDialog {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
+		label4 = new JLabel();
 		panel1 = new JPanel();
 		label2 = new JLabel();
 		textFieldName = new JTextField();
 		label1 = new JLabel();
 		textFieldIP = new JTextField();
+		label3 = new JLabel();
+		textFieldName2 = new JTextField();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
@@ -50,15 +53,21 @@ public class SetAgentFrame extends JDialog {
 			{
 				contentPanel.setBorder(new EtchedBorder());
 				contentPanel.setLayout(new GridBagLayout());
-				((GridBagLayout)contentPanel.getLayout()).columnWidths = new int[] {0, 350, 0};
+				((GridBagLayout)contentPanel.getLayout()).columnWidths = new int[] {0, 100, 0};
 				((GridBagLayout)contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 				((GridBagLayout)contentPanel.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
 				((GridBagLayout)contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
+				//---- label4 ----
+				label4.setIcon(new ImageIcon(getClass().getResource("/images/logofinal.png")));
+				contentPanel.add(label4, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 0), 0, 0));
+
 				//======== panel1 ========
 				{
 					panel1.setLayout(new GridBagLayout());
-					((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0, 0};
+					((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {45, 0, 0};
 					((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 					((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
 					((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
@@ -72,7 +81,7 @@ public class SetAgentFrame extends JDialog {
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldName ----
-					textFieldName.setText("New Agent");
+					textFieldName.setText("MT Connect");
 					textFieldName.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldName, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -86,11 +95,25 @@ public class SetAgentFrame extends JDialog {
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldIP ----
-					textFieldIP.setText("http://myagent.myinstitution.org/");
+					textFieldIP.setText("http://agent.mtconnect.org/");
 					textFieldIP.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
+
+					//---- label3 ----
+					label3.setText("Set IP address for Stream Camera:");
+					label3.setFont(new Font("Verdana", Font.PLAIN, 12));
+					panel1.add(label3, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 5), 0, 0));
+
+					//---- textFieldName2 ----
+					textFieldName2.setText("150.162.105.71");
+					textFieldName2.setFont(new Font("Verdana", Font.PLAIN, 12));
+					panel1.add(textFieldName2, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 0), 0, 0));
 				}
 				contentPanel.add(panel1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -130,11 +153,14 @@ public class SetAgentFrame extends JDialog {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JPanel dialogPane;
 	private JPanel contentPanel;
+	private JLabel label4;
 	private JPanel panel1;
 	private JLabel label2;
 	protected JTextField textFieldName;
 	private JLabel label1;
 	protected JTextField textFieldIP;
+	private JLabel label3;
+	protected JTextField textFieldName2;
 	private JPanel buttonBar;
 	protected JButton okButton;
 	protected JButton cancelButton;

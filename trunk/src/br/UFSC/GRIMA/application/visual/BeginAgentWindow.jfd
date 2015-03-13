@@ -3,7 +3,7 @@ JFDML JFormDesigner: "5.2.1.0.138" Java: "1.7.0_67" encoding: "UTF-8"
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			"title": "Set new Agent"
 			"font": &Font0 new java.awt.Font( "Verdana", 0, 12 )
@@ -131,8 +131,8 @@ new FormModel {
 				"value": "Center"
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 440, 300 )
+			"location": new java.awt.Point( 0, 0 )
 		} )
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JFrame;
 
 import br.UFSC.GRIMA.application.visual.SetAgentFrame;
 /**
@@ -16,6 +17,7 @@ public class SetAgentDialog extends SetAgentFrame implements ActionListener, Mou
 {
 	private String name;
 	private String ip;
+	private String ipCamera;
 	private ConfigureAgentWindow configure;
 	public SetAgentDialog(ConfigureAgentWindow configure) 
 	{
@@ -37,9 +39,11 @@ public class SetAgentDialog extends SetAgentFrame implements ActionListener, Mou
 		{
 			this.name = this.textFieldName.getText();
 			this.ip = this.textFieldName.getText();
-			Agent agent = new Agent(name, ip);
+			this.ipCamera = this.textFieldName2.getText();
+			Agent agent = new Agent(name, ip, ipCamera);
 			configure.comboBox1.addItem(agent.getIP());
 			configure.comboBox1.setSelectedIndex(configure.comboBox1.getItemCount() - 1);
+			
 			
 			this.dispose();
 		} else if(o == cancelButton)
@@ -53,6 +57,7 @@ public class SetAgentDialog extends SetAgentFrame implements ActionListener, Mou
 	{
 		this.textFieldName.selectAll();
 		this.textFieldIP.selectAll();
+		this.textFieldName2.selectAll();
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) 

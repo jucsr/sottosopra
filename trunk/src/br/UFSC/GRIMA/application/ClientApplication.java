@@ -46,14 +46,14 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
-	public Agent agent = new Agent("MTConnect", "http://agent.mtconnect.org/" , "150.162.105.71");
+	public Agent agent = null; // new Agent("MTConnect", "http://agent.mtconnect.org/" , "150.162.105.71");
 	private Font buttonsFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font tittlesFont = new Font("Khmer UI", Font.BOLD, 12);
 	private Font subtittlesFont = new Font("Euphemia", Font.BOLD, 12);
 	private Font dataFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font textPaneFont = new Font("Verdana", Font.PLAIN, 12);
 	
-	public ClientApplication()
+	public ClientApplication(Agent agent)
 	{
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
@@ -65,7 +65,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.adjustJFrame();
 		this.setVisible(true);
 		this.textPane1.setText("History:");
-		this.setDefaultCloseOperation(ClientApplication.EXIT_ON_CLOSE);
+		this.agent = agent;
 	}
 	public void adjustJFrame()
 	{
@@ -120,6 +120,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						panel6.remove(panelList.get(i));
 					}
 					panelList.removeAll(panelList);
+					System.out.println(agent.getIP());
 					current();
 					worker.execute();
 					b = true;
@@ -190,6 +191,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		else if(source == menuItem4)
 		{
 			new StreamClient(agent.getIpCamera());
+			textPane1.setText(textPane1.getText() + "\n" + "Webcam ON!");
+			
 			
 		}
 	}
@@ -812,7 +815,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()) && current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" )
 											{
 												//textPane1.setForeground(Color.RED);
-												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
+												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart()+" --> " + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
 											}
 										}
 										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
@@ -844,16 +847,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF") )
 										{
 											//textPane1.setForeground(Color.RED);
-											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
 											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
-												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> "+value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
 										}
 										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON")||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("READY"))
 										{
 											//textPane1.setForeground(Color.GREEN);
-											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
 											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
-												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> " + value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
 										}
 //										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON"))
 //										{
