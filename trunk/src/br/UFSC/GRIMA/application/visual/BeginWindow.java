@@ -38,7 +38,7 @@ public class BeginWindow extends JFrame {
 		menuItem2 = new JMenuItem();
 		menu3 = new JMenu();
 		menuItem3 = new JMenuItem();
-		menuItem4 = new JMenuItem();
+		menuItem4 = new JMenu();
 		menu2 = new JMenu();
 		menuItem1 = new JMenuItem();
 		label5 = new JLabel();
@@ -101,9 +101,11 @@ public class BeginWindow extends JFrame {
 				menuItem3.setFont(new Font("Verdana", Font.PLAIN, 12));
 				menu3.add(menuItem3);
 
-				//---- menuItem4 ----
-				menuItem4.setText("Webcam");
-				menuItem4.setFont(new Font("Verdana", Font.PLAIN, 12));
+				//======== menuItem4 ========
+				{
+					menuItem4.setText("Webcam");
+					menuItem4.setFont(new Font("Verdana", Font.PLAIN, 12));
+				}
 				menu3.add(menuItem4);
 			}
 			menuBar1.add(menu3);
@@ -323,7 +325,7 @@ public class BeginWindow extends JFrame {
 	protected JMenuItem menuItem2;
 	private JMenu menu3;
 	protected JMenuItem menuItem3;
-	protected JMenuItem menuItem4;
+	protected JMenu menuItem4;
 	private JMenu menu2;
 	protected JMenuItem menuItem1;
 	private JLabel label5;
