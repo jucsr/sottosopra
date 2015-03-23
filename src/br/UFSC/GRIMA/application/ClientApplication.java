@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -53,7 +54,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	private Font dataFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font textPaneFont = new Font("Verdana", Font.PLAIN, 12);
 	
-	public ClientApplication(Agent agent)
+	public ClientApplication(final Agent agent)
 	{
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
@@ -66,6 +67,21 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.setVisible(true);
 		this.textPane1.setText("History:");
 		this.agent = agent;
+//		System.out.println("#CAMERAS = " + agent.getnCameras());
+		for(int i = 0; i < this.agent.getnCameras(); i++)
+		{
+			JMenuItem menuItemTmp = new JMenuItem("camera " + (i + 1));
+			this.menuItem4.add(menuItemTmp);
+			menuItemTmp.addActionListener(new ActionListener() 
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0) 
+				{
+					System.out.println("chama a janela da camera i com o mesmo IP mas com diferente porta");
+					StreamClient sc = new StreamClient(agent.getIpCamera());
+				}
+			});
+		}
 	}
 	public void adjustJFrame()
 	{

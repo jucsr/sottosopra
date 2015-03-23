@@ -9,6 +9,7 @@ public class Agent
 	private String name = "";
 	private String ip = "";
 	private String ipCamera = "";
+	private int nCameras;
 	
 	public Agent(String name, String ip)
 	{
@@ -46,5 +47,13 @@ public class Agent
 	public void setIP(String ip)
 	{
 		this.ip = ip;
+	}
+
+	public int getnCameras() {
+		return nCameras;
+	}
+
+	public void setnCameras(int nCameras) {
+		this.nCameras = nCameras;
 	}
 }
