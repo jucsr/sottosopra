@@ -8,24 +8,27 @@ import java.util.Scanner;
 public class ClienteCamera 
 {
 	private int nCameras;
+	private String ipCamera; 
 
-   public ClienteCamera()
+   public ClienteCamera(String ipCamera)
    {
+	   this.ipCamera = ipCamera;
 	   startClientCamera();
+	   
    }
 	public void startClientCamera()
 	{
 		Socket cliente;
 		try 
 		{
-			cliente = new Socket("150.162.105.71", 12345);
+			cliente = new Socket(ipCamera, 12345);
 
 			Scanner scanner = new Scanner(cliente.getInputStream());
 			while (scanner.hasNextLine()) 
 			{
 				nCameras = Integer.parseInt(scanner.nextLine());
 //				System.out.println(nCameras);
-				break;
+				//break;
 			}
 			scanner.close();
 			cliente.close();

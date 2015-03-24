@@ -37,7 +37,7 @@ public class SetAgentFrame extends BeginAgentWindow implements ActionListener
 				public void run() 
 				{
 					Agent agent = new Agent(name, ip, ipCamera);
-					ClienteCamera cc = new ClienteCamera();
+					ClienteCamera cc = new ClienteCamera(ipCamera);
 					nCameras = cc.getnCameras();
 					agent.setnCameras(nCameras);
 					new ClientApplication(agent);
