@@ -81,8 +81,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				public void actionPerformed(ActionEvent event1) 
 				{
 					Object source = event1.getSource();
-					int port = 20000 - 10*menuList.indexOf(source);
-					new StreamClient(agent.getIpCamera(), port);
+					/////////////////////////////////////
+					int  index = menuList.indexOf(source);
+					int port = 20000 - 10*index;
+					menuList.get(index).setEnabled(false);
+					new StreamClient(agent.getIpCamera(), port, menuList.get(index));
+					
 				}
 			});
 		}
