@@ -43,6 +43,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	boolean s = true;
 	boolean c = true;
 	boolean e = true;
+	public ArrayList<JMenuItem> menuList = new ArrayList<JMenuItem>();
 	public ArrayList<JPanel> panelList = new ArrayList<JPanel>();
 	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
@@ -71,14 +72,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		for(int i = 0; i < this.agent.getnCameras(); i++)
 		{
 			JMenuItem menuItemTmp = new JMenuItem("camera " + (i + 1));
+			menuList.add(menuItemTmp);
 			this.menuItem4.add(menuItemTmp);
 			menuItemTmp.addActionListener(new ActionListener() 
 			{
 				@Override
-				public void actionPerformed(ActionEvent arg0) 
+				public void actionPerformed(ActionEvent event1) 
 				{
-					System.out.println("chama a janela da camera i com o mesmo IP mas com diferente porta");
-					StreamClient sc = new StreamClient(agent.getIpCamera());
+					Object source = event1.getSource();
+					int port = 20000 - 10*menuList.indexOf(source);
+					StreamClient sc = new StreamClient(agent.getIpCamera(), port);
 				}
 			});
 		}
@@ -204,13 +207,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 			new ConfigureAgentWindow(this, agent);
 		}
-		else if(source == menuItem4)
-		{
-			new StreamClient(agent.getIpCamera());
-			textPane1.setText(textPane1.getText() + "\n" + "Webcam ON!");
-			
-			
-		}
+//		else if(source == menuItem4)
+//		{
+//			new StreamClient(agent.getIpCamera());
+//			textPane1.setText(textPane1.getText() + "\n" + "Webcam ON!");
+//			
+//			
+//		}
 	}
 	
 	public void current() throws JAXBException, MalformedURLException //--> O Que deve aparecer para o usu�rio em rela��o � m�quina selecionada.
