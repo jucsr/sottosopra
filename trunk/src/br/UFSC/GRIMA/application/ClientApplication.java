@@ -28,6 +28,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
@@ -81,7 +82,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					Object source = event1.getSource();
 					int port = 20000 - 10*menuList.indexOf(source);
-					StreamClient sc = new StreamClient(agent.getIpCamera(), port);
+					new StreamClient(agent.getIpCamera(), port);
 				}
 			});
 		}
