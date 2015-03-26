@@ -31,20 +31,27 @@ public class SetAgentFrame extends BeginAgentWindow implements ActionListener
 			this.name = this.textFieldName.getText();
 			this.ip = this.textFieldIP.getText();
 			this.ipCamera = this.textFieldName2.getText();
-
-			new Thread() 
+			if (!ipCamera.equals(""))
 			{
-				public void run() 
+				new Thread() 
 				{
-					Agent agent = new Agent(name, ip, ipCamera);
-					ClienteCamera cc = new ClienteCamera(ipCamera);
-					nCameras = cc.getnCameras();
-					agent.setnCameras(nCameras);
-					new ClientApplication(agent);
-//					System.out.println("cameras = " + nCameras);
-				}
-			}.start();
-
+					public void run() 
+					{
+						Agent agent = new Agent(name, ip, ipCamera);
+						ClienteCamera cc = new ClienteCamera(ipCamera);
+						nCameras = cc.getnCameras();
+						agent.setnCameras(nCameras);
+						agent.setlistaPadrao(cc.getlistaPadrao());
+						new ClientApplication(agent);
+	//					System.out.println("cameras = " + nCameras);
+					}
+				}.start();
+			}
+			else
+			{
+				Agent agent = new Agent(name, ip);
+				new ClientApplication(agent);
+			}
 			this.dispose();
 
 		} else if (o == cancelButton) 

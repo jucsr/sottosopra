@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/com.sun.tools.xjc_2.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/com.sun.xml.bind_2.2.0.v201004141950.jar"/>
-	<classpathentry kind="lib" path="lib/commonj.sdo_2.1.1.v201112051852.jar"/>
 	<classpathentry kind="lib" path="lib/javax.activation_1.1.0.v201108011116.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail_1.4.0.v201005080615.jar"/>
 	<classpathentry kind="lib" path="lib/javax.persistence_2.1.0.v201304241213.jar"/>
@@ -17,5 +16,16 @@
 	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpa.modelgen.source_2.5.2.v20140319-9ad6abd.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars_2.5.2.v20140319-9ad6abd.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.persistence.jpars.source_2.5.2.v20140319-9ad6abd.jar"/>
+	<classpathentry kind="lib" path="lib/bridj-0.6.3-20130316.190111-13.jar"/>
+	<classpathentry kind="lib" path="lib/jboss.jar"/>
+	<classpathentry kind="lib" path="lib/netty-3.10.0.Final.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/thumbnailator-0.4.5.jar"/>
+	<classpathentry kind="lib" path="lib/webcam-capture-0.3.10-RC7.jar"/>
+	<classpathentry kind="lib" path="lib/webcam-capture-driver-gstreamer-0.3.10-RC7.jar"/>
+	<classpathentry kind="lib" path="lib/webcam-capture-driver-ipcam-0.3.10-RC7.jar"/>
+	<classpathentry kind="lib" path="lib/xuggle-xuggler-5.4.jar"/>
+	<classpathentry kind="lib" path="lib/camera.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,11 +3,20 @@ package br.UFSC.GRIMA.application;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ClienteCamera 
+import javax.swing.JOptionPane;
+
+import br.UFSC.GRIMA.application.visual.BeginWindow;
+
+
+
+
+public class ClienteCamera
 {
 	private int nCameras;
+	private ArrayList<String> listaPadrao  = new ArrayList<String>();
 	private String ipCamera; 
 
    public ClienteCamera(String ipCamera)
@@ -22,25 +31,29 @@ public class ClienteCamera
 		try 
 		{
 			cliente = new Socket(ipCamera, 12345);
-
 			Scanner scanner = new Scanner(cliente.getInputStream());
+			System.out.println("Cliente se conectou ao servidor!");
 			while (scanner.hasNextLine()) 
 			{
-				nCameras = Integer.parseInt(scanner.nextLine());
-//				System.out.println(nCameras);
-				//break;
+				listaPadrao.add(scanner.nextLine());
 			}
+			nCameras = Integer.parseInt(listaPadrao.get(listaPadrao.size() - 1));
 			scanner.close();
 			cliente.close();
 		} catch (IOException e) 
 		{
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Conexão não efetuada com o servidor WEBCAM!");
 		}
-		System.out.println("O cliente se conectou ao servidor!");
+		
 	}
 	public int getnCameras() 
 	{
 		return nCameras;
+	}
+	public ArrayList getlistaPadrao()
+	{
+		return listaPadrao;
 	}
 	public static void main(String[] args) throws UnknownHostException, IOException 
 	{

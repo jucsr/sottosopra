@@ -67,12 +67,29 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.panel4.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
-		this.textPane1.setText("History:");
+		textPane1.setText("History:");
 		this.agent = agent;
+		if(agent.getnCameras() > 0)
+		{
+			textPane1.setText(textPane1.getText() + "\n" + "Client-Webcam Connected With Success");
+		}
+		try
+		{
+			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+			Unmarshaller u = jc.createUnmarshaller();
+			URL url = new URL(agent.getIP() + "/current" );
+			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+			final MTConnectStreamsType teste = element.getValue();
+			textPane1.setText(textPane1.getText() + "\n" + agent.getName()+ " Connected With Success");
+		}
+		catch (Exception validate)
+		{
+			textPane1.setText(textPane1.getText() + "\n" + agent.getName()+ " Not Connected With Success");
+		}
 //		System.out.println("#CAMERAS = " + agent.getnCameras());
 		for(int i = 0; i < this.agent.getnCameras(); i++)
 		{
-			JMenuItem menuItemTmp = new JMenuItem("camera " + (i + 1));
+			JMenuItem menuItemTmp = new JMenuItem(("" + agent.getlistaPadrao().get(i)));
 			menuList.add(menuItemTmp);
 			this.menuItem4.add(menuItemTmp);
 			menuItemTmp.addActionListener(new ActionListener() 
@@ -83,7 +100,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					Object source = event1.getSource();
 					/////////////////////////////////////
 					int  index = menuList.indexOf(source);
+					System.out.println(index);
 					int port = 20000 - 10*index;
+					System.out.println(port);
 					menuList.get(index).setEnabled(false);
 					new StreamClient(agent.getIpCamera(), port, menuList.get(index));
 					
