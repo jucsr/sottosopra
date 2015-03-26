@@ -350,6 +350,6 @@ public class BeginWindow extends JFrame {
 	protected JScrollPane scrollPane2;
 	public JPanel panel6;
 	private JScrollPane scrollPane3;
-	protected JTextPane textPane1;
+	public JTextPane textPane1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
