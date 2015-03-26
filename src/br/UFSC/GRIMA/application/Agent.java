@@ -56,7 +56,7 @@ public class Agent
 	public int getnCameras() {
 		return nCameras;
 	}
-	public ArrayList getlistaPadrao() {
+	public ArrayList <String> getlistaPadrao() {
 		return listaPadrao;
 	}
 

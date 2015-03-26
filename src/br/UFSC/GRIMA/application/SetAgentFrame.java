@@ -42,7 +42,8 @@ public class SetAgentFrame extends BeginAgentWindow implements ActionListener
 						nCameras = cc.getnCameras();
 						agent.setnCameras(nCameras);
 						agent.setlistaPadrao(cc.getlistaPadrao());
-						new ClientApplication(agent);
+						ClientApplication c = new ClientApplication(agent);
+						
 	//					System.out.println("cameras = " + nCameras);
 					}
 				}.start();

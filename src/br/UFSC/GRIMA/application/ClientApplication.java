@@ -71,7 +71,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.agent = agent;
 		if(agent.getnCameras() > 0)
 		{
-			textPane1.setText(textPane1.getText() + "\n" + "Client-Webcam Connected With Success");
+			textPane1.setText(textPane1.getText() + "\n" + "*Client-Webcam Connected With Success: ");
+			textPane1.setText(textPane1.getText() + "\n  Cams List: ");
+			for(int i = 0; i < agent.getlistaPadrao().size() - 1; i++)
+			{
+				textPane1.setText(textPane1.getText() + "\n    --> " + agent.getlistaPadrao().get(i).substring(0, agent.getlistaPadrao().get(i).length() - 1));
+			}
 		}
 		try
 		{
@@ -80,7 +85,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			URL url = new URL(agent.getIP() + "/current" );
 			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 			final MTConnectStreamsType teste = element.getValue();
-			textPane1.setText(textPane1.getText() + "\n" + agent.getName()+ " Connected With Success");
+			textPane1.setText(textPane1.getText() + "\n*" + agent.getName()+ "  Agent Connected With Success:");
+			textPane1.setText(textPane1.getText() + "\n  " + agent.getIP());
+			textPane1.setText(textPane1.getText() + "\n  ==============================================");
 		}
 		catch (Exception validate)
 		{

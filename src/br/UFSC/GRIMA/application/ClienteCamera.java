@@ -43,7 +43,7 @@ public class ClienteCamera
 		} catch (IOException e) 
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Conexão não efetuada com o servidor WEBCAM!");
+			JOptionPane.showMessageDialog(null,"Was not possible the connection with the WEBCAM server!");
 		}
 		
 	}
@@ -51,7 +51,7 @@ public class ClienteCamera
 	{
 		return nCameras;
 	}
-	public ArrayList getlistaPadrao()
+	public ArrayList <String> getlistaPadrao()
 	{
 		return listaPadrao;
 	}
