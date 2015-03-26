@@ -1,4 +1,7 @@
 package br.UFSC.GRIMA.application;
+
+import java.util.ArrayList;
+
 /**
  * 
  * @author Jc
@@ -10,6 +13,7 @@ public class Agent
 	private String ip = "";
 	private String ipCamera = "";
 	private int nCameras;
+	private ArrayList<String> listaPadrao = new ArrayList<String>();
 	
 	public Agent(String name, String ip)
 	{
@@ -52,8 +56,14 @@ public class Agent
 	public int getnCameras() {
 		return nCameras;
 	}
+	public ArrayList getlistaPadrao() {
+		return listaPadrao;
+	}
 
 	public void setnCameras(int nCameras) {
 		this.nCameras = nCameras;
+	}
+	public void setlistaPadrao(ArrayList listaPadrao) {
+		this.listaPadrao = listaPadrao;
 	}
 }
