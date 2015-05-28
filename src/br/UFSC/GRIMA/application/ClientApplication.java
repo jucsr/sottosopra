@@ -75,7 +75,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			textPane1.setText(textPane1.getText() + "\n  Cams List: ");
 			for(int i = 0; i < agent.getlistaPadrao().size() - 1; i++)
 			{
-				textPane1.setText(textPane1.getText() + "\n    --> " + agent.getlistaPadrao().get(i).substring(0, agent.getlistaPadrao().get(i).length() - 1));
+				textPane1.setText(textPane1.getText() + "\n    " + (i + 1) + "  -->  " + agent.getlistaPadrao().get(i).substring(0, agent.getlistaPadrao().get(i).length() - 1));
 			}
 		}
 		try
@@ -116,6 +116,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 			});
 		}
+		this.setDefaultCloseOperation(ClientApplication.EXIT_ON_CLOSE); 
 	}
 	public void adjustJFrame()
 	{
@@ -255,7 +256,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		URL url = new URL(agent.getIP() + "/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType current = element.getValue();
-		System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
+		//System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padr�o pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
