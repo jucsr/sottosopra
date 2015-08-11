@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_31" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.6.0_21" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -23,7 +23,7 @@ new FormModel {
 				"gridy": 1
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "100, 0, 0, 0, 0, 0"
+				"$columnSpecs": "100, 0, 0, 10, 0, 0"
 				"$rowSpecs": "0, 2"
 				"$hGap": 5
 				"$vGap": 5
@@ -182,21 +182,31 @@ new FormModel {
 								"gridx": 1
 							} )
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-								"$columnSpecs": "5, 0"
+								"$columnSpecs": "0, 0"
 								"$rowSpecs": "0, 0, 0"
 								"$hGap": 5
 								"$vGap": 5
 								"$alignLeft": true
 								"$alignTop": true
 							} ) {
-								name: "panel4"
-								"border": new javax.swing.border.EtchedBorder( 1, null, null )
-								auxiliary() {
-									"JavaCodeGenerator.variableModifiers": 4
-								}
+								name: "panel5"
+								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+									"$columnSpecs": "5, 0"
+									"$rowSpecs": "0, 0, 0"
+									"$hGap": 5
+									"$vGap": 5
+									"$alignLeft": true
+									"$alignTop": true
+								} ) {
+									name: "panel4"
+									"border": new javax.swing.border.EtchedBorder( 1, null, null )
+									auxiliary() {
+										"JavaCodeGenerator.variableModifiers": 4
+									}
+								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridy": 1
 								"gridx": 1
+								"gridy": 1
 							} )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
@@ -294,7 +304,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 5 )
-			"size": new java.awt.Dimension( 885, 475 )
+			"size": new java.awt.Dimension( 885, 600 )
 		} )
 	}
 }

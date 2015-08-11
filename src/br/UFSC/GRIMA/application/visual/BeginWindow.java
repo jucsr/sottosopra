@@ -59,6 +59,7 @@ public class BeginWindow extends JFrame {
 		label3 = new JLabel();
 		textField2 = new JTextField();
 		label4 = new JLabel();
+		panel5 = new JPanel();
 		panel4 = new JPanel();
 		scrollPane2 = new JScrollPane();
 		panel6 = new JPanel();
@@ -135,7 +136,7 @@ public class BeginWindow extends JFrame {
 		//======== panel1 ========
 		{
 			panel1.setLayout(new GridBagLayout());
-			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 0, 0, 0, 0};
+			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
 			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 2, 0};
 			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
@@ -269,16 +270,28 @@ public class BeginWindow extends JFrame {
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
 
-						//======== panel4 ========
+						//======== panel5 ========
 						{
-							panel4.setBorder(new EtchedBorder());
-							panel4.setLayout(new GridBagLayout());
-							((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {10, 0, 0};
-							((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-							((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-							((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+							panel5.setLayout(new GridBagLayout());
+							((GridBagLayout)panel5.getLayout()).columnWidths = new int[] {0, 0, 0};
+							((GridBagLayout)panel5.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+							((GridBagLayout)panel5.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+							((GridBagLayout)panel5.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+
+							//======== panel4 ========
+							{
+								panel4.setBorder(new EtchedBorder());
+								panel4.setLayout(new GridBagLayout());
+								((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {10, 0, 0};
+								((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+								((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+							}
+							panel5.add(panel4, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 5), 0, 0));
 						}
-						panel2.add(panel4, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+						panel2.add(panel5, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 0, 0), 0, 0));
 					}
@@ -346,6 +359,7 @@ public class BeginWindow extends JFrame {
 	private JLabel label3;
 	public JTextField textField2;
 	private JLabel label4;
+	private JPanel panel5;
 	protected JPanel panel4;
 	protected JScrollPane scrollPane2;
 	public JPanel panel6;
