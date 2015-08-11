@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -29,6 +30,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 
+
+
+
+
+
+import br.UFSC.GRIMA.application.entities.devices.AxesType;
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
@@ -263,7 +270,31 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		panel4.setVisible(true);
 		for (int i = 0; i < cont ; i++) //---> Quantos Botoes deve colocar devido aos dados de ComponentStream
 		{
+											
 			final JToggleButton toggleTemp = new JToggleButton();
+//			System.out.println(current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent());
+			if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Rotary") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Linear"))
+			{
+				
+				final JButton graphButtonTemp = new JButton();
+				
+				//----New checkbox----
+						panel4.add(graphButtonTemp, new GridBagConstraints(2, i, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 10, 5, 0), 0, 0));
+									
+						graphButtonTemp.setIcon(new ImageIcon(getClass().getResource("/images/graph_icon.png")));
+
+						graphButtonTemp.addActionListener(new ActionListener() 
+						{
+							@Override
+							public void actionPerformed(ActionEvent e) 
+							{
+//								System.out.println("pegou");
+							}
+						});
+						
+			}	
 			//---- toggleButton1 ----
 			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);
