@@ -71,6 +71,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.menuItem2.addActionListener(this);
 		this.menuItem3.addActionListener(this);
 		this.menuItem4.addActionListener(this);
+		
+		
 		this.panel4.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
@@ -278,7 +280,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				
 				final JButton graphButtonTemp = new JButton();
 				
-				//----New checkbox----
+				//----New Graph button----
 						panel4.add(graphButtonTemp, new GridBagConstraints(2, i, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 10, 5, 0), 0, 0));
