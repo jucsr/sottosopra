@@ -274,29 +274,28 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 											
 			final JToggleButton toggleTemp = new JToggleButton();
-//			System.out.println(current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent());
-			if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Rotary") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Linear"))
-			{
-				
-				final JButton graphButtonTemp = new JButton();
-				
-				//----New Graph button----
-						panel4.add(graphButtonTemp, new GridBagConstraints(2, i, 1, 1, 0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 10, 5, 0), 0, 0));
-									
-						graphButtonTemp.setIcon(new ImageIcon(getClass().getResource("/images/graph_icon.png")));
-
-						graphButtonTemp.addActionListener(new ActionListener() 
-						{
-							@Override
-							public void actionPerformed(ActionEvent e) 
-							{
-//								System.out.println("pegou");
-							}
-						});
-						
-			}	
+//			if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Rotary") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Linear"))
+//			{
+//				
+//				final JButton graphButtonTemp = new JButton();
+//				
+//				//----New Graph button----
+//						panel4.add(graphButtonTemp, new GridBagConstraints(2, i, 1, 1, 0.0, 0.0,
+//						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+//						new Insets(0, 10, 5, 0), 0, 0));
+//									
+//						graphButtonTemp.setIcon(new ImageIcon(getClass().getResource("/images/graph_icon.png")));
+//
+//						graphButtonTemp.addActionListener(new ActionListener() 
+//						{
+//							@Override
+//							public void actionPerformed(ActionEvent e) 
+//							{
+////								System.out.println("pegou");
+//							}
+//						});
+//						
+//			}	
 			//---- toggleButton1 ----
 			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);

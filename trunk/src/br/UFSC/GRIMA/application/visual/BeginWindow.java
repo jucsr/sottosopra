@@ -1,5 +1,6 @@
 package br.UFSC.GRIMA.application.visual;
 
+import java.awt.*;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -25,6 +26,8 @@ import javax.swing.JToggleButton;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import com.jgoodies.forms.factories.*;
+import com.jgoodies.forms.layout.*;
 
 public class BeginWindow extends JFrame {
 	public BeginWindow() {
@@ -46,6 +49,9 @@ public class BeginWindow extends JFrame {
 		label1 = new JLabel();
 		comboBox1 = new JComboBox<>();
 		button1 = new JToggleButton();
+		panel8 = new JPanel();
+		button2 = new JToggleButton();
+		button3 = new JToggleButton();
 		panel7 = new JPanel();
 		label6 = new JLabel();
 		textField7 = new JTextField();
@@ -145,7 +151,7 @@ public class BeginWindow extends JFrame {
 			label1.setText("Requests:");
 			label1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
 			//---- comboBox1 ----
@@ -154,12 +160,12 @@ public class BeginWindow extends JFrame {
 				"Assets",
 				"Current",
 				"Probe",
-				"Sample",
-				"Graphs"
+				"Sample"
 			}));
 			comboBox1.setFont(new Font("Verdana", Font.PLAIN, 12));
+			comboBox1.setMinimumSize(new Dimension(75, 20));
 			panel1.add(comboBox1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
 			//---- button1 ----
@@ -167,7 +173,31 @@ public class BeginWindow extends JFrame {
 			button1.setVisible(false);
 			button1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			panel1.add(button1, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 5), 0, 0));
+
+			//======== panel8 ========
+			{
+				panel8.setLayout(new FormLayout(
+					"2*(default:grow)",
+					"[35dlu,pref]:grow"));
+
+				//---- button2 ----
+				button2.setText("Values");
+				button2.setMinimumSize(new Dimension(40, 30));
+				button2.setMargin(new Insets(2, 6, 2, 14));
+				button2.setAlignmentY(5.5F);
+				panel8.add(button2, CC.xy(1, 1));
+
+				//---- button3 ----
+				button3.setText("Graphs");
+				button3.setMinimumSize(new Dimension(40, 30));
+				button3.setMargin(new Insets(2, 6, 2, 14));
+				button3.setAlignmentY(5.5F);
+				panel8.add(button3, CC.xy(2, 1));
+			}
+			panel1.add(panel8, new GridBagConstraints(4, 1, 1, 1, 0.0, 20.0,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
 			//======== panel7 ========
@@ -193,7 +223,7 @@ public class BeginWindow extends JFrame {
 					new Insets(0, 0, 5, 0), 0, 0));
 			}
 			panel1.add(panel7, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 0), 0, 0));
 		}
 		contentPane.add(panel1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
@@ -347,6 +377,9 @@ public class BeginWindow extends JFrame {
 	private JLabel label1;
 	public JComboBox<String> comboBox1;
 	public JToggleButton button1;
+	private JPanel panel8;
+	private JToggleButton button2;
+	private JToggleButton button3;
 	private JPanel panel7;
 	private JLabel label6;
 	public JTextField textField7;
