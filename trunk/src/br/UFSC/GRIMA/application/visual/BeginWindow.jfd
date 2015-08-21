@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.6.0_21" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -24,7 +24,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 				"$columnSpecs": "100, 0, 0, right:10, 0:1.0, 0"
-				"$rowSpecs": "0, center:2"
+				"$rowSpecs": "0, center:30"
 				"$hGap": 5
 				"$vGap": 5
 				"$alignLeft": true
@@ -56,46 +56,51 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 					"gridy": 1
 					"gridx": 1
+					"ipady": 5
 				} )
-				add( new FormComponent( "javax.swing.JToggleButton" ) {
-					name: "button1"
-					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pause.png" )
-					"visible": false
-					"font": #Font0
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0, 150:1.0, 150:1.0"
+					"$rowSpecs": "16"
+					"$alignLeft": true
+					"$alignTop": true
+				} ) {
+					name: "panel9"
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
 					}
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridx": 2
-					"gridy": 1
-				} )
-				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "default:grow, default:grow"
-					"$rowSpecs": "max(pref;35dlu):grow"
-				} ) {
-					name: "panel8"
 					add( new FormComponent( "javax.swing.JToggleButton" ) {
-						name: "button2"
+						name: "button1"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pause.png" )
+						"font": #Font0
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 1
+						}
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "toggleButton2"
 						"text": "Values"
-						"minimumSize": new java.awt.Dimension( 40, 30 )
-						"margin": new java.awt.Insets( 2, 6, 2, 14 )
-						"alignmentY": 5.5f
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 1
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 1
+						}
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"ipady": 5
+						"gridx": 1
+						"insets": new java.awt.Insets( 0, 10, 0, 0 )
 					} )
 					add( new FormComponent( "javax.swing.JToggleButton" ) {
-						name: "button3"
+						name: "toggleButton3"
 						"text": "Graphs"
-						"minimumSize": new java.awt.Dimension( 40, 30 )
-						"margin": new java.awt.Insets( 2, 6, 2, 14 )
-						"alignmentY": 5.5f
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 1
+						}
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridx": 2
+						"insets": new java.awt.Insets( 0, 0, 0, 10 )
+						"ipady": 5
 					} )
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 					"gridx": 4
 					"gridy": 1
-					"weighty": 20.0
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0, 160"
@@ -127,6 +132,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 					"gridx": 5
 					"gridy": 1
+					"insets": new java.awt.Insets( 0, 5, 0, 0 )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridy": 2

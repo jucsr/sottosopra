@@ -26,8 +26,7 @@ import javax.swing.JToggleButton;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import com.jgoodies.forms.factories.*;
-import com.jgoodies.forms.layout.*;
+
 
 public class BeginWindow extends JFrame {
 	public BeginWindow() {
@@ -48,10 +47,10 @@ public class BeginWindow extends JFrame {
 		panel1 = new JPanel();
 		label1 = new JLabel();
 		comboBox1 = new JComboBox<>();
+		panel9 = new JPanel();
 		button1 = new JToggleButton();
-		panel8 = new JPanel();
-		button2 = new JToggleButton();
-		button3 = new JToggleButton();
+		toggleButton2 = new JToggleButton();
+		toggleButton3 = new JToggleButton();
 		panel7 = new JPanel();
 		label6 = new JLabel();
 		textField7 = new JTextField();
@@ -143,7 +142,7 @@ public class BeginWindow extends JFrame {
 		{
 			panel1.setLayout(new GridBagLayout());
 			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
-			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 2, 0};
+			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 30, 0};
 			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
@@ -166,37 +165,36 @@ public class BeginWindow extends JFrame {
 			comboBox1.setMinimumSize(new Dimension(75, 20));
 			panel1.add(comboBox1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(0, 0, 0, 5), 0, 0));
+				new Insets(0, 0, 0, 5), 0, 5));
 
-			//---- button1 ----
-			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
-			button1.setVisible(false);
-			button1.setFont(new Font("Verdana", Font.PLAIN, 12));
-			panel1.add(button1, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(0, 0, 0, 5), 0, 0));
-
-			//======== panel8 ========
+			//======== panel9 ========
 			{
-				panel8.setLayout(new FormLayout(
-					"2*(default:grow)",
-					"[35dlu,pref]:grow"));
+				panel9.setLayout(new GridBagLayout());
+				((GridBagLayout)panel9.getLayout()).columnWidths = new int[] {0, 150, 150, 0};
+				((GridBagLayout)panel9.getLayout()).rowHeights = new int[] {16, 0};
+				((GridBagLayout)panel9.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0, 1.0E-4};
+				((GridBagLayout)panel9.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 
-				//---- button2 ----
-				button2.setText("Values");
-				button2.setMinimumSize(new Dimension(40, 30));
-				button2.setMargin(new Insets(2, 6, 2, 14));
-				button2.setAlignmentY(5.5F);
-				panel8.add(button2, CC.xy(1, 1));
+				//---- button1 ----
+				button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
+				button1.setFont(new Font("Verdana", Font.PLAIN, 12));
+				panel9.add(button1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 0), 0, 0));
 
-				//---- button3 ----
-				button3.setText("Graphs");
-				button3.setMinimumSize(new Dimension(40, 30));
-				button3.setMargin(new Insets(2, 6, 2, 14));
-				button3.setAlignmentY(5.5F);
-				panel8.add(button3, CC.xy(2, 1));
+				//---- toggleButton2 ----
+				toggleButton2.setText("Values");
+				panel9.add(toggleButton2, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 10, 0, 0), 0, 5));
+
+				//---- toggleButton3 ----
+				toggleButton3.setText("Graphs");
+				panel9.add(toggleButton3, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 10), 0, 5));
 			}
-			panel1.add(panel8, new GridBagConstraints(4, 1, 1, 1, 0.0, 20.0,
+			panel1.add(panel9, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
@@ -224,7 +222,7 @@ public class BeginWindow extends JFrame {
 			}
 			panel1.add(panel7, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				new Insets(0, 0, 0, 0), 0, 0));
+				new Insets(0, 5, 0, 0), 0, 0));
 		}
 		contentPane.add(panel1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -376,10 +374,10 @@ public class BeginWindow extends JFrame {
 	private JPanel panel1;
 	private JLabel label1;
 	public JComboBox<String> comboBox1;
+	public JPanel panel9;
 	public JToggleButton button1;
-	private JPanel panel8;
-	private JToggleButton button2;
-	private JToggleButton button3;
+	public JToggleButton toggleButton2;
+	public JToggleButton toggleButton3;
 	private JPanel panel7;
 	private JLabel label6;
 	public JTextField textField7;

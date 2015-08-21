@@ -68,12 +68,16 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
 		this.button1.addActionListener(this);
+		this.toggleButton2.addActionListener(this);
+		this.toggleButton3.addActionListener(this);
+		this.toggleButton2.setSelected(true);
 		this.menuItem2.addActionListener(this);
 		this.menuItem3.addActionListener(this);
 		this.menuItem4.addActionListener(this);
 		
 		
 		this.panel4.setVisible(false);
+		this.panel9.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
 		textPane1.setText("History:");
@@ -163,6 +167,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 			}
 		}
+		if(source == toggleButton2)
+		{
+			this.toggleButton2.setSelected(!this.toggleButton2.isSelected());
+			this.toggleButton3.setSelected(!this.toggleButton3.isSelected());
+		}
 		if(source == comboBox1)
 		{
 			if ( 2 == index) // Current 
@@ -171,7 +180,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					buttons.removeAll(buttons);
 					textFieldList.removeAll(textFieldList);
 					panel4.removeAll();
-					button1.setVisible(true);
+					panel9.setVisible(true);
 					button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 					button1.setToolTipText("Pause");
 					for (int i = 0 ; i < panelList.size(); i++)
@@ -195,7 +204,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				try {
 					b = false;
 					textFieldList.removeAll(textFieldList);
-					button1.setVisible(false);
+					panel9.setVisible(false);
 					buttons.removeAll(buttons);
 					panel4.removeAll();
 					for (int i = 0 ; i < panelList.size(); i++)
@@ -216,7 +225,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			{
 				b = false;
 				textFieldList.removeAll(textFieldList);
-				button1.setVisible(false);
+				panel9.setVisible(false);
 				buttons.removeAll(buttons);
 				panel4.removeAll();
 				for (int i = 0 ; i < panelList.size(); i++)
