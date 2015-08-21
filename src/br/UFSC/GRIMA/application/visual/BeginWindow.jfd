@@ -24,7 +24,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 				"$columnSpecs": "100, 0, 0, right:10, 0:1.0, 0"
-				"$rowSpecs": "0, 2"
+				"$rowSpecs": "0, center:2"
 				"$hGap": 5
 				"$vGap": 5
 				"$alignLeft": true
@@ -47,9 +47,9 @@ new FormModel {
 						addElement( "Current" )
 						addElement( "Probe" )
 						addElement( "Sample" )
-						addElement( "Graphs" )
 					}
 					"font": &Font0 new java.awt.Font( "Verdana", 0, 12 )
+					"minimumSize": new java.awt.Dimension( 75, 20 )
 					auxiliary() {
 						"JavaCodeGenerator.variableModifiers": 1
 					}
@@ -68,6 +68,34 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 					"gridx": 2
 					"gridy": 1
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow, default:grow"
+					"$rowSpecs": "max(pref;35dlu):grow"
+				} ) {
+					name: "panel8"
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "button2"
+						"text": "Values"
+						"minimumSize": new java.awt.Dimension( 40, 30 )
+						"margin": new java.awt.Insets( 2, 6, 2, 14 )
+						"alignmentY": 5.5f
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "button3"
+						"text": "Graphs"
+						"minimumSize": new java.awt.Dimension( 40, 30 )
+						"margin": new java.awt.Insets( 2, 6, 2, 14 )
+						"alignmentY": 5.5f
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+					} )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+					"gridx": 4
+					"gridy": 1
+					"weighty": 20.0
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0, 160"
