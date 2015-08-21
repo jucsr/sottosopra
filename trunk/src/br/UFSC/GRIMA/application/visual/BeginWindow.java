@@ -138,15 +138,15 @@ public class BeginWindow extends JFrame {
 			panel1.setLayout(new GridBagLayout());
 			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
 			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 2, 0};
-			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
 			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
 			//---- label1 ----
 			label1.setText("Requests:");
 			label1.setFont(new Font("Verdana", Font.PLAIN, 12));
-			panel1.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+			panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 5, 5), 0, 0));
+				new Insets(0, 0, 0, 5), 0, 0));
 
 			//---- comboBox1 ----
 			comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
@@ -154,10 +154,11 @@ public class BeginWindow extends JFrame {
 				"Assets",
 				"Current",
 				"Probe",
-				"Sample"
+				"Sample",
+				"Graphs"
 			}));
 			comboBox1.setFont(new Font("Verdana", Font.PLAIN, 12));
-			panel1.add(comboBox1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+			panel1.add(comboBox1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 5), 0, 0));
 
@@ -165,7 +166,7 @@ public class BeginWindow extends JFrame {
 			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 			button1.setVisible(false);
 			button1.setFont(new Font("Verdana", Font.PLAIN, 12));
-			panel1.add(button1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+			panel1.add(button1, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 5), 0, 0));
 
@@ -191,9 +192,9 @@ public class BeginWindow extends JFrame {
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 			}
-			panel1.add(panel7, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0,
+			panel1.add(panel7, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 0, 5), 0, 0));
+				new Insets(0, 0, 0, 0), 0, 0));
 		}
 		contentPane.add(panel1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
