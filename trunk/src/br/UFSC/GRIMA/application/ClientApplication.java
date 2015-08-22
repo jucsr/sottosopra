@@ -169,35 +169,19 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		}
 		if(source == toggleButton2)
 		{
-			this.toggleButton2.setSelected(!this.toggleButton2.isSelected());
 			this.toggleButton3.setSelected(!this.toggleButton3.isSelected());
+			chooseUpdate();
+		}
+		if(source == toggleButton3)
+		{
+			this.toggleButton2.setSelected(!this.toggleButton2.isSelected());
+			chooseUpdate();
 		}
 		if(source == comboBox1)
 		{
 			if ( 2 == index) // Current 
 			{
-				try {
-					buttons.removeAll(buttons);
-					textFieldList.removeAll(textFieldList);
-					panel4.removeAll();
-					panel9.setVisible(true);
-					button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
-					button1.setToolTipText("Pause");
-					for (int i = 0 ; i < panelList.size(); i++)
-					{
-						panelList.get(i).removeAll();
-						panel6.remove(panelList.get(i));
-					}
-					panelList.removeAll(panelList);
-					System.out.println(agent.getIP());
-					current();
-					worker.execute();
-					b = true;
-					this.revalidate();
-					this.repaint();
-				} catch (MalformedURLException | JAXBException e) {
-					e.printStackTrace();
-				}
+				chooseUpdate();
 			}
 			if (3 == index) // Probe
 			{
@@ -265,12 +249,48 @@ public class ClientApplication extends BeginWindow implements ActionListener
 //			
 //		}
 	}
+	private void chooseUpdate()
+	{
+		try 
+		{
+			buttons.removeAll(buttons);
+			textFieldList.removeAll(textFieldList);
+			panel4.removeAll();
+			panel9.setVisible(true);
+			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
+			button1.setToolTipText("Pause");
+			for (int i = 0 ; i < panelList.size(); i++)
+			{
+				panelList.get(i).removeAll();
+				panel6.remove(panelList.get(i));
+			}
+			panelList.removeAll(panelList);
+			System.out.println(agent.getIP());
+			if (this.toggleButton2.isSelected())
+			{
+				currentValues();
+				worker.execute();
+			}
+			else if (this.toggleButton3.isSelected())
+			{
+				currentGraphs();
+				worker.execute();
+			}
+			
+			b = true;
+			this.revalidate();
+			this.repaint();
+		} 
+		catch (MalformedURLException | JAXBException e) 
+		{
+			e.printStackTrace();
+		}
+	}
 	
-	public void current() throws JAXBException, MalformedURLException //--> O Que deve aparecer para o usu�rio em rela��o � m�quina selecionada.
+	private void currentValues() throws JAXBException, MalformedURLException 
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-//		URL url = new URL( "http://agent.mtconnect.org/current" );
 		URL url = new URL(agent.getIP() + "/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType current = element.getValue();
@@ -283,28 +303,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 											
 			final JToggleButton toggleTemp = new JToggleButton();
-//			if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Rotary") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent().equals("Linear"))
-//			{
-//				
-//				final JButton graphButtonTemp = new JButton();
-//				
-//				//----New Graph button----
-//						panel4.add(graphButtonTemp, new GridBagConstraints(2, i, 1, 1, 0.0, 0.0,
-//						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-//						new Insets(0, 10, 5, 0), 0, 0));
-//									
-//						graphButtonTemp.setIcon(new ImageIcon(getClass().getResource("/images/graph_icon.png")));
-//
-//						graphButtonTemp.addActionListener(new ActionListener() 
-//						{
-//							@Override
-//							public void actionPerformed(ActionEvent e) 
-//							{
-////								System.out.println("pegou");
-//							}
-//						});
-//						
-//			}	
 			//---- toggleButton1 ----
 			toggleTemp.setFont(buttonsFont);
 			toggleTemp.setName(""+i);
@@ -522,6 +520,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		}
 	}
 	
+	private void currentGraphs() throws JAXBException, MalformedURLException
+	{
+		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+		Unmarshaller u = jc.createUnmarshaller();
+	}
 	public void probe() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
