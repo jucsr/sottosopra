@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -29,18 +29,12 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-
-
-
-
-
-
-import br.UFSC.GRIMA.application.entities.devices.AxesType;
+import main.java.us.sosia.video.stream.agent.StreamClient;
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
-import main.java.us.sosia.video.stream.agent.StreamClient;
+import br.UFSC.GRIMA.application.dataTools.*;
 
 
 public class ClientApplication extends BeginWindow implements ActionListener
@@ -51,11 +45,18 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	boolean s = true;
 	boolean c = true;
 	boolean e = true;
+	
 	public ArrayList<JMenuItem> menuList = new ArrayList<JMenuItem>();
 	public ArrayList<JPanel> panelList = new ArrayList<JPanel>();
 	public ArrayList<JTextField> textFieldList = new ArrayList<JTextField>();
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
+	
+	private ArrayList<DataSerie> dataSerieList = new ArrayList<DataSerie>();                          //
+	private ArrayList<SerieIdentifier> serieIdentifierList = new ArrayList<SerieIdentifier>();        //Array lists used to update the current values
+	private ArrayList<JIndexedButton> jIndexedButtonList = new ArrayList<JIndexedButton>();               //
+	private ArrayList<JIndexedCheckbox> jIndexedCheckboxList = new ArrayList<JIndexedCheckbox>();     //
+	
 	public Agent agent = null; // new Agent("MTConnect", "http://agent.mtconnect.org/" , "150.162.105.71");
 	private Font buttonsFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font tittlesFont = new Font("Khmer UI", Font.BOLD, 12);
@@ -65,24 +66,27 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	
 	public ClientApplication(final Agent agent)
 	{
+////--------ajusta configurações da janela e suas açoes----------------------------------------------------------
 		this.comboBox1.addActionListener(this);
 		this.menuItem1.addActionListener(this);
 		this.button1.addActionListener(this);
-		this.toggleButton2.addActionListener(this);
-		this.toggleButton3.addActionListener(this);
-		this.toggleButton2.setSelected(true);
+		this.toggleAbaValues.addActionListener(this);
+		this.toggleAbaGraph.addActionListener(this);
 		this.menuItem2.addActionListener(this);
 		this.menuItem3.addActionListener(this);
 		this.menuItem4.addActionListener(this);
 		
-		
-		this.panel4.setVisible(false);
+		this.panelCurrentValues.setVisible(false);
+		this.panelCurrentGraphs.setVisible(false);
+		this.panel10.setVisible(false);
 		this.panel9.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
 		textPane1.setText("History:");
-		this.agent = agent;
+///// ------------Ajusta configuracao da camera e afins------------------------------------------------------------		
+		this.setAgent(agent);
 		if(agent.getnCameras() > 0)
+			
 		{
 			textPane1.setText(textPane1.getText() + "\n" + "*Client-Webcam Connected With Success: ");
 			textPane1.setText(textPane1.getText() + "\n  Cams List: ");
@@ -106,10 +110,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		{
 			textPane1.setText(textPane1.getText() + "\n" + agent.getName()+ " Not Connected With Success");
 		}
-//		System.out.println("#CAMERAS = " + agent.getnCameras());
 		for(int i = 0; i < this.agent.getnCameras(); i++)
 		{
-			JMenuItem menuItemTmp = new JMenuItem(("" + agent.getlistaPadrao().get(i)));
+			JMenuItem menuItemTmp = new JMenuItem("" + agent.getlistaPadrao().get(i));
 			menuList.add(menuItemTmp);
 			this.menuItem4.add(menuItemTmp);
 			menuItemTmp.addActionListener(new ActionListener() 
@@ -140,6 +143,39 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		Dimension thisDimension = this.getSize();
 		this.setLocation((int) (windowDimension.getWidth() - thisDimension.getWidth()) / 2, (int) (windowDimension.getHeight() - thisDimension.getHeight()) / 2);
 	}
+	public void panelDestructor()
+	{
+		b = false;
+		textFieldList.removeAll(textFieldList);
+		panelCurrentGraphs.removeAll();
+		panelCurrentValues.removeAll();
+		panelValues.removeAll();
+		panelGraphs.removeAll();
+		
+		
+		buttons.removeAll(buttons);
+		for (int i=0 ; i< panelList.size();i++)
+		{
+			panelList.get(i).removeAll();
+			panelValues.remove(panelList.get(i));
+		}
+		panelList.removeAll(panelList);
+		serieIdentifierList.removeAll(serieIdentifierList);
+		dataSerieList.removeAll(dataSerieList);
+		jIndexedButtonList.removeAll(jIndexedButtonList);
+		for (int i=0 ; i<jIndexedCheckboxList.size(); i++)
+		{
+			jIndexedCheckboxList.get(i).clearCheckboxList();
+			jIndexedCheckboxList.remove(i);
+		}
+		
+		panel9.setVisible(false);
+		panelCurrentValues.setVisible(false);
+		panelCurrentGraphs.setVisible(false);
+		panel10.setVisible(false);
+		System.out.println("destrutor\n");
+	}
+	
 
 	public void actionPerformed(ActionEvent event)
 	{
@@ -167,36 +203,42 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 			}
 		}
-		if(source == toggleButton2)
+		else if(source == toggleAbaValues)
 		{
-			this.toggleButton3.setSelected(!this.toggleButton3.isSelected());
-			chooseUpdate();
+			this.toggleAbaGraph.setSelected(!this.toggleAbaValues.isSelected());
+			if (toggleAbaValues.isSelected())
+			{
+				setCurrentValues();
+			}
+			else
+			{
+				setCurrentGraph();
+			}
 		}
-		if(source == toggleButton3)
+		else if(source == toggleAbaGraph)
 		{
-			this.toggleButton2.setSelected(!this.toggleButton2.isSelected());
-			chooseUpdate();
+			this.toggleAbaValues.setSelected(!this.toggleAbaGraph.isSelected());
+			if (toggleAbaGraph.isSelected())
+			{
+				setCurrentGraph();
+			}
+			else
+			{
+				setCurrentValues();
+			}
 		}
-		if(source == comboBox1)
+		else if(source == comboBox1)
 		{
 			if ( 2 == index) // Current 
 			{
-				chooseUpdate();
+				panelDestructor();
+				panel9.setVisible(true);
+				worker.execute();
 			}
 			if (3 == index) // Probe
 			{
 				try {
-					b = false;
-					textFieldList.removeAll(textFieldList);
-					panel9.setVisible(false);
-					buttons.removeAll(buttons);
-					panel4.removeAll();
-					for (int i = 0 ; i < panelList.size(); i++)
-					{
-						panelList.get(i).removeAll();
-						panel6.remove(panelList.get(i));
-					}
-					panelList.removeAll(panelList);
+					panelDestructor();
 					probe();
 					worker.execute();
 					this.revalidate();
@@ -207,17 +249,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			}
 			if (4 == index) // Sample
 			{
-				b = false;
-				textFieldList.removeAll(textFieldList);
-				panel9.setVisible(false);
-				buttons.removeAll(buttons);
-				panel4.removeAll();
-				for (int i = 0 ; i < panelList.size(); i++)
-				{
-					panelList.get(i).removeAll();
-					panel6.remove(panelList.get(i));
-				}
-				panelList.removeAll(panelList);
+				panelDestructor();
 				try {
 					sample();
 					worker.execute();
@@ -229,7 +261,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				this.repaint();
 			}
 		}
-		if (source == menuItem1)
+		else if (source == menuItem1)
 		{
 			AboutWindow nojaJanela = new AboutWindow(this);
 			nojaJanela.setVisible(true);
@@ -237,7 +269,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		else if(source == menuItem2)
 		{
 			System.exit(EXIT_ON_CLOSE);
-		} else if(source == menuItem3)
+		} 
+		else if(source == menuItem3)
 		{
 			new ConfigureAgentWindow(this, agent);
 		}
@@ -249,29 +282,44 @@ public class ClientApplication extends BeginWindow implements ActionListener
 //			
 //		}
 	}
-	private void chooseUpdate()
+	private void setCurrentValues()
+	{
+		panelGraphs.setVisible(false);
+		panelCurrentGraphs.setVisible(false);
+		if (jIndexedButtonList.size() != 0)
+		{
+			panelValues.setVisible(true);
+			panelCurrentValues.setVisible(true);
+			for (int i=0;i < jIndexedButtonList.size(); i++)
+			{
+				for ()
+			}
+		}
+	}
+	
+	private void chooseCurrentUpdate()
 	{
 		try 
 		{
 			buttons.removeAll(buttons);
 			textFieldList.removeAll(textFieldList);
-			panel4.removeAll();
+			panelCurrentValues.removeAll();
 			panel9.setVisible(true);
 			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 			button1.setToolTipText("Pause");
 			for (int i = 0 ; i < panelList.size(); i++)
 			{
 				panelList.get(i).removeAll();
-				panel6.remove(panelList.get(i));
+				panelValues.remove(panelList.get(i));				
 			}
 			panelList.removeAll(panelList);
 			System.out.println(agent.getIP());
-			if (this.toggleButton2.isSelected())
+			if (this.toggleAbaValues.isSelected())
 			{
 				currentValues();
 				worker.execute();
 			}
-			else if (this.toggleButton3.isSelected())
+			else if (this.toggleAbaGraph.isSelected())
 			{
 				currentGraphs();
 				worker.execute();
@@ -294,11 +342,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		URL url = new URL(agent.getIP() + "/current" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType current = element.getValue();
-		//System.out.println(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
+		//System.out.println(""+current.getStreams().getDeviceStream(9).get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrï¿½o pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
-		panel4.setVisible(true);
+		panelCurrentValues.setVisible(true);
+		panel10.setVisible(true);
+		panelValues.setVisible(true);
 		for (int i = 0; i < cont ; i++) //---> Quantos Botoes deve colocar devido aos dados de ComponentStream
 		{
 											
@@ -309,7 +359,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
@@ -332,7 +382,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 						}
-						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+						panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
 //						panelList.get(j).setBorder(new CompoundBorder(
@@ -535,7 +585,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectDevicesType probe = element.getValue();
 		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
 		textField2.setText(""+ probe.getDevices().getDevice().get(0).getUuid());
-		panel4.setVisible(true);
+		panelCurrentValues.setVisible(true);
+		panel10.setVisible(true);
 		int cont  = probe.getDevices().getDevice().get(0).getComponents().getComponent().size();
 		for (int i = 0; i < cont ; i++) //---> Quantos Botï¿½es deve colocar devido aos dados de ComponentStream
 		{
@@ -546,7 +597,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(i).getName().getLocalPart());
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 		
@@ -562,67 +613,67 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						int j = Integer.parseInt(toggleTemp.getName());
 						if(!buttons.contains(j))
 						{
-						buttons.add(j);
-						//JLabel label6 = new JLabel();
-						///////////////////////////////////
-						{
-							panelList.get(j).setLayout(new GridBagLayout());
-							((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
-							((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
-						}
-						panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 5), 0, 0));
-//						panelList.get(j).setBorder(new CompoundBorder(
-//								new TitledBorder(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart()),
-//								new EmptyBorder(5, 5, 5, 5)));
-						
-						//===========
-						panelList.get(j).setBorder(new CompoundBorder(
-								new TitledBorder(null, "" + probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
-								null));
-						//===========
-						
-						for (int i = 0; i < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().size(); i++)
-						{
-							//---- label7 ----
-							JLabel label7 = new JLabel();
-							label7.setFont(tittlesFont);
-							label7.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getName().getLocalPart()+"-"+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getId());
-							label7.setForeground(new Color(25, 25, 112));
-							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 0), 0, 0));
-							conterR++;
-							for (int z = 0; z < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().size(); z++)
+							buttons.add(j);
+							//JLabel label6 = new JLabel();
+							///////////////////////////////////
 							{
-								//---- label8 ----
-								JLabel label8 = new JLabel();
-								label8.setFont(subtittlesFont);
-								JTextField textField3 = new JTextField();
-								textField3.setFont(dataFont);
-								if (probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName() != null)
-									label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName());
-								else
-									label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getId());
-								if(probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits() != null)
-									textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits());
-								else
-									textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getType());
-								textField3.setEditable(false);
-								panelList.get(j).add(label8, new GridBagConstraints(conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+								panelList.get(j).setLayout(new GridBagLayout());
+								((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
+								((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+								((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+							}
+							panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 5, 5), 0, 0));
+	//						panelList.get(j).setBorder(new CompoundBorder(
+	//								new TitledBorder(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart()),
+	//								new EmptyBorder(5, 5, 5, 5)));
+							
+							//===========
+							panelList.get(j).setBorder(new CompoundBorder(
+									new TitledBorder(null, "" + probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getName().getLocalPart(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+									null));
+							//===========
+							
+							for (int i = 0; i < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().size(); i++)
+							{
+								//---- label7 ----
+								JLabel label7 = new JLabel();
+								label7.setFont(tittlesFont);
+								label7.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getName().getLocalPart()+"-"+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getId());
+								label7.setForeground(new Color(25, 25, 112));
+								panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 2+conterR, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 5), 0, 0));
-								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 								conterR++;
-							}	
-						}
-						conterC++;
-						revalidate();
-						repaint();
+								for (int z = 0; z < probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().size(); z++)
+								{
+									//---- label8 ----
+									JLabel label8 = new JLabel();
+									label8.setFont(subtittlesFont);
+									JTextField textField3 = new JTextField();
+									textField3.setFont(dataFont);
+									if (probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName() != null)
+										label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getName());
+									else
+										label8.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getId());
+									if(probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits() != null)
+										textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getUnits());
+									else
+										textField3.setText(""+probe.getDevices().getDevice().get(0).getComponents().getComponent().get(j).getValue().getComponents().getComponent().get(i).getValue().getDataItems().getDataItem().get(z).getType());
+									textField3.setEditable(false);
+									panelList.get(j).add(label8, new GridBagConstraints(conterC, 2+ conterR, 1, 1, 0.0, 0.0,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 5, 5), 0, 0));
+									panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 5, 0), 0, 0));
+									conterR++;
+								}	
+							}
+							conterC++;
+							revalidate();
+							repaint();
 						}
 						else
 						{
@@ -648,13 +699,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-//		URL url = new URL( "http://agent.mtconnect.org/sample" );
 		URL url = new URL(agent.getIP() + "/sample" );
 		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 		final MTConnectStreamsType sample = element.getValue();
 		textField1.setText(""+sample.getStreams().getDeviceStream().get(0).getName());
 		textField2.setText(""+sample.getStreams().getDeviceStream().get(0).getUuid());
-		panel4.setVisible(true);
+		panelCurrentValues.setVisible(true);
+		panel10.setVisible(true);
 		int cont = sample.getStreams().getDeviceStream().get(0).getComponentStream().size();
 		for (int i = 0 ; i < cont ; i++)
 		{
@@ -665,7 +716,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName() );
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panel4.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
@@ -685,7 +736,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 					((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 					}
-				panel6.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+					panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 //				panelList.get(j).setBorder(new CompoundBorder(
@@ -803,7 +854,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					int j = Integer.parseInt(toggleTemp.getName());
 					panelList.get(j).removeAll();
-					panel6.remove(panelList.get(j));
+					panelValues.remove(panelList.get(j));
 					//conterC = conterC -1;
 					revalidate();
 					repaint();
@@ -838,7 +889,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				catch(Exception connectionError)
 				{
 				    JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
-
 				}
 				while(b)
 				{
@@ -900,11 +950,14 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size(); i++)
 									{
 										
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
+										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" |
+										   current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
 										{	
 											textFieldList.get(k).setForeground(new Color(0,128,0));
 										}
-										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
+										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | 
+												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | 
+												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
 										{	
 											textFieldList.get(k).setForeground(Color.RED);
 											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()) && current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" )
@@ -932,6 +985,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								if(e)
 								{
+									
 									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size(); i++)
 									{
 										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
