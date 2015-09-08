@@ -42,12 +42,9 @@ public class BeginWindow extends JFrame {
 		label4 = new JLabel();
 		scrollPane2 = new JScrollPane();
 		panel5 = new JPanel();
-		panelCurrentValues = new JPanel();
-		panelCurrentGraphs = new JPanel();
+		mainPanel = new JPanel();
 		scrollPane4 = new JScrollPane();
-		panel10 = new JPanel();
-		panelValues = new JPanel();
-		panelGraphs = new JPanel();
+		infoPanel = new JPanel();
 		scrollPane3 = new JScrollPane();
 		textPane1 = new JTextPane();
 
@@ -290,29 +287,16 @@ public class BeginWindow extends JFrame {
 								((GridBagLayout)panel5.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
 								((GridBagLayout)panel5.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
-								//======== panelCurrentValues ========
+								//======== mainPanel ========
 								{
-									panelCurrentValues.setBorder(new EtchedBorder());
-									panelCurrentValues.setLayout(new GridBagLayout());
-									((GridBagLayout)panelCurrentValues.getLayout()).columnWidths = new int[] {10, 0, 0};
-									((GridBagLayout)panelCurrentValues.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-									((GridBagLayout)panelCurrentValues.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-									((GridBagLayout)panelCurrentValues.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+									mainPanel.setBorder(new EtchedBorder());
+									mainPanel.setLayout(new GridBagLayout());
+									((GridBagLayout)mainPanel.getLayout()).columnWidths = new int[] {10, 0, 0};
+									((GridBagLayout)mainPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+									((GridBagLayout)mainPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+									((GridBagLayout)mainPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 								}
-								panel5.add(panelCurrentValues, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 5), 0, 0));
-
-								//======== panelCurrentGraphs ========
-								{
-									panelCurrentGraphs.setBorder(new EtchedBorder());
-									panelCurrentGraphs.setLayout(new GridBagLayout());
-									((GridBagLayout)panelCurrentGraphs.getLayout()).columnWidths = new int[] {10, 0, 0};
-									((GridBagLayout)panelCurrentGraphs.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-									((GridBagLayout)panelCurrentGraphs.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-									((GridBagLayout)panelCurrentGraphs.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
-								}
-								panel5.add(panelCurrentGraphs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+								panel5.add(mainPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 5), 0, 0));
 							}
@@ -329,33 +313,13 @@ public class BeginWindow extends JFrame {
 				//======== scrollPane4 ========
 				{
 
-					//======== panel10 ========
+					//======== infoPanel ========
 					{
-						panel10.setLayout(new GridBagLayout());
-						((GridBagLayout)panel10.getLayout()).columnWidths = new int[] {0, 0};
-						((GridBagLayout)panel10.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-						((GridBagLayout)panel10.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-						((GridBagLayout)panel10.getLayout()).rowWeights = new double[] {0.0, 1.0, 0.0, 1.0E-4};
-
-						//======== panelValues ========
-						{
-							panelValues.setBorder(new EtchedBorder());
-							panelValues.setAlignmentY(0.0F);
-							panelValues.setLayout(new FlowLayout(FlowLayout.LEFT));
-						}
-						panel10.add(panelValues, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 0, 0), 0, 0));
-
-						//======== panelGraphs ========
-						{
-							panelGraphs.setLayout(new FlowLayout());
-						}
-						panel10.add(panelGraphs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 0, 0), 0, 0));
+						infoPanel.setBorder(new EtchedBorder());
+						infoPanel.setAlignmentY(0.0F);
+						infoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 					}
-					scrollPane4.setViewportView(panel10);
+					scrollPane4.setViewportView(infoPanel);
 				}
 				splitPane1.setRightComponent(scrollPane4);
 			}
@@ -410,13 +374,10 @@ public class BeginWindow extends JFrame {
 	public JTextField textField2;
 	private JLabel label4;
 	protected JScrollPane scrollPane2;
-	private JPanel panel5;
-	protected JPanel panelCurrentValues;
-	protected JPanel panelCurrentGraphs;
+	protected JPanel panel5;
+	protected JPanel mainPanel;
 	private JScrollPane scrollPane4;
-	public JPanel panel10;
-	public JPanel panelValues;
-	public JPanel panelGraphs;
+	public JPanel infoPanel;
 	private JScrollPane scrollPane3;
 	public JTextPane textPane1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

@@ -235,6 +235,9 @@ new FormModel {
 									"$alignTop": true
 								} ) {
 									name: "panel5"
+									auxiliary() {
+										"JavaCodeGenerator.variableModifiers": 4
+									}
 									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 										"$columnSpecs": "5, 0"
 										"$rowSpecs": "0, 0, 0"
@@ -243,28 +246,12 @@ new FormModel {
 										"$alignLeft": true
 										"$alignTop": true
 									} ) {
-										name: "panelCurrentValues"
-										"border": &EtchedBorder0 new javax.swing.border.EtchedBorder( 1, null, null )
+										name: "mainPanel"
+										"border": new javax.swing.border.EtchedBorder( 1, null, null )
 										auxiliary() {
 											"JavaCodeGenerator.variableModifiers": 4
 										}
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-										"$columnSpecs": "5, 0"
-										"$rowSpecs": "0, 0, 0"
-										"$hGap": 5
-										"$vGap": 5
-										"$alignLeft": true
-										"$alignTop": true
-									} ) {
-										name: "panelCurrentGraphs"
-										"border": #EtchedBorder0
-										auxiliary() {
-											"JavaCodeGenerator.variableModifiers": 4
-										}
-									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 1
-									} )
 								} )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 								"gridx": 1
@@ -276,35 +263,15 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane4"
-						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-							"$columnSpecs": "0:1.0"
-							"$rowSpecs": "0, 0:1.0, 0"
-							"$alignTop": true
-							"$alignLeft": true
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+							"alignment": 0
 						} ) {
-							name: "panel10"
+							name: "infoPanel"
+							"border": new javax.swing.border.EtchedBorder( 1, null, null )
+							"alignmentY": 0.0f
 							auxiliary() {
 								"JavaCodeGenerator.variableModifiers": 1
 							}
-							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
-								"alignment": 0
-							} ) {
-								name: "panelValues"
-								"border": new javax.swing.border.EtchedBorder( 1, null, null )
-								"alignmentY": 0.0f
-								auxiliary() {
-									"JavaCodeGenerator.variableModifiers": 1
-									"JavaCodeGenerator.variableName": "panelValues"
-								}
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
-								name: "panelGraphs"
-								auxiliary() {
-									"JavaCodeGenerator.variableModifiers": 1
-								}
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridy": 1
-							} )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "right"

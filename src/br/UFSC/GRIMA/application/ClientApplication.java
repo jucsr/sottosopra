@@ -1,7 +1,10 @@
 package br.UFSC.GRIMA.application;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -23,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingWorker;
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -30,11 +35,20 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import main.java.us.sosia.video.stream.agent.StreamClient;
+import br.UFSC.GRIMA.application.entities.devices.ComponentType;
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
+import br.UFSC.GRIMA.application.entities.streams.ComponentStreamType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
-import br.UFSC.GRIMA.application.dataTools.*;
+import br.UFSC.GRIMA.application.dataTools.GButton;
+import br.UFSC.GRIMA.application.dataTools.GComponent;
+import br.UFSC.GRIMA.application.dataTools.GCondition;
+import br.UFSC.GRIMA.application.dataTools.GDataserie;
+import br.UFSC.GRIMA.application.dataTools.GDevice;
+import br.UFSC.GRIMA.application.dataTools.GEvent;
+import br.UFSC.GRIMA.application.dataTools.GSample;
+import br.UFSC.GRIMA.application.dataTools.GSubComponent;
 
 
 public class ClientApplication extends BeginWindow implements ActionListener
@@ -52,17 +66,14 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public ArrayList<Integer> buttons = new ArrayList<Integer>();
 	public ArrayList<JTextField> textFieldTimeList = new ArrayList<JTextField>();
 	
-	private ArrayList<DataSerie> dataSerieList = new ArrayList<DataSerie>();                          //
-	private ArrayList<SerieIdentifier> serieIdentifierList = new ArrayList<SerieIdentifier>();        //Array lists used to update the current values
-	private ArrayList<JIndexedButton> jIndexedButtonList = new ArrayList<JIndexedButton>();               //
-	private ArrayList<JIndexedCheckbox> jIndexedCheckboxList = new ArrayList<JIndexedCheckbox>();     //
-	
 	public Agent agent = null; // new Agent("MTConnect", "http://agent.mtconnect.org/" , "150.162.105.71");
 	private Font buttonsFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font tittlesFont = new Font("Khmer UI", Font.BOLD, 12);
 	private Font subtittlesFont = new Font("Euphemia", Font.BOLD, 12);
 	private Font dataFont = new Font("Verdana", Font.PLAIN, 12);
 	private Font textPaneFont = new Font("Verdana", Font.PLAIN, 12);
+	
+	private GDevice device;
 	
 	public ClientApplication(final Agent agent)
 	{
@@ -76,9 +87,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		this.menuItem3.addActionListener(this);
 		this.menuItem4.addActionListener(this);
 		
-		this.panelCurrentValues.setVisible(false);
-		this.panelCurrentGraphs.setVisible(false);
-		this.panel10.setVisible(false);
+		this.mainPanel.setVisible(false);
 		this.panel9.setVisible(false);
 		this.adjustJFrame();
 		this.setVisible(true);
@@ -105,6 +114,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			textPane1.setText(textPane1.getText() + "\n*" + agent.getName()+ "  Agent Connected With Success:");
 			textPane1.setText(textPane1.getText() + "\n  " + agent.getIP());
 			textPane1.setText(textPane1.getText() + "\n  ==============================================");
+			System.out.println(element.getValue().getHeader().getCreationTime().getClass());
+			System.out.println(element.getValue().getHeader().getCreationTime().toString());
 		}
 		catch (Exception validate)
 		{
@@ -133,6 +144,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			});
 		}
 		this.setDefaultCloseOperation(ClientApplication.EXIT_ON_CLOSE); 
+		worker.execute();
 	}
 	public void adjustJFrame()
 	{
@@ -147,37 +159,44 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		b = false;
 		textFieldList.removeAll(textFieldList);
-		panelCurrentGraphs.removeAll();
-		panelCurrentValues.removeAll();
-		panelValues.removeAll();
-		panelGraphs.removeAll();
-		
-		
+		mainPanel.removeAll();
+		infoPanel.removeAll();
+		try
+		{
+			panel5.remove(device.buttonPanel);
+		}
+		catch(Exception e)
+		{
+			System.out.println("no vpanel");
+		}
+		try
+		{
+			panel5.remove(device.checkBoxPanel);
+		}
+		catch(Exception e)
+		{
+			System.out.println("no vpanel");
+		}
 		buttons.removeAll(buttons);
 		for (int i=0 ; i< panelList.size();i++)
 		{
 			panelList.get(i).removeAll();
-			panelValues.remove(panelList.get(i));
+			infoPanel.remove(panelList.get(i));
 		}
 		panelList.removeAll(panelList);
-		serieIdentifierList.removeAll(serieIdentifierList);
-		dataSerieList.removeAll(dataSerieList);
-		jIndexedButtonList.removeAll(jIndexedButtonList);
-		for (int i=0 ; i<jIndexedCheckboxList.size(); i++)
-		{
-			jIndexedCheckboxList.get(i).clearCheckboxList();
-			jIndexedCheckboxList.remove(i);
-		}
-		
+
 		panel9.setVisible(false);
-		panelCurrentValues.setVisible(false);
-		panelCurrentGraphs.setVisible(false);
-		panel10.setVisible(false);
+		mainPanel.setVisible(false);
+		infoPanel.setVisible(false);
 		System.out.println("destrutor\n");
 	}
 	
-
-	public void actionPerformed(ActionEvent event)
+	public void addComponentLayout(Container container, Component component, int coluna, int linha, int colunasOcupadas, int linhasOcupadas, Insets insets)
+	{
+		container.add(component, new GridBagConstraints(coluna, linha, colunasOcupadas, linhasOcupadas, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+	}
+	
+ 	public void actionPerformed(ActionEvent event)
 	{
 		int index = comboBox1.getSelectedIndex();
 		Object source = event.getSource();
@@ -206,25 +225,47 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		else if(source == toggleAbaValues)
 		{
 			this.toggleAbaGraph.setSelected(!this.toggleAbaValues.isSelected());
+			System.out.println("start");
 			if (toggleAbaValues.isSelected())
 			{
-				setCurrentValues();
+				try 
+				{
+					setCurrentValues();
+					
+				} catch (MalformedURLException e) 
+				{
+					e.printStackTrace();
+					
+				} catch (JAXBException e) 
+				{
+					e.printStackTrace();
+				}
 			}
 			else
 			{
-				setCurrentGraph();
+				setCurrentGraphs();
 			}
 		}
-		else if(source == toggleAbaGraph)
+		else if(source == toggleAbaGraph) 
 		{
 			this.toggleAbaValues.setSelected(!this.toggleAbaGraph.isSelected());
+			System.out.println("start");
 			if (toggleAbaGraph.isSelected())
 			{
-				setCurrentGraph();
+				setCurrentGraphs();
 			}
 			else
 			{
-				setCurrentValues();
+				try 
+				{
+					setCurrentValues();
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		else if(source == comboBox1)
@@ -233,7 +274,21 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			{
 				panelDestructor();
 				panel9.setVisible(true);
-				worker.execute();
+				if (toggleAbaValues.isSelected())
+				{
+					try 
+					{
+						setCurrentValues();
+					} catch (MalformedURLException | JAXBException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				else if (toggleAbaGraph.isSelected())
+				{
+					setCurrentGraphs();
+				}
 			}
 			if (3 == index) // Probe
 			{
@@ -282,35 +337,305 @@ public class ClientApplication extends BeginWindow implements ActionListener
 //			
 //		}
 	}
-	private void setCurrentValues()
+	private void setCurrentValues() throws JAXBException, MalformedURLException
 	{
-		panelGraphs.setVisible(false);
-		panelCurrentGraphs.setVisible(false);
-		if (jIndexedButtonList.size() != 0)
+		infoPanel.removeAll();
+		System.out.println(device);
+
+		if (device == null)
 		{
-			panelValues.setVisible(true);
-			panelCurrentValues.setVisible(true);
-			for (int i=0;i < jIndexedButtonList.size(); i++)
+			System.out.println("criando novo device");
+			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+			Unmarshaller u = jc.createUnmarshaller();
+			URL url = new URL(agent.getIP() + "/current" );
+			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+			final MTConnectStreamsType current = element.getValue();
+			this.device = new GDevice(current.getStreams().getDeviceStream().get(0).getName(),
+									  current.getStreams().getDeviceStream().get(0).getUuid());
+			textField1.setText(device.getName());
+			textField2.setText(device.getUuid());
+			panel5.add(device.buttonPanel);
+			addComponentLayout(panel5, device.buttonPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
+			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
+			device.informationPanel.setSize(infoPanel.getSize());
+			
+			
+			for (int i = 0; i< current.getStreams().getDeviceStream().get(0).getComponentStream().size(); i++)
 			{
-				for ()
+				System.out.println("criando botão " + i);
+				final GButton toggleTemp = new GButton();
+				toggleTemp.setFont(buttonsFont);
+				toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
+				addComponentLayout(device.buttonPanel, toggleTemp, 1, i, 1, 1, new Insets(0, 0, 5, 0));
+				System.out.println("Criando component");
+				GComponent component = new GComponent(current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent(),
+													  current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName(), 
+													  current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponentId());
+				device.componentStreamList.add(component);
+				component.setButton(toggleTemp);
+				toggleTemp.setIndex(i);
+				toggleTemp.addActionListener(new ActionListener() 
+				{
+					@Override
+					public void actionPerformed(ActionEvent event) 
+					{
+						System.out.println("criando action listener");
+						GButton button = (GButton) event.getSource();
+						GComponent component = device.componentStreamList.get(button.getIndex());
+						if (button.isSelected())
+						{
+							
+							if (component.getComponentInfoPanel() == null)
+							{
+								JPanel componentPanel = new JPanel();
+								component.setComponentInfoPanel(componentPanel);
+								componentPanel.setLayout(new GridBagLayout());
+								((GridBagLayout)componentPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+								((GridBagLayout)componentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)componentPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+								((GridBagLayout)componentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+								
+								componentPanel.setBorder(new CompoundBorder(
+										new TitledBorder(null,component.getComponent()+" - "+ component.getName(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+										null));
+								
+								addComponentLayout(device.informationPanel, componentPanel, component.getButton().getIndex(), 0, 1, 1, new Insets(0, 0, 5, 5));
+								ComponentStreamType jaxComponent = current.getStreams().getDeviceStream().get(0).getComponentStream().get(component.getButton().getIndex());
+								int panelLine = 0;
+								try
+								{
+									if(!jaxComponent.getSamples().getSample().isEmpty())
+									{
+										System.out.println("creating sample"); /////////////criando sample
+										GSample componentSample = new GSample();
+										JLabel tittleSample = new JLabel();
+										tittleSample.setFont(tittlesFont);
+										tittleSample.setText("Samples:");
+										tittleSample.setForeground(new Color(25, 25, 112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleSample, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i = 0; i < jaxComponent.getSamples().getSample().size();i++)
+										{
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
+																						   jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId());
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (subComponent.getName() != null)
+											{
+												fieldName.setText(subComponent.getName());
+											}
+											else
+											{
+												fieldName.setText(subComponent.getID());
+											}
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new  JTextField();
+											field.setFont(dataFont);
+											
+//											GDataserie dataserie = new GDataserie();
+											
+											//criar dataserie e atualizar valor default, adicionar ao atualizador
+											
+											String value = (String)jaxComponent.getSamples().getSample().get(i).getValue().getValue(); //provisorio
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											subComponent.settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											componentSample.subComponentList.add(subComponent);
+										}
+									}
+								}
+								catch(Exception sampleError)
+								{
+									System.out.println("No Samples");
+	//								panelLine--;
+								}
+								try
+								{
+									if(!jaxComponent.getEvents().getEvent().isEmpty())
+									{
+										System.out.println("creating event");
+										GEvent componentEvent = new GEvent();
+										JLabel tittleEvent = new JLabel();
+										tittleEvent.setFont(tittlesFont);
+										tittleEvent.setText("Events:");
+										tittleEvent.setForeground(new Color(25,25,112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleEvent, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i=0; i < jaxComponent.getEvents().getEvent().size(); i++)
+										{
+											
+											
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(i).getValue().getName(),
+																						   jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId());
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (subComponent.getName() != null)
+											{
+												fieldName.setText(subComponent.getName());
+											}
+											else
+											{
+												fieldName.setText(subComponent.getID());
+											}
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new JTextField();
+											field.setFont(dataFont);
+											String value = (String)jaxComponent.getEvents().getEvent().get(i).getValue().getValue(); //provisorio
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											subComponent.settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											componentEvent.subComponentList.add(subComponent);
+											System.out.println("subcomponent da posição " + panelLine);
+											System.out.println(fieldName.getText() + ": " +value);
+											
+											
+										}
+									}
+								}
+								catch(Exception eventsError)
+								{
+									System.out.println("No Events");
+//									componentPanel.remove(panelLine);
+//									panelLine--;
+								}
+								try
+								{
+									if(!jaxComponent.getCondition().getCondition().isEmpty())
+									{
+										System.out.println("creating conditions");
+										GCondition componentCondition = new GCondition();
+										JLabel tittleCondition = new JLabel();
+										tittleCondition.setFont(tittlesFont);
+										tittleCondition.setText("Conditions:");
+										tittleCondition.setForeground(new Color(25,25,112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleCondition, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i=0; i < jaxComponent.getCondition().getCondition().size(); i++)
+										{
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),
+																						   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (subComponent.getName() != null)
+											{
+												fieldName.setText(subComponent.getName());
+											}
+											else
+											{
+												fieldName.setText(subComponent.getID());
+											}
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new JTextField();
+											field.setFont(dataFont);
+
+											//criar dataserie e atualizar valor default, adicionar ao atualizador
+											
+											String value = (String)jaxComponent.getCondition().getCondition().get(i).getName().getLocalPart(); //provisorio
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											subComponent.settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											componentCondition.subComponentList.add(subComponent);
+											device.valuesToUpdadte.add(subComponent);
+											System.out.println("subcomponent da posição " + panelLine);
+											System.out.println(fieldName.getText() + ": " +value);
+										}
+									}
+								}
+								catch(Exception conditionsError)
+								{
+									System.out.println(conditionsError);
+									System.out.println("No Conditions");
+//									componentPanel.remove(panelLine);
+//									panelLine--;
+								}
+								component.getComponentInfoPanel().setVisible(true);
+								revalidate();
+								repaint();
+							}
+							else
+							{
+								component.getComponentInfoPanel().setVisible(true);
+								//remove campos do valuestoupdate
+								device.valuesToUpdadte.addAll(component.getgSample().subComponentList);
+								device.valuesToUpdadte.addAll(component.getgEvent().subComponentList);
+								device.valuesToUpdadte.addAll(component.getgCondition().subComponentList);
+							}
+						}
+						else
+						{
+							component.getComponentInfoPanel().setVisible(false);
+							//remove campos do valuestoupdate
+							device.valuesToUpdadte.removeAll(component.getgSample().subComponentList);
+							device.valuesToUpdadte.removeAll(component.getgEvent().subComponentList);
+							device.valuesToUpdadte.removeAll(component.getgCondition().subComponentList);
+						}	
+					}
+				});
+				toggleTemp.setVisible(true);	
 			}
 		}
+		else
+		{
+			addComponentLayout(panel5, device.buttonPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
+			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
+		}
+		panel5.setVisible(true);
+		infoPanel.setVisible(true);
+		device.buttonPanel.setVisible(true);
+		device.informationPanel.setVisible(true);
+		System.out.println("ajustando paineis");
+		revalidate();
+		repaint();
 	}
 	
+	private void setCurrentGraphs()
+	{
+		
+	}
 	private void chooseCurrentUpdate()
 	{
 		try 
 		{
 			buttons.removeAll(buttons);
 			textFieldList.removeAll(textFieldList);
-			panelCurrentValues.removeAll();
+			mainPanel.removeAll();
 			panel9.setVisible(true);
 			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
 			button1.setToolTipText("Pause");
 			for (int i = 0 ; i < panelList.size(); i++)
 			{
 				panelList.get(i).removeAll();
-				panelValues.remove(panelList.get(i));				
+				infoPanel.remove(panelList.get(i));				
 			}
 			panelList.removeAll(panelList);
 			System.out.println(agent.getIP());
@@ -346,9 +671,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
 		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrï¿½o pra todas
 		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
-		panelCurrentValues.setVisible(true);
-		panel10.setVisible(true);
-		panelValues.setVisible(true);
+		mainPanel.setVisible(true);
+		infoPanel.setVisible(true);
 		for (int i = 0; i < cont ; i++) //---> Quantos Botoes deve colocar devido aos dados de ComponentStream
 		{
 											
@@ -359,7 +683,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			mainPanel.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
@@ -382,7 +706,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 						}
-						panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+						infoPanel.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
 //						panelList.get(j).setBorder(new CompoundBorder(
@@ -585,8 +909,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectDevicesType probe = element.getValue();
 		textField1.setText(""+probe.getDevices().getDevice().get(0).getName());
 		textField2.setText(""+ probe.getDevices().getDevice().get(0).getUuid());
-		panelCurrentValues.setVisible(true);
-		panel10.setVisible(true);
+		mainPanel.setVisible(true);
+		infoPanel.setVisible(true);
 		int cont  = probe.getDevices().getDevice().get(0).getComponents().getComponent().size();
 		for (int i = 0; i < cont ; i++) //---> Quantos Botï¿½es deve colocar devido aos dados de ComponentStream
 		{
@@ -597,7 +921,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+ probe.getDevices().getDevice().get(0).getComponents().getComponent().get(i).getName().getLocalPart());
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			mainPanel.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 		
@@ -623,7 +947,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 								((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 							}
-							panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+							infoPanel.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 5, 5), 0, 0));
 	//						panelList.get(j).setBorder(new CompoundBorder(
@@ -704,8 +1028,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		final MTConnectStreamsType sample = element.getValue();
 		textField1.setText(""+sample.getStreams().getDeviceStream().get(0).getName());
 		textField2.setText(""+sample.getStreams().getDeviceStream().get(0).getUuid());
-		panelCurrentValues.setVisible(true);
-		panel10.setVisible(true);
+		mainPanel.setVisible(true);
+		infoPanel.setVisible(true);
 		int cont = sample.getStreams().getDeviceStream().get(0).getComponentStream().size();
 		for (int i = 0 ; i < cont ; i++)
 		{
@@ -716,7 +1040,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			toggleTemp.setText(""+ sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+ "-"+sample.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName() );
 			JPanel panel5 = new JPanel();
 			panelList.add(panel5);
-			panelCurrentValues.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
+			mainPanel.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 0), 0, 0));
 			toggleTemp.addActionListener(new ActionListener() 
@@ -736,7 +1060,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 					((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 					}
-					panelValues.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
+					infoPanel.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 //				panelList.get(j).setBorder(new CompoundBorder(
@@ -854,7 +1178,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					int j = Integer.parseInt(toggleTemp.getName());
 					panelList.get(j).removeAll();
-					panelValues.remove(panelList.get(j));
+					infoPanel.remove(panelList.get(j));
 					//conterC = conterC -1;
 					revalidate();
 					repaint();
@@ -868,11 +1192,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
-/////////////////////////////////////////- Teste
-	SwingWorker worker = new SwingWorker()  // Atualizador em Tempo Real!
+	
+	
+	SwingWorker worker = new SwingWorker() 
 	{
-		@Override
-		protected Object doInBackground() throws Exception 
+		protected Object doInBackground() throws Exception
 		{
 			while(true)
 			{
@@ -880,7 +1204,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 					JAXBContext jct = JAXBContext.newInstance(MTConnectStreamsType.class);
 					Unmarshaller ut = jct.createUnmarshaller();
-	//				URL urlt = new URL( "http://agent.mtconnect.org/current" );
 					URL urlt = new URL(agent.getIP() + "/current" );
 					JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
 					final MTConnectStreamsType currentt = elementt.getValue();
@@ -890,143 +1213,169 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				{
 				    JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				while(b)
-				{
-					MTConnectStreamsType current = null;
-					try
-					{
-						JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-						Unmarshaller u = jc.createUnmarshaller();
-						URL url = new URL(agent.getIP() +  "/current");
-						JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-						current = element.getValue();
-						textField7.setText(""+current.getHeader().getCreationTime());
-						flag = true;
-					}
-					catch(Exception connectionError)
-					{
-						JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
-						
-						flag = false;
-					}
-					int k = 0;
-					while(k < textFieldList.size() && flag)
-					{
-						for(int z = 0 ; z < buttons.size() ; z++)
-						{	
-							int j = buttons.get(z);
-							c = true;
-							s = true;
-							e = true;
-							try
-							{
-								if(s)
-								{
-									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
-									{
-										String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
-										if (string.toUpperCase().equals("AVAILABLE") || string.toUpperCase().equals("ACTIVE"))
-										{
-											textFieldList.get(k).setForeground(new Color(0,128,0));
-										}
-										else if(string.toUpperCase().equals("UNAVAILABLE"))
-										{
-												textFieldList.get(k).setForeground(Color.RED);	
-										}
-										textFieldList.get(k).setText(string);
-										k++;
-									}
-								}
-							}
-							catch (Exception error)
-							{
-								s = false;
-								System.out.println("Estive aqui S");
-							}
-							try
-							{
-								if (c)
-								{
-									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size(); i++)
-									{
-										
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" |
-										   current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
-										{	
-											textFieldList.get(k).setForeground(new Color(0,128,0));
-										}
-										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | 
-												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | 
-												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
-										{	
-											textFieldList.get(k).setForeground(Color.RED);
-											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()) && current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" )
-											{
-												//textPane1.setForeground(Color.RED);
-												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart()+" --> " + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
-											}
-										}
-										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
-//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning") && war == true)
-//										{
-//											textPane1.setForeground(Color.RED);
-//											textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()+ "\n");
-//										}
-										k++;
-									}
-								}
-							}
-							catch(Exception error2)
-							{
-							c = false;
-							System.out.println("Estive aqui C");
-							}
-							try
-							{
-								if(e)
-								{
-									
-									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size(); i++)
-									{
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
-											textFieldList.get(k).setForeground(new Color(0,128,0));
-										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
-											textFieldList.get(k).setForeground(Color.RED);
-										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
-										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF") )
-										{
-											//textPane1.setForeground(Color.RED);
-											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
-											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
-												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> "+value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
-										}
-										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON")||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("READY"))
-										{
-											//textPane1.setForeground(Color.GREEN);
-											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
-											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
-												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> " + value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
-										}
-//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON"))
-//										{
-//											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
-//											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
-//												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
-//										}
-										k++;
-									}
-								}
-							}
-							catch(Exception error3)
-							{
-								e = false;
-								System.out.println("Estive aqui E");
-							}
-						}
-					}
-				}
 			}
 		}
+	
+	
+/////////////////////////////////////////- Teste
+//	SwingWorker worker = new SwingWorker()  // Atualizador em Tempo Real!
+//	{
+//		@Override
+//		protected Object doInBackground() throws Exception 
+//		{
+//			while(true)
+//			{
+//				try
+//				{
+//					JAXBContext jct = JAXBContext.newInstance(MTConnectStreamsType.class);
+//					Unmarshaller ut = jct.createUnmarshaller();
+//	//				URL urlt = new URL( "http://agent.mtconnect.org/current" );
+//					URL urlt = new URL(agent.getIP() + "/current" );
+//					JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
+//					final MTConnectStreamsType currentt = elementt.getValue();
+//					textField7.setText(""+currentt.getHeader().getCreationTime());
+//				}
+//				catch(Exception connectionError)
+//				{
+//				    JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
+//				}
+//				while(b)
+//				{
+//					MTConnectStreamsType current = null;
+//					try
+//					{
+//						JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+//						Unmarshaller u = jc.createUnmarshaller();
+//						URL url = new URL(agent.getIP() +  "/current");
+//						JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+//						current = element.getValue();
+//						textField7.setText(""+current.getHeader().getCreationTime());
+//						flag = true;
+//					}
+//					catch(Exception connectionError)
+//					{
+//						JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
+//						
+//						flag = false;
+//					}
+//					int k = 0;
+//					while(k < textFieldList.size() && flag)
+//					{
+//						for(int z = 0 ; z < buttons.size() ; z++)
+//						{	
+//							int j = buttons.get(z);
+//							c = true;
+//							s = true;
+//							e = true;
+//							try
+//							{
+//								if(s)
+//								{
+//									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
+//									{
+//										String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
+//										if (string.toUpperCase().equals("AVAILABLE") || string.toUpperCase().equals("ACTIVE"))
+//										{
+//											textFieldList.get(k).setForeground(new Color(0,128,0));
+//										}
+//										else if(string.toUpperCase().equals("UNAVAILABLE"))
+//										{
+//												textFieldList.get(k).setForeground(Color.RED);	
+//										}
+//										textFieldList.get(k).setText(string);
+//										k++;
+//									}
+//								}
+//							}
+//							catch (Exception error)
+//							{
+//								s = false;
+//								System.out.println("Estive aqui S");
+//							}
+//							try
+//							{
+//								if (c)
+//								{
+//									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size(); i++)
+//									{
+//										
+//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" |
+//										   current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
+//										{	
+//											textFieldList.get(k).setForeground(new Color(0,128,0));
+//										}
+//										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | 
+//												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | 
+//												current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
+//										{	
+//											textFieldList.get(k).setForeground(Color.RED);
+//											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()) && current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" )
+//											{
+//												//textPane1.setForeground(Color.RED);
+//												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart()+" --> " + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp());
+//											}
+//										}
+//										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
+////										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning") && war == true)
+////										{
+////											textPane1.setForeground(Color.RED);
+////											textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue()+ "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getTimestamp()+ "\n");
+////										}
+//										k++;
+//									}
+//								}
+//							}
+//							catch(Exception error2)
+//							{
+//							c = false;
+//							System.out.println("Estive aqui C");
+//							}
+//							try
+//							{
+//								if(e)
+//								{
+//									
+//									for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size(); i++)
+//									{
+//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
+//											textFieldList.get(k).setForeground(new Color(0,128,0));
+//										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
+//											textFieldList.get(k).setForeground(Color.RED);
+//										textFieldList.get(k).setText(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
+//										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("STOPPED") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF") )
+//										{
+//											//textPane1.setForeground(Color.RED);
+//											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+//											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
+//												textPane1.setText(textPane1.getText() + "\n" + current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> "+value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+//										}
+//										else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON")||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("READY"))
+//										{
+//											//textPane1.setForeground(Color.GREEN);
+//											String value = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+//											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
+//												textPane1.setText(textPane1.getText() + "\n"+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getName().getLocalPart()+" --> " + value + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+//										}
+////										if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().toUpperCase().equals("ON"))
+////										{
+////											String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue();
+////											if(!textPane1.getText().contains(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp()))
+////												textPane1.setText(textPane1.getText() + "\n" + name + "---"+"Time:"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getTimestamp());
+////										}
+//										k++;
+//									}
+//								}
+//							}
+//							catch(Exception error3)
+//							{
+//								e = false;
+//								System.out.println("Estive aqui E");
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 //				while(a)
 //				{
 //					JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
