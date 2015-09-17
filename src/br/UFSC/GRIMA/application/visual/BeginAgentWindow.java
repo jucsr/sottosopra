@@ -104,7 +104,6 @@ public class BeginAgentWindow extends JFrame {
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- textFieldName2 ----
-					textFieldName2.setText("150.162.105.71");
 					textFieldName2.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldName2, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,

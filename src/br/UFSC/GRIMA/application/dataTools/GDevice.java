@@ -24,10 +24,11 @@ public class GDevice
 	public JPanel checkBoxPanel = new JPanel();
 	public JPanel GraphPanel = new JPanel();
 	
-	public ArrayList<GSubComponent> valuesToUpdadte = new ArrayList<GSubComponent>();
+	public ArrayList<GSubComponent> valuesToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> sampleRequestList = new ArrayList<GDataserie>();
 	public ArrayList<GSubComponent> graphsToUpdadte = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> seriesToUpdate = new ArrayList<GDataserie>();
+	public String[] categoryAxesValues = new String[1000];
 	
 	public GDevice (String name, String uuid)
 	{

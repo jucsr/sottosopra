@@ -34,6 +34,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.jboss.ejb.plugins.JaccAuthorizationInterceptor;
+
 import main.java.us.sosia.video.stream.agent.StreamClient;
 import br.UFSC.GRIMA.application.entities.devices.ComponentType;
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
@@ -115,7 +117,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			textPane1.setText(textPane1.getText() + "\n  " + agent.getIP());
 			textPane1.setText(textPane1.getText() + "\n  ==============================================");
 			System.out.println(element.getValue().getHeader().getCreationTime().getClass());
-			System.out.println(element.getValue().getHeader().getCreationTime().toString());
 		}
 		catch (Exception validate)
 		{
@@ -408,16 +409,24 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									{
 										System.out.println("creating sample"); /////////////criando sample
 										GSample componentSample = new GSample();
+										System.out.println(componentSample);
 										JLabel tittleSample = new JLabel();
 										tittleSample.setFont(tittlesFont);
 										tittleSample.setText("Samples:");
 										tittleSample.setForeground(new Color(25, 25, 112));
 										addComponentLayout(component.getComponentInfoPanel(), tittleSample, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 										panelLine++;
+										System.out.println("creating sample for: " + jaxComponent.getSamples().getSample().size());
 										for(int i = 0; i < jaxComponent.getSamples().getSample().size();i++)
 										{
+											System.out.println(i +"o loop, name:" + jaxComponent.getSamples().getSample().get(i).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
+											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
+																				  jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId(),
+																				  button.getIndex(), 0, i, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
 																						   jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId());
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
+											subComponent.setDataserie(dataserie);
 											JLabel fieldName = new JLabel();
 											fieldName.setFont(subtittlesFont);
 											if (subComponent.getName() != null)
@@ -428,15 +437,14 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											{
 												fieldName.setText(subComponent.getID());
 											}
+											System.out.println("setting field name: " + fieldName);
 											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
 											JTextField field = new  JTextField();
 											field.setFont(dataFont);
 											
-//											GDataserie dataserie = new GDataserie();
-											
-											//criar dataserie e atualizar valor default, adicionar ao atualizador
 											
 											String value = (String)jaxComponent.getSamples().getSample().get(i).getValue().getValue(); //provisorio
+											System.out.println("setando valor default: " + value);
 											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
 											{
 												field.setForeground(new Color(0,128,0));
@@ -451,13 +459,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
 											componentSample.subComponentList.add(subComponent);
+											device.valuesToUpdate.add(subComponent);
+											device.seriesToUpdate.add(dataserie);
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
 										}
 									}
 								}
 								catch(Exception sampleError)
 								{
 									System.out.println("No Samples");
-	//								panelLine--;
 								}
 								try
 								{
@@ -465,18 +475,25 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									{
 										System.out.println("creating event");
 										GEvent componentEvent = new GEvent();
+										System.out.println(componentEvent);
 										JLabel tittleEvent = new JLabel();
 										tittleEvent.setFont(tittlesFont);
 										tittleEvent.setText("Events:");
 										tittleEvent.setForeground(new Color(25,25,112));
 										addComponentLayout(component.getComponentInfoPanel(), tittleEvent, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 										panelLine++;
+										System.out.println("creating event for: " + jaxComponent.getEvents().getEvent().size());
 										for(int i=0; i < jaxComponent.getEvents().getEvent().size(); i++)
 										{
 											
-											
-											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(i).getValue().getName(),
+											System.out.println(i +"o loop, name:" + jaxComponent.getEvents().getEvent().get(i).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
+											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
+																				  jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId(),
+													  							  button.getIndex(), 1, i, device.categoryAxesValues);
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId());
+											subComponent.setDataserie(dataserie);
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											JLabel fieldName = new JLabel();
 											fieldName.setFont(subtittlesFont);
 											if (subComponent.getName() != null)
@@ -487,10 +504,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											{
 												fieldName.setText(subComponent.getID());
 											}
+											System.out.println("setting field name: " + fieldName);
 											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
 											JTextField field = new JTextField();
 											field.setFont(dataFont);
 											String value = (String)jaxComponent.getEvents().getEvent().get(i).getValue().getValue(); //provisorio
+											System.out.println("setando valor default: " + value);
 											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
 											{
 												field.setForeground(new Color(0,128,0));
@@ -505,10 +524,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
 											componentEvent.subComponentList.add(subComponent);
-											System.out.println("subcomponent da posição " + panelLine);
-											System.out.println(fieldName.getText() + ": " +value);
-											
-											
+											device.valuesToUpdate.add(subComponent);
+											device.seriesToUpdate.add(dataserie);
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
 										}
 									}
 								}
@@ -524,16 +542,24 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									{
 										System.out.println("creating conditions");
 										GCondition componentCondition = new GCondition();
+										System.out.println(componentCondition);
 										JLabel tittleCondition = new JLabel();
 										tittleCondition.setFont(tittlesFont);
 										tittleCondition.setText("Conditions:");
 										tittleCondition.setForeground(new Color(25,25,112));
 										addComponentLayout(component.getComponentInfoPanel(), tittleCondition, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 										panelLine++;
+										System.out.println("creating condition for: " + jaxComponent.getCondition().getCondition().size());
 										for(int i=0; i < jaxComponent.getCondition().getCondition().size(); i++)
 										{
-											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),
-																						   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
+											System.out.println(i +"o loop, name:" + jaxComponent.getCondition().getCondition().get(i).getValue().getName() + " id: " + jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
+											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),  
+																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(),
+																				  button.getIndex(), 2, i, device.categoryAxesValues);
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
+															   							   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
+											subComponent.setDataserie(dataserie);
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											JLabel fieldName = new JLabel();
 											fieldName.setFont(subtittlesFont);
 											if (subComponent.getName() != null)
@@ -544,12 +570,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											{
 												fieldName.setText(subComponent.getID());
 											}
+											System.out.println("setting field name: " + fieldName);
 											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
 											JTextField field = new JTextField();
 											field.setFont(dataFont);
-
-											//criar dataserie e atualizar valor default, adicionar ao atualizador
-											
 											String value = (String)jaxComponent.getCondition().getCondition().get(i).getName().getLocalPart(); //provisorio
 											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
 											{
@@ -562,42 +586,43 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											field.setText(value);
 											field.setEditable(false);
 											subComponent.settField(field);
+											System.out.println("setando valor default: " + value);
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
 											componentCondition.subComponentList.add(subComponent);
-											device.valuesToUpdadte.add(subComponent);
-											System.out.println("subcomponent da posição " + panelLine);
-											System.out.println(fieldName.getText() + ": " +value);
+											device.valuesToUpdate.add(subComponent);
+											device.seriesToUpdate.add(dataserie);
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
 										}
 									}
 								}
 								catch(Exception conditionsError)
 								{
-									System.out.println(conditionsError);
 									System.out.println("No Conditions");
-//									componentPanel.remove(panelLine);
-//									panelLine--;
 								}
 								component.getComponentInfoPanel().setVisible(true);
 								revalidate();
 								repaint();
 							}
+							
 							else
 							{
 								component.getComponentInfoPanel().setVisible(true);
 								//remove campos do valuestoupdate
-								device.valuesToUpdadte.addAll(component.getgSample().subComponentList);
-								device.valuesToUpdadte.addAll(component.getgEvent().subComponentList);
-								device.valuesToUpdadte.addAll(component.getgCondition().subComponentList);
+								device.valuesToUpdate.addAll(component.getgSample().subComponentList);
+								device.valuesToUpdate.addAll(component.getgEvent().subComponentList);
+								device.valuesToUpdate.addAll(component.getgCondition().subComponentList);
+								System.out.println("showing existing panel and adding to valuestoupdate: " + device.valuesToUpdate.size());
 							}
 						}
 						else
 						{
 							component.getComponentInfoPanel().setVisible(false);
 							//remove campos do valuestoupdate
-							device.valuesToUpdadte.removeAll(component.getgSample().subComponentList);
-							device.valuesToUpdadte.removeAll(component.getgEvent().subComponentList);
-							device.valuesToUpdadte.removeAll(component.getgCondition().subComponentList);
+							device.valuesToUpdate.removeAll(component.getgSample().subComponentList);
+							device.valuesToUpdate.removeAll(component.getgEvent().subComponentList);
+							device.valuesToUpdate.removeAll(component.getgCondition().subComponentList);
+							System.out.println("showinghiding existing panel and removing the valuestoupdate: " + device.valuesToUpdate.size());
 						}	
 					}
 				});
@@ -622,283 +647,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		
 	}
-	private void chooseCurrentUpdate()
-	{
-		try 
-		{
-			buttons.removeAll(buttons);
-			textFieldList.removeAll(textFieldList);
-			mainPanel.removeAll();
-			panel9.setVisible(true);
-			button1.setIcon(new ImageIcon(getClass().getResource("/images/pause.png")));
-			button1.setToolTipText("Pause");
-			for (int i = 0 ; i < panelList.size(); i++)
-			{
-				panelList.get(i).removeAll();
-				infoPanel.remove(panelList.get(i));				
-			}
-			panelList.removeAll(panelList);
-			System.out.println(agent.getIP());
-			if (this.toggleAbaValues.isSelected())
-			{
-				currentValues();
-				worker.execute();
-			}
-			else if (this.toggleAbaGraph.isSelected())
-			{
-				currentGraphs();
-				worker.execute();
-			}
-			
-			b = true;
-			this.revalidate();
-			this.repaint();
-		} 
-		catch (MalformedURLException | JAXBException e) 
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	private void currentValues() throws JAXBException, MalformedURLException 
-	{
-		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-		Unmarshaller u = jc.createUnmarshaller();
-		URL url = new URL(agent.getIP() + "/current" );
-		JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-		final MTConnectStreamsType current = element.getValue();
-		//System.out.println(""+current.getStreams().getDeviceStream(9).get(0).getComponentStream().get(7).getSamples().getSample().get(1).getValue().getValue());
-		textField1.setText(current.getStreams().getDeviceStream().get(0).getName()); // -- Nome da Machine
-		textField2.setText(current.getStreams().getDeviceStream().get(0).getUuid()); // -- ID ---> padrï¿½o pra todas
-		int cont = current.getStreams().getDeviceStream().get(0).getComponentStream().size(); // --> Numero de Components Streams!
-		mainPanel.setVisible(true);
-		infoPanel.setVisible(true);
-		for (int i = 0; i < cont ; i++) //---> Quantos Botoes deve colocar devido aos dados de ComponentStream
-		{
-											
-			final JToggleButton toggleTemp = new JToggleButton();
-			//---- toggleButton1 ----
-			toggleTemp.setFont(buttonsFont);
-			toggleTemp.setName(""+i);
-			toggleTemp.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
-			JPanel panel5 = new JPanel();
-			panelList.add(panel5);
-			mainPanel.add(toggleTemp, new GridBagConstraints(1, i, 1, 1, 0.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(0, 0, 5, 0), 0, 0));
-			toggleTemp.addActionListener(new ActionListener() 
-			{
-				@Override
-				public void actionPerformed(ActionEvent e) 
-				{
-					if(toggleTemp.isSelected())
-					{
-						int conterR = 0; // --> Linha, Row
-						int j = Integer.parseInt(toggleTemp.getName());
-						if(!buttons.contains(j))
-						{
-						//JLabel label6 = new JLabel();
-						///////////////////////////////////
-						{
-							panelList.get(j).setLayout(new GridBagLayout());
-							((GridBagLayout)panelList.get(j).getLayout()).columnWidths = new int[] {0, 0, 0};
-							((GridBagLayout)panelList.get(j).getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-							((GridBagLayout)panelList.get(j).getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-							((GridBagLayout)panelList.get(j).getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
-						}
-						infoPanel.add(panelList.get(j), new GridBagConstraints(0+ conterC, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 5), 0, 0));
-//						panelList.get(j).setBorder(new CompoundBorder(
-//								new TitledBorder(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName()),
-//								new EmptyBorder(5, 5, 5, 5)));
-						
-						//===========
-						panelList.get(j).setBorder(new CompoundBorder(
-								new TitledBorder(null, "" + ""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+" - "+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
-								null));
-						//===========
-						
-						buttons.add(j);
-						//////////////////////////
-						//label6.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getName());
-						//panel5.add(label6, new GridBagConstraints(1 + conterC, 0, 1, 1, 0.0, 0.0,
-						//	GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						//	new Insets(0, 0, 5, 0), 0, 0));
-						try
-						{
-						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size() >= 1)
-						{
-							//---- label7 ----
-							JLabel label7 = new JLabel();
-							label7.setFont(tittlesFont);
-							label7.setText("Samples:");
-							label7.setForeground(new Color(25, 25, 112));
-							panelList.get(j).add(label7, new GridBagConstraints(1 + conterC, 1, 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 0), 0, 0));
-							
-							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().size(); i++)
-							{ 
-								//---- label8 ----
-								JLabel label8 = new JLabel();
-								label8.setFont(subtittlesFont);
-								JTextField textField3 = new JTextField();
-								textField3.setFont(dataFont);
-								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName()!=null)
-									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getName());
-								else
-									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getDataItemId());
-								String string = (String)current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getSamples().getSample().get(i).getValue().getValue();
-								if (string.toUpperCase().equals("AVAILABLE") || string.toUpperCase().equals("ACTIVE"))
-								{
-									textField3.setForeground(new Color(0,128,0));
-								}
-									else if(string.toUpperCase().equals("UNAVAILABLE"))
-								{
-									textField3.setForeground(Color.RED);	
-								}
-								textField3.setText(string);
-								textField3.setEditable(false);
-								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
-									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 5), 0, 0));
-								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 0), 0, 0));
-								textFieldList.add(textField3);
-								conterR++;
-							}
-							revalidate();
-							repaint();
-						}
-						}
-						catch(Exception sampleError)
-						{
-							System.out.println("No Samples");
-							conterR= conterR -1;
-						}
-						try
-						{
-						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size() >= 1)
-						{
-							//---- label7 ----
-							JLabel label7 = new JLabel();
-							label7.setFont(tittlesFont);
-							label7.setText("Conditions:");
-							label7.setForeground(new Color(25, 25, 112));
-							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 0), 0, 0));
-							conterR++;
-							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().size(); i++)
-							{
-								//---- label8 ----
-								JLabel label8 = new JLabel();
-								label8.setFont(subtittlesFont);
-								JTextField textField3 = new JTextField();
-								textField3.setFont(buttonsFont);
-								label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getDataItemId());
-								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("AVAILABLE"))
-									textField3.setForeground(new Color(0,128,0));
-								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("UNAVAILABLE"))
-									textField3.setForeground(Color.RED);
-//								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart().equals("Warning"))
-//								{
-//									textPane1.setText("Warning Type: "+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getType()+""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getValue().getValue());
-//								} 
 
-								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getCondition().getCondition().get(i).getName().getLocalPart());
-								textField3.setEditable(false);
-								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
-										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 5), 0, 0));
-								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 0), 0, 0));
-								textFieldList.add(textField3);
-								conterR++;
-							}
-							revalidate();
-							repaint();
-						}
-						}
-						catch(Exception conditionsError)
-						{
-							System.out.println("No Conditions");
-						}
-						try
-						{
-						if (current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size() >= 1)
-						{
-							//---- label7 ----
-							JLabel label7 = new JLabel();
-							label7.setFont(tittlesFont);
-							label7.setText("Events:");
-							label7.setForeground(new Color(25, 25, 112));
-							panelList.get(j).add(label7, new GridBagConstraints(1+ conterC, 2+conterR , 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 5, 0), 0, 0));
-							conterR++;
-							for (int i = 0 ; i < current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().size(); i++)
-							{
-								//---- label8 ----
-								JLabel label8 = new JLabel();
-								label8.setFont(subtittlesFont);
-								JTextField textField3 = new JTextField();
-								textField3.setFont(buttonsFont);
-								String name = current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getName();
-								if(name == null)
-									label8.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getDataItemId());
-								else
-									label8.setText(""+name);	
-								if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Normal" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("AVAILABLE") | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ON") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ARMED") ||current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("ACTIVE"))
-									textField3.setForeground(new Color(0,128,0));
-								else if(current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Warning" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue() == "Unavailable" | current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("UNAVAILABLE") || current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue().equals("OFF"))
-									textField3.setForeground(Color.RED);
-							
-								textField3.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(j).getEvents().getEvent().get(i).getValue().getValue());
-								textField3.setEditable(false);
-								panelList.get(j).add(label8, new GridBagConstraints(0 + conterC, 2+ conterR, 1, 1, 0.0, 0.0,
-									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 5), 0, 0));
-								panelList.get(j).add(textField3, new GridBagConstraints(1 + conterC, 2+ conterR, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-									new Insets(0, 0, 5, 0), 0, 0));
-								textFieldList.add(textField3);
-								conterR++;
-							}
-							revalidate();
-							repaint();
-						}
-						}
-						catch(Exception conditionsError)
-						{
-							System.out.println("No Events");
-						}
-						conterC = conterC+1;
-					}
-						else
-						{
-							panelList.get(j).setVisible(true);
-						}
-					}
-					else if (!toggleTemp.isSelected())
-					{
-						int j = Integer.parseInt(toggleTemp.getName());
-						panelList.get(j).setVisible(false);
-						//panel6.remove(panelList.get(j));
-						//conterC = conterC -1;
-						revalidate();
-						repaint();
-					}
-				}
-			});
-		}
-	}
-	
-	private void currentGraphs() throws JAXBException, MalformedURLException
-	{
-		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-		Unmarshaller u = jc.createUnmarshaller();
-	}
 	public void probe() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
@@ -1207,7 +956,86 @@ public class ClientApplication extends BeginWindow implements ActionListener
 					URL urlt = new URL(agent.getIP() + "/current" );
 					JAXBElement<MTConnectStreamsType> elementt =(JAXBElement<MTConnectStreamsType>)ut.unmarshal(urlt);
 					final MTConnectStreamsType currentt = elementt.getValue();
-					textField7.setText(""+currentt.getHeader().getCreationTime());
+					if (currentt!= null)
+					{
+						textField7.setText(""+currentt.getHeader().getCreationTime());
+						if (comboBox1.getSelectedItem().toString().equals("Current") && device!=null) 
+	 					{
+							//atualiza Series de dados
+							try
+							{
+								System.out.println("atualizando series:" + device.seriesToUpdate.size());
+								for (int i=0; i<device.seriesToUpdate.size();i++)
+								{
+									System.out.print("    " + i + "o loop: ");
+									GDataserie serie = device.seriesToUpdate.get(i);
+									if (serie.SEC == 0) //Sample
+									{
+										System.out.println("sample serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue());
+										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp(),
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue());
+									}
+									if (serie.SEC == 1) //Event
+									{
+										System.out.println("event serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
+										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp(),
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
+									}
+									if (serie.SEC == 2) // Condition
+									{
+										System.out.println("condition serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
+										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp(),
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
+									}
+								}
+							}
+							catch (Exception e)
+							{
+								System.out.println("seriesToUpdate range changed in execution\n"+e);
+							}
+							if (toggleAbaValues.isSelected())
+							{
+								System.out.println("atualizando valores: " + device.valuesToUpdate.size());
+								try
+								{
+									for (int i=0; i<device.valuesToUpdate.size();i++)
+									{
+										GSubComponent subComponent = device.valuesToUpdate.get(i);
+										System.out.println("    " + i + "o loop, vis.painel:" + device.componentStreamList.get(subComponent.getDataserie().componentIndex).getComponentInfoPanel().isVisible() + ", categ.chart: " + subComponent.getDataserie().isCategoryChart() + ", num.chart: " + subComponent.getDataserie().isNumericChart());
+
+										if (device.componentStreamList.get(subComponent.getDataserie().componentIndex).getComponentInfoPanel().isVisible())
+										{
+											String value = null;
+											if (subComponent.getDataserie().getLastValue() == null)
+											{
+												value = "UNAVAILABLE";
+												System.out.println("       (NULL)Defining value to update on field, value: UNAVAILABLE");
+											}
+											else if (subComponent.getDataserie().isCategoryChart() )
+											{
+												value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
+												System.out.println("       (category)Defining value to update on field, value: " + value + ", index returned: " +  subComponent.getDataserie().getCategoryPosition(subComponent.getDataserie().getLastValue()) + ", string passada: " + subComponent.getDataserie().getLastValue());
+											}
+											else if (subComponent.getDataserie().isNumericChart())
+											{
+												value = subComponent.getDataserie().getLastValue();
+												System.out.println("       (num)Defining value to update on field, value: " + subComponent.getDataserie().getLastValue().toString());
+											}										
+											subComponent.gettField().setText(value);
+										}
+									}
+									
+								}
+								catch (Exception e)
+								{
+									System.out.println(e);
+									System.out.println("valuesToUpdate  range changed in execution");
+								}
+							}
+						}
+						revalidate();
+						repaint();
+					}
 				}
 				catch(Exception connectionError)
 				{
@@ -1215,7 +1043,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 			}
 		}
-	
+		protected void done()
+		{
+			System.out.println("Saiu do atualizador");
+		}
+	};
 	
 /////////////////////////////////////////- Teste
 //	SwingWorker worker = new SwingWorker()  // Atualizador em Tempo Real!
@@ -1480,11 +1312,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 //				}
 //			}				
 //		}						
-		protected void done()
-		{
-			System.out.println("Saiu");
-		}
-	};
+		
 	public Agent getAgent() 
 	{
 		return agent;

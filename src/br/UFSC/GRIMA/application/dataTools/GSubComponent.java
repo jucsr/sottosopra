@@ -38,4 +38,10 @@ public class GSubComponent
 	public void setSubComponentCheckbox(JCheckBox subComponentCheckbox) {
 		this.subComponentCheckbox = subComponentCheckbox;
 	}
+	public GDataserie getDataserie() {
+		return dataserie;
+	}
+	public void setDataserie(GDataserie dataserie) {
+		this.dataserie = dataserie;
+	}
 }
