@@ -1,5 +1,6 @@
 package br.UFSC.GRIMA.application.dataTools;
 
+import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -26,7 +27,7 @@ public class GDevice
 	
 	public ArrayList<GSubComponent> valuesToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> sampleRequestList = new ArrayList<GDataserie>();
-	public ArrayList<GSubComponent> graphsToUpdadte = new ArrayList<GSubComponent>();
+	public ArrayList<GSubComponent> graphsToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> seriesToUpdate = new ArrayList<GDataserie>();
 	public String[] categoryAxesValues = new String[1000];
 	
@@ -40,6 +41,13 @@ public class GDevice
 		((GridBagLayout)buttonPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
 		((GridBagLayout)buttonPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 		((GridBagLayout)buttonPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+		checkBoxPanel.setBorder(new EtchedBorder());
+		checkBoxPanel.setLayout(new GridBagLayout());
+		((GridBagLayout)checkBoxPanel.getLayout()).columnWidths = new int[] {10, 0, 0};
+		((GridBagLayout)checkBoxPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+		((GridBagLayout)checkBoxPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+		((GridBagLayout)checkBoxPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+		
 		informationPanel.setBorder(new EtchedBorder());
 		informationPanel.setAlignmentY(0.0F);
 		informationPanel.setLayout(new FlowLayout(FlowLayout.LEFT));

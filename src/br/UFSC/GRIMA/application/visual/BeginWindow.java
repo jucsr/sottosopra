@@ -20,7 +20,7 @@ public class BeginWindow extends JFrame {
 		menu2 = new JMenu();
 		menuItem1 = new JMenuItem();
 		label5 = new JLabel();
-		panel1 = new JPanel();
+		painelMenuCheckbox = new JPanel();
 		label1 = new JLabel();
 		comboBox1 = new JComboBox<>();
 		panel9 = new JPanel();
@@ -117,16 +117,16 @@ public class BeginWindow extends JFrame {
 
 		//======== panel1 ========
 		{
-			panel1.setLayout(new GridBagLayout());
-			((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
-			((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 30, 0};
-			((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
-			((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
+			painelMenuCheckbox.setLayout(new GridBagLayout());
+			((GridBagLayout)painelMenuCheckbox.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
+			((GridBagLayout)painelMenuCheckbox.getLayout()).rowHeights = new int[] {0, 30, 0};
+			((GridBagLayout)painelMenuCheckbox.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
+			((GridBagLayout)painelMenuCheckbox.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
 			//---- label1 ----
 			label1.setText("Requests:");
 			label1.setFont(new Font("Verdana", Font.PLAIN, 12));
-			panel1.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+			painelMenuCheckbox.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
@@ -140,7 +140,7 @@ public class BeginWindow extends JFrame {
 			}));
 			comboBox1.setFont(new Font("Verdana", Font.PLAIN, 12));
 			comboBox1.setMinimumSize(new Dimension(75, 20));
-			panel1.add(comboBox1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+			painelMenuCheckbox.add(comboBox1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 5));
 
@@ -171,7 +171,7 @@ public class BeginWindow extends JFrame {
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 10), 0, 5));
 			}
-			panel1.add(panel9, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0,
+			painelMenuCheckbox.add(panel9, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 5), 0, 0));
 
@@ -197,11 +197,11 @@ public class BeginWindow extends JFrame {
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 			}
-			panel1.add(panel7, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0,
+			painelMenuCheckbox.add(panel7, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 5, 0, 0), 0, 0));
 		}
-		contentPane.add(panel1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+		contentPane.add(painelMenuCheckbox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 5, 5), 0, 0));
 
@@ -353,7 +353,7 @@ public class BeginWindow extends JFrame {
 	private JMenu menu2;
 	protected JMenuItem menuItem1;
 	private JLabel label5;
-	private JPanel panel1;
+	private JPanel painelMenuCheckbox;
 	private JLabel label1;
 	public JComboBox<String> comboBox1;
 	public JPanel panel9;

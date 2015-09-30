@@ -10,9 +10,9 @@ public class GComponent
 	private String name;
 	private String componentID;
 	
-	private GSample gSample = new GSample();
-	private GEvent gEvent= new GEvent();
-	private GCondition gCondition = new GCondition();
+	private GSample gSample;
+	private GEvent gEvent;
+	private GCondition gCondition;
 	
 	private GButton button = new GButton();
 	private JPanel componentInfoPanel;
@@ -82,5 +82,21 @@ public class GComponent
 	public void setComponentInfoPanel(JPanel componentInfoPanel) 
 	{
 		this.componentInfoPanel = componentInfoPanel;
+	}
+
+	public JPanel getPainelMenuCheckbox() {
+		return painelMenuCheckbox;
+	}
+
+	public void setPainelMenuCheckbox(JPanel painelMenuCheckbox) {
+		this.painelMenuCheckbox = painelMenuCheckbox;
+	}
+
+	public GCheckbox getComponentCheckbox() {
+		return componentCheckbox;
+	}
+
+	public void setComponentCheckbox(GCheckbox componentCheckbox) {
+		this.componentCheckbox = componentCheckbox;
 	}
 }

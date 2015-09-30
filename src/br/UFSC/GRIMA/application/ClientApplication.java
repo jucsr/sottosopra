@@ -44,6 +44,7 @@ import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.application.visual.AboutWindow;
 import br.UFSC.GRIMA.application.visual.BeginWindow;
 import br.UFSC.GRIMA.application.dataTools.GButton;
+import br.UFSC.GRIMA.application.dataTools.GCheckbox;
 import br.UFSC.GRIMA.application.dataTools.GComponent;
 import br.UFSC.GRIMA.application.dataTools.GCondition;
 import br.UFSC.GRIMA.application.dataTools.GDataserie;
@@ -244,7 +245,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			}
 			else
 			{
-				setCurrentGraphs();
+				try {
+					setCurrentGraphs();
+				} catch (MalformedURLException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		else if(source == toggleAbaGraph) 
@@ -253,7 +259,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			System.out.println("start");
 			if (toggleAbaGraph.isSelected())
 			{
-				setCurrentGraphs();
+				try {
+					setCurrentGraphs();
+				} catch (MalformedURLException | JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 			{
@@ -288,7 +299,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 				else if (toggleAbaGraph.isSelected())
 				{
-					setCurrentGraphs();
+					try {
+						setCurrentGraphs();
+					} catch (MalformedURLException | JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			if (3 == index) // Probe
@@ -340,8 +356,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	}
 	private void setCurrentValues() throws JAXBException, MalformedURLException
 	{
-		infoPanel.removeAll();
-		System.out.println(device);
 
 		if (device == null)
 		{
@@ -355,10 +369,18 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									  current.getStreams().getDeviceStream().get(0).getUuid());
 			textField1.setText(device.getName());
 			textField2.setText(device.getUuid());
-			panel5.add(device.buttonPanel);
-			addComponentLayout(panel5, device.buttonPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
-			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
-			device.informationPanel.setSize(infoPanel.getSize());
+			try
+			{
+				mainPanel.remove(device.checkBoxPanel);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			infoPanel.removeAll();
+			System.out.println(device);
+			addComponentLayout(panel5, device.buttonPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
+			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
 			
 			
 			for (int i = 0; i< current.getStreams().getDeviceStream().get(0).getComponentStream().size(); i++)
@@ -458,6 +480,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											subComponent.settField(field);
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
+											component.setgSample(componentSample);
 											componentSample.subComponentList.add(subComponent);
 											device.valuesToUpdate.add(subComponent);
 											device.seriesToUpdate.add(dataserie);
@@ -467,6 +490,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								}
 								catch(Exception sampleError)
 								{
+									System.out.println(sampleError);
 									System.out.println("No Samples");
 								}
 								try
@@ -524,6 +548,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
 											componentEvent.subComponentList.add(subComponent);
+											component.setgEvent(componentEvent);
 											device.valuesToUpdate.add(subComponent);
 											device.seriesToUpdate.add(dataserie);
 											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
@@ -532,6 +557,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								}
 								catch(Exception eventsError)
 								{
+									System.out.println(eventsError);
 									System.out.println("No Events");
 //									componentPanel.remove(panelLine);
 //									panelLine--;
@@ -590,6 +616,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
 											panelLine++;
 											componentCondition.subComponentList.add(subComponent);
+											component.setgCondition(componentCondition);
 											device.valuesToUpdate.add(subComponent);
 											device.seriesToUpdate.add(dataserie);
 											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
@@ -598,6 +625,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								}
 								catch(Exception conditionsError)
 								{
+									System.out.println(conditionsError);
 									System.out.println("No Conditions");
 								}
 								component.getComponentInfoPanel().setVisible(true);
@@ -609,9 +637,9 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								component.getComponentInfoPanel().setVisible(true);
 								//remove campos do valuestoupdate
-								device.valuesToUpdate.addAll(component.getgSample().subComponentList);
-								device.valuesToUpdate.addAll(component.getgEvent().subComponentList);
-								device.valuesToUpdate.addAll(component.getgCondition().subComponentList);
+								if (component.getgSample()!= null)device.valuesToUpdate.addAll(component.getgSample().subComponentList);
+								if (component.getgEvent()!= null)device.valuesToUpdate.addAll(component.getgEvent().subComponentList);
+								if (component.getgCondition()!= null)device.valuesToUpdate.addAll(component.getgCondition().subComponentList);
 								System.out.println("showing existing panel and adding to valuestoupdate: " + device.valuesToUpdate.size());
 							}
 						}
@@ -619,18 +647,264 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						{
 							component.getComponentInfoPanel().setVisible(false);
 							//remove campos do valuestoupdate
-							device.valuesToUpdate.removeAll(component.getgSample().subComponentList);
-							device.valuesToUpdate.removeAll(component.getgEvent().subComponentList);
-							device.valuesToUpdate.removeAll(component.getgCondition().subComponentList);
-							System.out.println("showinghiding existing panel and removing the valuestoupdate: " + device.valuesToUpdate.size());
+							if (component.getgSample()!= null)device.valuesToUpdate.removeAll(component.getgSample().subComponentList);
+							if (component.getgEvent()!= null)device.valuesToUpdate.removeAll(component.getgEvent().subComponentList);
+							if (component.getgCondition()!= null)device.valuesToUpdate.removeAll(component.getgCondition().subComponentList);
+							System.out.println("showing hiding existing panel and removing the valuestoupdate: " + device.valuesToUpdate.size());
 						}	
 					}
 				});
 				toggleTemp.setVisible(true);	
 			}
 		}
+		else if (device.buttonPanel.getComponentCount() == 0)
+		{
+			for(int i=0; i<device.componentStreamList.size();i++)
+			{
+				GButton button = new GButton();
+				button.setFont(buttonsFont);
+				button.setText(device.componentStreamList.get(i).getComponent()+"-"+ device.componentStreamList.get(i).getName());
+				addComponentLayout(device.buttonPanel, button, 1, i, 1, 1, new Insets(0, 0, 5, 0));
+				device.componentStreamList.get(i).setButton(button);
+				button.setIndex(i);
+				button.addActionListener(new ActionListener() 
+				{
+					@Override
+					public void actionPerformed(ActionEvent event) 
+					{
+						System.out.println("criando action listener");
+						GButton button = (GButton) event.getSource();
+						GComponent component = device.componentStreamList.get(button.getIndex());
+						if (button.isSelected())
+						{
+							if (component.getComponentInfoPanel() == null)
+							{
+								JPanel componentPanel = new JPanel();
+								component.setComponentInfoPanel(componentPanel);
+								componentPanel.setLayout(new GridBagLayout());
+								((GridBagLayout)componentPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+								((GridBagLayout)componentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)componentPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+								((GridBagLayout)componentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+								
+								componentPanel.setBorder(new CompoundBorder(
+										new TitledBorder(null,component.getComponent()+" - "+ component.getName(), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),
+										null));
+								
+								addComponentLayout(device.informationPanel, componentPanel, component.getButton().getIndex(), 0, 1, 1, new Insets(0, 0, 5, 5));
+								GComponent jaxComponent = device.componentStreamList.get(button.getIndex());
+								int panelLine = 0;
+//								try
+//								{
+									if(!jaxComponent.getgSample().subComponentList.isEmpty())
+									{
+										System.out.println("creating sample"); /////////////criando sample
+										JLabel tittleSample = new JLabel();
+										tittleSample.setFont(tittlesFont);
+										tittleSample.setText("Samples:");
+										tittleSample.setForeground(new Color(25, 25, 112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleSample, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i = 0; i < jaxComponent.getgSample().subComponentList.size();i++)
+										{
+											System.out.println(i +"o loop, name:" + jaxComponent.getgSample().subComponentList.get(i).getName() + " id: " + jaxComponent.getgSample().subComponentList.get(i).getID() + " componentIndex: " + button.getIndex() );
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (jaxComponent.getgSample().subComponentList.get(i).getName() != null)
+											{
+												fieldName.setText(jaxComponent.getgSample().subComponentList.get(i).getName());
+											}
+											else
+											{
+												fieldName.setText(jaxComponent.getgSample().subComponentList.get(i).getID());
+											}
+											System.out.println("setting field name: " + fieldName);
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new  JTextField();
+											field.setFont(dataFont);
+											
+											String value = jaxComponent.getgSample().subComponentList.get(i).getDataserie().getLastValue(); //provisorio
+											System.out.println("setando valor default: " + value);
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											jaxComponent.getgSample().subComponentList.get(i).settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											device.valuesToUpdate.add(jaxComponent.getgSample().subComponentList.get(i));
+											if (!device.seriesToUpdate.contains(jaxComponent.getgSample().subComponentList.get(i).getDataserie()))
+											{
+												device.seriesToUpdate.add(jaxComponent.getgSample().subComponentList.get(i).getDataserie());
+											}
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
+										}
+									}
+//								}
+//								catch(Exception sampleError)
+//								{
+//									System.out.println(sampleError);
+//									System.out.println("No Samples");
+//								}
+								try
+								{
+									if(!jaxComponent.getgEvent().subComponentList.isEmpty())
+									{
+										System.out.println("creating Event"); /////////////criando sample
+										JLabel tittleEvent = new JLabel();
+										tittleEvent.setFont(tittlesFont);
+										tittleEvent.setText("Events:");
+										tittleEvent.setForeground(new Color(25, 25, 112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleEvent, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i = 0; i < jaxComponent.getgEvent().subComponentList.size();i++)
+										{
+											System.out.println(i +"o loop, name:" + jaxComponent.getgEvent().subComponentList.get(i).getName() + " id: " + jaxComponent.getgEvent().subComponentList.get(i).getID() + " componentIndex: " + button.getIndex() );
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (jaxComponent.getgEvent().subComponentList.get(i).getName() != null)
+											{
+												fieldName.setText(jaxComponent.getgEvent().subComponentList.get(i).getName());
+											}
+											else
+											{
+												fieldName.setText(jaxComponent.getgEvent().subComponentList.get(i).getID());
+											}
+											System.out.println("setting field name: " + fieldName);
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new  JTextField();
+											field.setFont(dataFont);
+											
+											String value = jaxComponent.getgEvent().subComponentList.get(i).getDataserie().getLastValue(); //provisorio
+											System.out.println("setando valor default: " + value);
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+											else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											jaxComponent.getgEvent().subComponentList.get(i).settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											device.valuesToUpdate.add(jaxComponent.getgEvent().subComponentList.get(i));
+											if (!device.seriesToUpdate.contains(jaxComponent.getgEvent().subComponentList.get(i).getDataserie()))
+											{
+												device.seriesToUpdate.add(jaxComponent.getgEvent().subComponentList.get(i).getDataserie());
+											}
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
+										}
+									}
+								}
+								catch(Exception eventsError)
+								{
+									System.out.println(eventsError);
+									System.out.println("No Events");
+								}
+								try
+								{
+									if(!jaxComponent.getgEvent().subComponentList.isEmpty())
+									{
+										System.out.println("creating Condition"); /////////////criando sample
+										JLabel tittleCondition = new JLabel();
+										tittleCondition.setFont(tittlesFont);
+										tittleCondition.setText("Events:");
+										tittleCondition.setForeground(new Color(25, 25, 112));
+										addComponentLayout(component.getComponentInfoPanel(), tittleCondition, 0, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+										panelLine++;
+										for(int i = 0; i < jaxComponent.getgCondition().subComponentList.size();i++)
+										{
+											System.out.println(i +"o loop, name:" + jaxComponent.getgCondition().subComponentList.get(i).getName() + " id: " + jaxComponent.getgCondition().subComponentList.get(i).getID() + " componentIndex: " + button.getIndex() );
+											JLabel fieldName = new JLabel();
+											fieldName.setFont(subtittlesFont);
+											if (jaxComponent.getgCondition().subComponentList.get(i).getName() != null)
+											{
+												fieldName.setText(jaxComponent.getgCondition().subComponentList.get(i).getName());
+											}
+											else
+											{
+												fieldName.setText(jaxComponent.getgCondition().subComponentList.get(i).getID());
+											}
+											System.out.println("setting field name: " + fieldName);
+											addComponentLayout(component.getComponentInfoPanel(), fieldName, 0, panelLine, 1, 1, new Insets(0, 2, 5, 0));
+											JTextField field = new  JTextField();
+											field.setFont(dataFont);
+											
+											String value = jaxComponent.getgCondition().subComponentList.get(i).getDataserie().getLastValue(); //provisorio
+											System.out.println("setando valor default: " + value);
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE"))
+											{
+												field.setForeground(new Color(0,128,0));
+											}
+											else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+												field.setForeground(Color.RED);	
+											}
+											field.setText(value);
+											field.setEditable(false);
+											jaxComponent.getgCondition().subComponentList.get(i).settField(field);
+											addComponentLayout(component.getComponentInfoPanel(), field, 1, panelLine, 1, 1, new Insets(0, 0, 5, 0));
+											panelLine++;
+											device.valuesToUpdate.add(jaxComponent.getgCondition().subComponentList.get(i));
+											if (!device.seriesToUpdate.contains(jaxComponent.getgCondition().subComponentList.get(i).getDataserie()))
+											{
+												device.seriesToUpdate.add(jaxComponent.getgCondition().subComponentList.get(i).getDataserie());
+											}
+											System.out.println("Adding to values and seriestoupdate: " + device.valuesToUpdate.size() + " " + device.seriesToUpdate.size());
+										}
+									}
+								}
+								catch(Exception conditionsError)
+								{
+									System.out.println(conditionsError);
+									System.out.println("No Conditions");
+								}
+								component.getComponentInfoPanel().setVisible(true);
+								revalidate();
+								repaint();
+							}
+//							
+							else
+							{
+								component.getComponentInfoPanel().setVisible(true);
+								//add campos do valuestoupdate
+								if (component.getgSample()!= null)device.valuesToUpdate.addAll(component.getgSample().subComponentList);
+								if (component.getgEvent()!= null)device.valuesToUpdate.addAll(component.getgEvent().subComponentList);
+								if (component.getgCondition()!= null)device.valuesToUpdate.addAll(component.getgCondition().subComponentList);
+								System.out.println("showing existing panel and adding to valuestoupdate: " + device.valuesToUpdate.size());
+							}
+						}
+						else
+						{
+							component.getComponentInfoPanel().setVisible(false);
+							//remove campos do valuestoupdate
+							if (component.getgSample()!= null)device.valuesToUpdate.removeAll(component.getgSample().subComponentList);
+							if (component.getgEvent()!= null)device.valuesToUpdate.removeAll(component.getgEvent().subComponentList);
+							if (component.getgCondition()!= null)device.valuesToUpdate.removeAll(component.getgCondition().subComponentList);
+							System.out.println("showing hiding existing panel and removing the valuestoupdate: " + device.valuesToUpdate.size());
+						}	
+					}
+				});
+				button.setVisible(true);
+			}
+			infoPanel.removeAll();
+			panel5.removeAll();
+			addComponentLayout(panel5, device.buttonPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
+			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
+		}
 		else
 		{
+			infoPanel.removeAll();
+			panel5.removeAll();
 			addComponentLayout(panel5, device.buttonPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
 			addComponentLayout(infoPanel, device.informationPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
 		}
@@ -643,9 +917,320 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		repaint();
 	}
 	
-	private void setCurrentGraphs()
+	private void setCurrentGraphs() throws JAXBException, MalformedURLException
 	{
 		
+		if (device == null)
+		{
+			System.out.println("criando novo device");
+			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+			Unmarshaller u = jc.createUnmarshaller();
+			URL url = new URL(agent.getIP() + "/current" );
+			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+			final MTConnectStreamsType current = element.getValue();
+			this.device = new GDevice(current.getStreams().getDeviceStream().get(0).getName(),
+									  current.getStreams().getDeviceStream().get(0).getUuid());
+			textField1.setText(device.getName());
+			textField2.setText(device.getUuid());
+			infoPanel.removeAll();
+			try
+			{
+				mainPanel.remove(device.buttonPanel);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			addComponentLayout(panel5, device.checkBoxPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
+			addComponentLayout(infoPanel, device.GraphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
+			
+			for (int i = 0; i< current.getStreams().getDeviceStream().get(0).getComponentStream().size(); i++)
+			{
+				System.out.println("criando checkbox " + i);
+				final GCheckbox componentCheckbox = new GCheckbox();
+				componentCheckbox.setFont(buttonsFont);
+				componentCheckbox.setText(""+current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent()+"-"+ current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName());
+				final JPanel painelMenuCheckbox = new JPanel();
+				painelMenuCheckbox.setBorder(new CompoundBorder(new TitledBorder(null, null , TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, subtittlesFont),null));
+				painelMenuCheckbox.setLayout(new GridBagLayout());
+				((GridBagLayout)painelMenuCheckbox.getLayout()).columnWidths = new int[] {105, 0, 0, 15, 0, 0, 0};
+				((GridBagLayout)painelMenuCheckbox.getLayout()).rowHeights = new int[] {0, 30, 0};
+				((GridBagLayout)painelMenuCheckbox.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0E-4};
+				((GridBagLayout)painelMenuCheckbox.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
+
+				addComponentLayout(painelMenuCheckbox, componentCheckbox, 0, 0, 3, 1, new Insets(0, 0, 5, 0));
+				addComponentLayout(device.checkBoxPanel, painelMenuCheckbox, 1, i, 1, 1, new Insets(0, 0, 5, 0));
+				System.out.println("Criando component");
+				GComponent component = new GComponent(current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponent(),
+													  current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getName(), 
+													  current.getStreams().getDeviceStream().get(0).getComponentStream().get(i).getComponentId());
+				device.componentStreamList.add(component);
+				component.setComponentCheckbox(componentCheckbox);
+				component.setPainelMenuCheckbox(painelMenuCheckbox);
+				componentCheckbox.setIndex(i);
+				componentCheckbox.addActionListener(new ActionListener() 
+				{
+					@Override
+					public void actionPerformed(ActionEvent event) 
+					{
+						System.out.println("criando action listener");
+						GCheckbox checkbox = (GCheckbox) event.getSource();
+						GComponent component = device.componentStreamList.get(checkbox.getIndex());
+						if (checkbox.isSelected())
+						{
+							if (component.getgSample() == null &&
+								component.getgEvent() == null &&
+								component.getgCondition() == null)
+								
+							{
+								ComponentStreamType jaxComponent = current.getStreams().getDeviceStream().get(0).getComponentStream().get(component.getComponentCheckbox().getIndex());
+								int panelLine = 1;
+								try
+								{
+									if(!jaxComponent.getSamples().getSample().isEmpty())
+									{
+										System.out.println("creating sample"); /////////////criando sample
+										GSample componentSample = new GSample();
+										System.out.println(componentSample);
+										System.out.println("creating sample for: " + jaxComponent.getSamples().getSample().size());
+										for(int j = 0; j < jaxComponent.getSamples().getSample().size();j++)
+										{
+											System.out.println(j +"o loop, name:" + jaxComponent.getSamples().getSample().get(j).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
+											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
+																				  jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId(),
+																				  checkbox.getIndex(), 0, j, device.categoryAxesValues);
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
+																						   jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId());
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
+											subComponent.setDataserie(dataserie);
+											GCheckbox subCheckbox = new GCheckbox();
+											if (subComponent.getName() != null)
+											{
+												subCheckbox.setText(subComponent.getName());
+											}
+											else
+											{
+												subCheckbox.setText(subComponent.getID());
+											}
+											subCheckbox.setFont(subtittlesFont);
+											addComponentLayout(component.getPainelMenuCheckbox(), subCheckbox, 1, panelLine, 2, 1, new Insets(0, 5, 5, 0));
+											panelLine++;
+											subCheckbox.setIndex(component.getComponentCheckbox().getIndex());
+											subCheckbox.setSubComponentIndex(j);
+											subCheckbox.addActionListener(new ActionListener() 
+											{
+												
+												@Override
+												public void actionPerformed(ActionEvent e) 
+												{
+													GCheckbox subCheckbox = (GCheckbox) e.getSource();
+													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgSample().subComponentList.get(subCheckbox.getSubComponentIndex());
+													
+													if (subComponent.getSubComponentCheckbox().isSelected())
+													{
+														device.graphsToUpdate.add(subComponent);
+													}
+													else
+													{
+														device.graphsToUpdate.remove(subComponent);
+													}
+												}
+											});
+											componentSample.subComponentList.add(subComponent);
+											component.setgSample(componentSample);
+											device.seriesToUpdate.add(dataserie);
+										}
+									}
+									
+								}
+								catch(Exception sampleError)
+								{
+									System.out.println("No Samples");
+								}
+								try
+								{
+									if(!jaxComponent.getEvents().getEvent().isEmpty())
+									{
+										System.out.println("creating event"); /////////////criando sample
+										GEvent componentEvent = new GEvent();
+										System.out.println(componentEvent);
+										System.out.println("creating sample for: " + jaxComponent.getEvents().getEvent().size());
+										for(int j = 0; j < jaxComponent.getEvents().getEvent().size();j++)
+										{
+											System.out.println(j +"o loop, name:" + jaxComponent.getEvents().getEvent().get(j).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
+											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
+																				  jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId(),
+																				  checkbox.getIndex(), 0, j, device.categoryAxesValues);
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
+																						   jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId());
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
+											subComponent.setDataserie(dataserie);
+											GCheckbox subCheckbox = new GCheckbox();
+											if (subComponent.getName() != null)
+											{
+												subCheckbox.setText(subComponent.getName());
+											}
+											else
+											{
+												subCheckbox.setText(subComponent.getID());
+											}
+											subCheckbox.setFont(subtittlesFont);
+											addComponentLayout(component.getPainelMenuCheckbox(), subCheckbox, 1, panelLine, 2, 1, new Insets(0, 5, 5, 0));
+											panelLine++;
+											subCheckbox.setIndex(component.getComponentCheckbox().getIndex());
+											subCheckbox.setSubComponentIndex(j);
+											subCheckbox.addActionListener(new ActionListener() 
+											{
+												
+												@Override
+												public void actionPerformed(ActionEvent e) 
+												{
+													GCheckbox subCheckbox = (GCheckbox) e.getSource();
+													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgEvent().subComponentList.get(subCheckbox.getSubComponentIndex());
+													
+													if (subCheckbox.isSelected())
+													{
+														device.graphsToUpdate.add(subComponent);
+													}
+													else
+													{
+														device.graphsToUpdate.remove(subComponent);
+													}
+												}
+											});
+											componentEvent.subComponentList.add(subComponent);
+											component.setgEvent(componentEvent);
+											device.seriesToUpdate.add(dataserie);
+										}
+									}
+								}
+								catch(Exception eventError)
+								{
+									System.out.println("No Events");
+								}
+								try
+								{
+									if (!jaxComponent.getCondition().getCondition().isEmpty())
+									{
+										System.out.println("creating Conditions"); /////////////criando Conditions
+										GCondition componentCondition = new GCondition();
+										System.out.println(componentCondition);
+										System.out.println("creating event for: " + jaxComponent.getCondition().getCondition().size());
+										for(int i=0; i<jaxComponent.getCondition().getCondition().size(); i++)
+										{
+											System.out.println(i +"o loop, name:" + jaxComponent.getCondition().getCondition().get(i).getValue().getName() + " id: " + jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
+											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),
+																						   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
+											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
+																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(), 
+																				  checkbox.getIndex(), 2, i, device.categoryAxesValues);
+											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
+											subComponent.setDataserie(dataserie);
+											GCheckbox subCheckbox = new GCheckbox();
+											if (subComponent.getName() != null)
+											{
+												subCheckbox.setText(subComponent.getName());
+											}
+											else
+											{
+												subCheckbox.setText(subComponent.getID());
+											}
+											subCheckbox.setFont(subtittlesFont);
+											addComponentLayout(component.getPainelMenuCheckbox(), subCheckbox, 1, panelLine, 2, 1, new Insets(0, 5, 5, 0));
+											panelLine++;
+											subCheckbox.setIndex(component.getComponentCheckbox().getIndex());
+											subCheckbox.setSubComponentIndex(i);
+											subCheckbox.addActionListener(new ActionListener()
+											{
+												@Override
+												public void actionPerformed(ActionEvent e) 
+												{
+													GCheckbox subCheckbox = (GCheckbox) e.getSource();
+													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgCondition().subComponentList.get(subCheckbox.getSubComponentIndex());
+													
+													if (subComponent.getSubComponentCheckbox().isSelected())
+													{
+														device.graphsToUpdate.add(subComponent);
+													}
+													else
+													{
+														device.graphsToUpdate.remove(subComponent);
+													}
+												}
+											});
+											componentCondition.subComponentList.add(subComponent);
+											component.setgCondition(componentCondition);
+											device.seriesToUpdate.add(dataserie);
+										}
+										
+									}
+								}
+								catch(Exception conditionError)
+								{
+									System.out.println("No Conditions");
+								}
+								revalidate();
+								repaint();
+							}
+							else
+							{
+								for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+								{
+									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+								}
+								for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+								{
+									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+								}
+								for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+								{
+									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+								}
+							}
+						}
+						else if (!checkbox.isSelected())
+						{
+							System.out.println("//////////////////////// tamanho subComponentList: " + component.getgSample().subComponentList.size());
+							
+							for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+							{
+								component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+								component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								repaint();
+								revalidate();
+							}
+							for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+							{
+								component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+								component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+							}
+							for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+							{
+								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+							}
+							System.out.println("sdhufhasdofuahdf");
+						}
+						
+					}
+				});
+				componentCheckbox.setVisible(true);	
+			}
+		}
+		else
+		{
+			infoPanel.removeAll();
+			panel5.removeAll();
+			addComponentLayout(panel5, device.checkBoxPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
+			addComponentLayout(infoPanel, device.GraphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
+		}
+		panel5.setVisible(true);
+		infoPanel.setVisible(true);
+		device.checkBoxPanel.setVisible(true);
+		device.GraphPanel.setVisible(true);
+		System.out.println("ajustando paineis");
+		revalidate();
+		repaint();
 	}
 
 	public void probe() throws JAXBException, MalformedURLException
@@ -1020,7 +1605,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											{
 												value = subComponent.getDataserie().getLastValue();
 												System.out.println("       (num)Defining value to update on field, value: " + subComponent.getDataserie().getLastValue().toString());
-											}										
+											}
+											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE") || value.toUpperCase().equals("NORMAL"))
+											{
+												subComponent.gettField().setForeground(new Color(0,128,0));
+											}
+												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											{
+													subComponent.gettField().setForeground(Color.RED);	
+											}
 											subComponent.gettField().setText(value);
 										}
 									}
