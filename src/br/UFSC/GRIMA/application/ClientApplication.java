@@ -1060,7 +1060,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(j +"o loop, name:" + jaxComponent.getEvents().getEvent().get(j).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																				  jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId(),
-																				  checkbox.getIndex(), 0, j, device.categoryAxesValues);
+																				  checkbox.getIndex(), 1, j, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
@@ -1175,42 +1175,55 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							}
 							else
 							{
-								for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+								if (component.getgSample() != null)
 								{
-									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+									{
+										component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									}
 								}
-								for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+								if (component.getgEvent()!= null)
 								{
-									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+									{
+										component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									}
 								}
-								for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+								if (component.getgCondition() != null)
 								{
-									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+									{
+										component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(true);
+									}
 								}
 							}
 						}
 						else if (!checkbox.isSelected())
 						{
-							System.out.println("//////////////////////// tamanho subComponentList: " + component.getgSample().subComponentList.size());
-							
-							for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+							if (component.getgSample() != null)
 							{
-								component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
-								component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
-								repaint();
-								revalidate();
+								for(int i=0; i<component.getgSample().subComponentList.size(); i++)
+								{
+									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								}
 							}
-							for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+							if (component.getgEvent()!= null)
 							{
-								component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
-								component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								for(int i=0; i<component.getgEvent().subComponentList.size(); i++)
+								{
+									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								}
 							}
-							for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+							if (component.getgCondition() != null)
 							{
-								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
-								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								for(int i=0; i<component.getgCondition().subComponentList.size(); i++)
+								{
+									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
+									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+								}
 							}
-							System.out.println();
 						}
 						
 					}
@@ -1557,7 +1570,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									GDataserie serie = device.seriesToUpdate.get(i);
 									if (serie.SEC == 0) //Sample
 									{
-										System.out.println("sample serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue());
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp(),
 														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue());
 									}
