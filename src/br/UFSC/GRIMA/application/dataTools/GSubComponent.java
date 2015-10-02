@@ -11,7 +11,7 @@ public class GSubComponent
 	private String id;
 	private GDataserie dataserie;
 	private JTextField tField = new JTextField();
-	private JCheckBox subComponentCheckbox = new JCheckBox();
+	private GCheckbox subComponentCheckbox;
 	
 	public GSubComponent(String name, String id)
 	{
@@ -35,7 +35,7 @@ public class GSubComponent
 	public JCheckBox getSubComponentCheckbox() {
 		return subComponentCheckbox;
 	}
-	public void setSubComponentCheckbox(JCheckBox subComponentCheckbox) {
+	public void setSubComponentCheckbox(GCheckbox subComponentCheckbox) {
 		this.subComponentCheckbox = subComponentCheckbox;
 	}
 	public GDataserie getDataserie() {

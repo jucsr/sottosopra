@@ -191,13 +191,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		mainPanel.setVisible(false);
 		infoPanel.setVisible(false);
 		System.out.println("destrutor\n");
-	}
-	
+	}	
 	public void addComponentLayout(Container container, Component component, int coluna, int linha, int colunasOcupadas, int linhasOcupadas, Insets insets)
 	{
 		container.add(component, new GridBagConstraints(coluna, linha, colunasOcupadas, linhasOcupadas, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
 	}
-	
  	public void actionPerformed(ActionEvent event)
 	{
 		int index = comboBox1.getSelectedIndex();
@@ -916,7 +914,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		revalidate();
 		repaint();
 	}
-	
 	private void setCurrentGraphs() throws JAXBException, MalformedURLException
 	{
 		
@@ -993,6 +990,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										GSample componentSample = new GSample();
 										System.out.println(componentSample);
 										System.out.println("creating sample for: " + jaxComponent.getSamples().getSample().size());
+										component.setgSample(componentSample);
 										for(int j = 0; j < jaxComponent.getSamples().getSample().size();j++)
 										{
 											System.out.println(j +"o loop, name:" + jaxComponent.getSamples().getSample().get(j).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
@@ -1037,7 +1035,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												}
 											});
 											componentSample.subComponentList.add(subComponent);
-											component.setgSample(componentSample);
+											componentSample.subComponentList.get(j).setSubComponentCheckbox(subCheckbox);
 											device.seriesToUpdate.add(dataserie);
 										}
 									}
@@ -1045,6 +1043,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								}
 								catch(Exception sampleError)
 								{
+									System.out.println("//////////***" + sampleError);
 									System.out.println("No Samples");
 								}
 								try
@@ -1055,6 +1054,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										GEvent componentEvent = new GEvent();
 										System.out.println(componentEvent);
 										System.out.println("creating sample for: " + jaxComponent.getEvents().getEvent().size());
+										component.setgEvent(componentEvent);
 										for(int j = 0; j < jaxComponent.getEvents().getEvent().size();j++)
 										{
 											System.out.println(j +"o loop, name:" + jaxComponent.getEvents().getEvent().get(j).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
@@ -1099,7 +1099,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												}
 											});
 											componentEvent.subComponentList.add(subComponent);
-											component.setgEvent(componentEvent);
+											componentEvent.subComponentList.get(j).setSubComponentCheckbox(subCheckbox);
 											device.seriesToUpdate.add(dataserie);
 										}
 									}
@@ -1116,6 +1116,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										GCondition componentCondition = new GCondition();
 										System.out.println(componentCondition);
 										System.out.println("creating event for: " + jaxComponent.getCondition().getCondition().size());
+										component.setgCondition(componentCondition);
 										for(int i=0; i<jaxComponent.getCondition().getCondition().size(); i++)
 										{
 											System.out.println(i +"o loop, name:" + jaxComponent.getCondition().getCondition().get(i).getValue().getName() + " id: " + jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
@@ -1159,7 +1160,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												}
 											});
 											componentCondition.subComponentList.add(subComponent);
-											component.setgCondition(componentCondition);
+											componentCondition.subComponentList.get(i).setSubComponentCheckbox(subCheckbox);
 											device.seriesToUpdate.add(dataserie);
 										}
 										
@@ -1209,7 +1210,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
 								component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
 							}
-							System.out.println("sdhufhasdofuahdf");
+							System.out.println();
 						}
 						
 					}
