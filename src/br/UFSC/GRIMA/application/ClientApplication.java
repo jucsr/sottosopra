@@ -35,6 +35,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.jboss.ejb.plugins.JaccAuthorizationInterceptor;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 
 import main.java.us.sosia.video.stream.agent.StreamClient;
 import br.UFSC.GRIMA.application.entities.devices.ComponentType;
@@ -442,7 +444,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getSamples().getSample().get(i).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
 																				  jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId(),
-																				  button.getIndex(), 0, i, device.categoryAxesValues);
+																				  button.getIndex(), 0, i);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
 																						   jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
@@ -511,7 +513,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getEvents().getEvent().get(i).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
 																				  jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId(),
-													  							  button.getIndex(), 1, i, device.categoryAxesValues);
+													  							  button.getIndex(), 1, i);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId());
 											subComponent.setDataserie(dataserie);
@@ -579,7 +581,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getCondition().getCondition().get(i).getValue().getName() + " id: " + jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),  
 																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(),
-																				  button.getIndex(), 2, i, device.categoryAxesValues);
+																				  button.getIndex(), 2, i);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
 															   							   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
 											subComponent.setDataserie(dataserie);
@@ -939,7 +941,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				e.printStackTrace();
 			}
 			addComponentLayout(panel5, device.checkBoxPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
-			addComponentLayout(infoPanel, device.GraphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
+			addComponentLayout(infoPanel, device.graphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 0));
 			
 			for (int i = 0; i< current.getStreams().getDeviceStream().get(0).getComponentStream().size(); i++)
 			{
@@ -996,12 +998,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(j +"o loop, name:" + jaxComponent.getSamples().getSample().get(j).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
 																				  jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId(),
-																				  checkbox.getIndex(), 0, j, device.categoryAxesValues);
+																				  checkbox.getIndex(), 0, j);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
 																						   jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											subComponent.setDataserie(dataserie);
-											GCheckbox subCheckbox = new GCheckbox();
+											final GCheckbox subCheckbox = new GCheckbox();
 											if (subComponent.getName() != null)
 											{
 												subCheckbox.setText(subComponent.getName());
@@ -1021,12 +1023,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												@Override
 												public void actionPerformed(ActionEvent e) 
 												{
-													GCheckbox subCheckbox = (GCheckbox) e.getSource();
 													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgSample().subComponentList.get(subCheckbox.getSubComponentIndex());
 													
 													if (subComponent.getSubComponentCheckbox().isSelected())
 													{
 														device.graphsToUpdate.add(subComponent);
+														device.addtoDataset(subComponent);
 													}
 													else
 													{
@@ -1060,12 +1062,12 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(j +"o loop, name:" + jaxComponent.getEvents().getEvent().get(j).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																				  jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId(),
-																				  checkbox.getIndex(), 1, j, device.categoryAxesValues);
+																				  checkbox.getIndex(), 1, j);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											subComponent.setDataserie(dataserie);
-											GCheckbox subCheckbox = new GCheckbox();
+											final GCheckbox subCheckbox = new GCheckbox();
 											if (subComponent.getName() != null)
 											{
 												subCheckbox.setText(subComponent.getName());
@@ -1085,12 +1087,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												@Override
 												public void actionPerformed(ActionEvent e) 
 												{
-													GCheckbox subCheckbox = (GCheckbox) e.getSource();
 													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgEvent().subComponentList.get(subCheckbox.getSubComponentIndex());
 													
 													if (subCheckbox.isSelected())
 													{
+														device.addtoDataset(subComponent);
 														device.graphsToUpdate.add(subComponent);
+
 													}
 													else
 													{
@@ -1124,10 +1127,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 																						   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
 											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
 																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(), 
-																				  checkbox.getIndex(), 2, i, device.categoryAxesValues);
+																				  checkbox.getIndex(), 2, i);
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											subComponent.setDataserie(dataserie);
-											GCheckbox subCheckbox = new GCheckbox();
+											final GCheckbox subCheckbox = new GCheckbox();
 											if (subComponent.getName() != null)
 											{
 												subCheckbox.setText(subComponent.getName());
@@ -1146,12 +1149,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												@Override
 												public void actionPerformed(ActionEvent e) 
 												{
-													GCheckbox subCheckbox = (GCheckbox) e.getSource();
 													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgCondition().subComponentList.get(subCheckbox.getSubComponentIndex());
 													
 													if (subComponent.getSubComponentCheckbox().isSelected())
 													{
 														device.graphsToUpdate.add(subComponent);
+														device.addtoDataset(subComponent);
+
 													}
 													else
 													{
@@ -1228,20 +1232,22 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						
 					}
 				});
-				componentCheckbox.setVisible(true);	
+				componentCheckbox.setVisible(true);
+				
 			}
+			device.setGraphCharts();
 		}
 		else
 		{
 			infoPanel.removeAll();
 			panel5.removeAll();
 			addComponentLayout(panel5, device.checkBoxPanel, 0, 1, 1, 1, new Insets(0, 0, 5, 5));
-			addComponentLayout(infoPanel, device.GraphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
+			addComponentLayout(infoPanel, device.graphPanel, 0, 0, 1, 1, new Insets(0, 0, 5, 5));
 		}
 		panel5.setVisible(true);
 		infoPanel.setVisible(true);
 		device.checkBoxPanel.setVisible(true);
-		device.GraphPanel.setVisible(true);
+		device.graphPanel.setVisible(true);
 		System.out.println("ajustando paineis");
 		revalidate();
 		repaint();
@@ -1561,6 +1567,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 						if (comboBox1.getSelectedItem().toString().equals("Current") && device!=null) 
 	 					{
 							//atualiza Series de dados
+							device.setLastTimestamp(currentt.getHeader().getCreationTime());
+							System.out.println("############################################################################################################################" + device.getLastTimestamp().toString());
 							try
 							{
 								System.out.println("atualizando series:" + device.seriesToUpdate.size());
@@ -1571,19 +1579,22 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									if (serie.SEC == 0) //Sample
 									{
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue());
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue(),
+														 device.getLastTimestamp());
 									}
 									if (serie.SEC == 1) //Event
 									{
 										System.out.println("event serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue(),
+														 device.getLastTimestamp());
 									}
 									if (serie.SEC == 2) // Condition
 									{
 										System.out.println("condition serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
+														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart(),
+														 device.getLastTimestamp());
 									}
 								}
 							}
@@ -1611,19 +1622,18 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											}
 											else if (subComponent.getDataserie().isCategoryChart() )
 											{
-												value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
-												System.out.println("       (category)Defining value to update on field, value: " + value + ", index returned: " +  subComponent.getDataserie().getCategoryPosition(subComponent.getDataserie().getLastValue()) + ", string passada: " + subComponent.getDataserie().getLastValue());
+											//	value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
+												value = subComponent.getDataserie().categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
 											}
 											else if (subComponent.getDataserie().isNumericChart())
 											{
 												value = subComponent.getDataserie().getLastValue();
-												System.out.println("       (num)Defining value to update on field, value: " + subComponent.getDataserie().getLastValue().toString());
 											}
 											if (value.toUpperCase().equals("AVAILABLE") || value.toUpperCase().equals("ACTIVE") || value.toUpperCase().equals("NORMAL"))
 											{
 												subComponent.gettField().setForeground(new Color(0,128,0));
 											}
-												else if(value.toUpperCase().equals("UNAVAILABLE"))
+											else if(value.toUpperCase().equals("UNAVAILABLE"))
 											{
 													subComponent.gettField().setForeground(Color.RED);	
 											}
@@ -1637,6 +1647,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									System.out.println(e);
 									System.out.println("valuesToUpdate  range changed in execution");
 								}
+							}
+							else if (toggleAbaGraph.isSelected())
+							{
+								System.out.println("Iniciando atualizador grafico");
+								TimeSeriesCollection numDataset = new TimeSeriesCollection();
+								TimeSeriesCollection symbolDataset = new TimeSeriesCollection();
+								
 							}
 						}
 						revalidate();
@@ -1654,7 +1671,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			System.out.println("Saiu do atualizador");
 		}
 	};
-	
+	{	
 /////////////////////////////////////////- Teste
 //	SwingWorker worker = new SwingWorker()  // Atualizador em Tempo Real!
 //	{
@@ -1918,7 +1935,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 //				}
 //			}				
 //		}						
-		
+	}		
 	public Agent getAgent() 
 	{
 		return agent;

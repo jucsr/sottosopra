@@ -31,13 +31,14 @@ public class GDataserie
 	public int subComponentIndex;
 	private boolean numericChart = false;
 	private boolean categoryChart = false;
-	public TimeSeries serie;
+	private boolean axesOutOfRange = false;
+	private TimeSeries serie;
 	private Millisecond range = new Millisecond();
-	public String[] categoryAxesValues;
+	public String[] categoryAxesValues = new String[30];
 	
 	
 	
-	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent, String[] string)
+	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent)
 	{
 		System.out.println("GDS: iniciando criação do ds");
 		setName(Name);
@@ -45,7 +46,6 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
-		this.categoryAxesValues = string;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -62,35 +62,35 @@ public class GDataserie
 			Unmarshaller u = jc.createUnmarshaller();
 			URL url = new URL(agent.getIP() + "/sample?path=//DataItem[@id='" + dataItemId + "']" );
 			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-			if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().isEmpty())
-			{
-				
-				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
-				{
-					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
-							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue());
-				}
-			}
-			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().isEmpty())
-			{
-				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
-				{
-					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
-							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue());
-				}
-			}
-			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().isEmpty())
-			{
-				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
-				{
-					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
-							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getValue());
-				}
-			}
-			else
-			{
-				System.out.println("Empty Sample request. " + dataItemId);
-			}
+//			if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().isEmpty())
+//			{
+//				
+//				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue());
+//				}
+//			}
+//			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().isEmpty())
+//			{
+//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue());
+//				}
+//			}
+//			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().isEmpty())
+//			{
+//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getValue());
+//				}
+//			}
+//			else
+//			{
+//				System.out.println("Empty Sample request. " + dataItemId);
+//			}
 		}
 		catch(Exception connectionError)
 		{
@@ -100,7 +100,7 @@ public class GDataserie
 		
 		
 	}
-	public GDataserie(String Name, String dataItemId,  int componentIndex, int SEC, int subComponentIndex, String[] string)
+	public GDataserie(String Name, String dataItemId,  int componentIndex, int SEC, int subComponentIndex)
 	{
 		System.out.println("GDS: iniciando criação do ds");
 		setName(Name);
@@ -108,7 +108,6 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
-		this.categoryAxesValues = string;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -125,14 +124,13 @@ public class GDataserie
 		this.range = range;
 		this.serie.setMaximumItemAge(range.getMillisecond());
 	}
-	public void addToSerie(XMLGregorianCalendar xtime, String yValue)
+	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime)
 	{
-		System.out.println("GDS:    Iniciando addToSerie. tempo, valor: " + xtime.toString() + " " + yValue);
 		Millisecond time = new Millisecond(xtime.getMillisecond(), xtime.getSecond(), xtime.getMinute(), xtime.getHour(), xtime.getDay(), xtime.getMonth(), xtime.getYear());
-		System.out.println("GDS:         tempo convertido: " + time.toString());
-		System.out.println("GDS:         verificando tipo de serie. catChart, numchart" + categoryChart + " " + numericChart);
+		Millisecond inicialTime = new Millisecond(0, creationTime.getSecond(), creationTime.getMinute(), creationTime.getHour(), creationTime.getDay(), creationTime.getMonth(), creationTime.getYear());
 		if (!categoryChart && !numericChart)
 		{
+			time = inicialTime;
 			try
 			{
 				if(yValue.toUpperCase().equals("UNAVAILABLE"))
@@ -158,14 +156,32 @@ public class GDataserie
 		else if (categoryChart)
 		{
 			System.out.println("GDS:      categoryChart pre definido");
+			if(serie.getItemCount()>0)
+			{
+				if (yValue.equals(categoryAxesValues[Math.round(Float.parseFloat(getLastValue()))]))
+				{
+					time = inicialTime;
+				}
+			}
+			if (yValue.equals(categoryAxesValues[Math.round(Float.parseFloat(getLastValue()))]))
+			{
+				time = inicialTime;
+			}
 			serie.addOrUpdate(time, getCategoryPosition(yValue));
 		}
 		else if (numericChart)
 		{
 			System.out.print("GDS:     numchart pre efinido. adicionando ");
+			if(serie.getItemCount()>0)
+			{
+				if (serie.getValue(serie.getItemCount()-1).equals(Double.parseDouble(yValue)))
+				{
+					time = inicialTime;
+				}
+			}
 			if(yValue.toUpperCase().equals("UNAVAILABLE"))
 			{
-				serie.addOrUpdate(time, null);
+				serie.add(time, null);
 				System.out.println("nulo");
 			}
 			else
@@ -175,12 +191,29 @@ public class GDataserie
 				serie.addOrUpdate(time, numValue);
 			}
 		}
+		////Descarta valores intermediarios////
+		if (serie.getItemCount() > 2)
+		{
+			if (serie.getValue(serie.getItemCount()-1) == null && serie.getValue(serie.getItemCount()-2) == null && serie.getValue(serie.getItemCount()-3) == null)
+			{
+				serie.delete(serie.getItemCount()-2, serie.getItemCount()-2); /// deleta o penúltimo registro
+			}
+			else if (serie.getValue(serie.getItemCount() - 1).equals(serie.getValue(serie.getItemCount()-2)) && serie.getValue(serie.getItemCount()-1).equals(serie.getValue(serie.getItemCount()-3)))
+			{
+				serie.delete(serie.getItemCount()-2, serie.getItemCount()-2); /// deleta o penúltimo registro
+			}
+		}
+		System.out.println("###################tamanho da lista: " + serie.getItemCount());
 	}
 	public int getCategoryPosition (String string)
 	{
 		System.out.println("GDS: Inicializando getCategoryPosition, iniciando for: "  + this.categoryAxesValues.length + ", string: " + string);
+		if (axesOutOfRange)
+		{
+			categoryAxesValues[0] = string;
+			return 0;
+		}
 		int i;
-		
 		for ( i=0; i< this.categoryAxesValues.length && categoryAxesValues[i]!= null;i++)
 		{
 			System.out.println("GDS:       " + i + "o loop. valor corrente na lista de strings: " + categoryAxesValues[i]);
@@ -189,6 +222,12 @@ public class GDataserie
 				System.out.println("GDS:      returning index " + i + " com string: " + categoryAxesValues[i]);
 				return i;
 			}
+		}
+		if (i == 30)
+		{
+			axesOutOfRange = true;
+			categoryAxesValues[0] = string;
+			return 0;
 		}
 		System.out.println("GDS:       Creating new string on axis: " + string + " na posição " + i);
 		categoryAxesValues[i]= string;
@@ -203,7 +242,7 @@ public class GDataserie
 	{
 		this.name = name;
 	}
-		public String getDataItemId() {
+	public String getDataItemId() {
 		return dataItemId;
 	}
 	public void setDataItemId(String dataItemId) {
@@ -217,6 +256,10 @@ public class GDataserie
 	{
 		return this.numericChart;
 	}
+	public boolean isAxesOutOfRange()
+	{
+		return this.axesOutOfRange;
+	}
 	public String getLastValue()
 	{
 		System.out.println("GDS: iniciando getLastValue. tamanho da serie: " + this.serie.getItemCount() + " com ultimo valor: " + this.serie.getValue(this.serie.getItemCount() - 1));
@@ -225,5 +268,9 @@ public class GDataserie
 			return this.serie.getValue(this.serie.getItemCount() - 1).toString();
 		}
 		else return null;
+	}
+	public TimeSeries getSerie()
+	{
+		return this.serie;
 	}
 }
