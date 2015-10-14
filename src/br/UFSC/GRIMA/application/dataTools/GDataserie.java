@@ -33,7 +33,7 @@ public class GDataserie
 	private boolean categoryChart = false;
 	private boolean axesOutOfRange = false;
 	private TimeSeries serie;
-	private Millisecond range = new Millisecond();
+	private int[] range = new int[4];
 	public String[] categoryAxesValues = new String[30];
 	
 	
@@ -46,6 +46,7 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
+		range[2] = 3;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -108,6 +109,7 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
+		range[2] = 3;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -118,11 +120,6 @@ public class GDataserie
 			this.serie = new TimeSeries(dataItemId);
 		}
 		System.out.println("GDS: setando nome na dataserie: " + this.serie.getKey());
-	}
-	public void setRange (Millisecond range)
-	{																		/////////////////setar tamanho maximo
-		this.range = range;
-		this.serie.setMaximumItemAge(range.getMillisecond());
 	}
 	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime)
 	{
@@ -204,6 +201,42 @@ public class GDataserie
 			}
 		}
 		System.out.println("###################tamanho da lista: " + serie.getItemCount());
+		/////Descarta registros antigos
+		Millisecond time0 = new Millisecond(0, inicialTime.getSecond().getSecond() - range[3], inicialTime.getSecond().getMinute().getMinute() - range[2], inicialTime.getSecond().getMinute().getHour().getHour() - range[1], inicialTime.getSecond().getMinute().getHour().getDay().getDayOfMonth() - range[0], inicialTime.getSecond().getMinute().getHour().getDay().getMonth(), inicialTime.getSecond().getMinute().getHour().getDay().getYear());
+		if(serie.getItemCount() > 1)
+		{
+			for (int i=0; i < serie.getItemCount() - 1;i++)
+			{
+				if (time0.compareTo(serie.getTimePeriod(i)) <=0)
+					break;
+				else if (time0.compareTo(serie.getTimePeriod(i)) > 0 && time0.compareTo(serie.getTimePeriod(i+1)) < 0)
+				{
+					if (!axesOutOfRange)
+					{
+						if (!numericChart)
+						{
+							serie.add(time0, serie.getValue(i));
+						}
+						if (numericChart)
+						{
+							////faz uma aproximacao linear em t0
+//							double y1 = serie.getValue(i).doubleValue();
+//							double y2 = serie.getValue(i+1).doubleValue();
+//							Millisecond t1 = (Millisecond) serie.getTimePeriod(i);
+//							Millisecond t2 = (Millisecond) serie.getTimePeriod(i+1);
+//							long x0 = time0.getMillisecond() + time0.getSecond().getSecond()*1000 + time0.getSecond().getMinute().getMinute()*60000 + time0.getSecond().getMinute().getHour().getHour()*3600000 + time0.getSecond().getMinute().getHour().getDay().getDayOfMonth()*86400000 + time0.getSecond().getMinute().getHour().getDay().getMonth()*86400000 + time0.getMillisecond();
+//							long x1;
+//							long x2;
+//							float a =  (float) ((y2 - y1 )/(1.0*x2 - 1.0x1));
+//							float b = (float) (y1 - a*x1);
+//							float yn = a*x0 + b;
+//							serie.addOrUpdate(time0, yn);
+						}
+						serie.delete(0, i);
+					}
+				}
+			}
+		}
 	}
 	public int getCategoryPosition (String string)
 	{

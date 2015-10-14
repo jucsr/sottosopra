@@ -1372,7 +1372,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			});
 		}
 	}
-	
+
 	public void sample() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
@@ -1541,12 +1541,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 			});
 		}
 	}
-	
+
 	private JAXBElement<MTConnectDevicesType> extracted(Unmarshaller u, URL url) throws JAXBException 
 	{
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
-	
 	
 	SwingWorker worker = new SwingWorker() 
 	{

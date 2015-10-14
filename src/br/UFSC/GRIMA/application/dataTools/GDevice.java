@@ -2,6 +2,7 @@ package br.UFSC.GRIMA.application.dataTools;
 
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -15,6 +16,12 @@ import org.hamcrest.core.IsAnything;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.SymbolAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYStepAreaRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
@@ -133,8 +140,15 @@ public class GDevice
 		ChartPanel panel1 = new ChartPanel(numericChart);
 		panel1.setVisible(true);
 		
+		DateAxis xAxis = new DateAxis();
+		ValueAxis yAxis = new SymbolAxis("Status", categoryAxesValues);
+		XYItemRenderer renderer = new XYStepAreaRenderer();
+		XYPlot plot = new XYPlot(symbolDataset, xAxis, yAxis, renderer);
+		JFreeChart categoryChart = new JFreeChart("Category Chart", new Font("Tahoma", 0, 18), plot, true);
+		ChartPanel panel2 = new ChartPanel(categoryChart);
 		
-		graphPanel.add(panel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));		
+		graphPanel.add(panel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		graphPanel.add(panel2, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
 	}
 
 	public XMLGregorianCalendar getLastTimestamp() {
