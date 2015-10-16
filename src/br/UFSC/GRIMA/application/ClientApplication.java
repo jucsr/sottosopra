@@ -1033,6 +1033,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 													else
 													{
 														device.graphsToUpdate.remove(subComponent);
+														device.removeFromDataset(subComponent);
 													}
 												}
 											});
@@ -1089,15 +1090,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 												{
 													GSubComponent subComponent = device.componentStreamList.get(subCheckbox.getIndex()).getgEvent().subComponentList.get(subCheckbox.getSubComponentIndex());
 													
-													if (subCheckbox.isSelected())
+													if (subComponent.getSubComponentCheckbox().isSelected())
 													{
-														device.addtoDataset(subComponent);
 														device.graphsToUpdate.add(subComponent);
-
+														device.addtoDataset(subComponent);
 													}
 													else
 													{
 														device.graphsToUpdate.remove(subComponent);
+														device.removeFromDataset(subComponent);
 													}
 												}
 											});
@@ -1155,11 +1156,11 @@ public class ClientApplication extends BeginWindow implements ActionListener
 													{
 														device.graphsToUpdate.add(subComponent);
 														device.addtoDataset(subComponent);
-
 													}
 													else
 													{
 														device.graphsToUpdate.remove(subComponent);
+														device.removeFromDataset(subComponent);
 													}
 												}
 											});
@@ -1210,6 +1211,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								{
 									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
 									component.getgSample().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+									device.graphsToUpdate.remove(component.getgSample().subComponentList.get(i));
+									device.removeFromDataset(component.getgSample().subComponentList.get(i));
 								}
 							}
 							if (component.getgEvent()!= null)
@@ -1218,6 +1221,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								{
 									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
 									component.getgEvent().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+									device.graphsToUpdate.remove(component.getgEvent().subComponentList.get(i));
+									device.removeFromDataset(component.getgEvent().subComponentList.get(i));
 								}
 							}
 							if (component.getgCondition() != null)
@@ -1226,6 +1231,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								{
 									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setVisible(false);
 									component.getgCondition().subComponentList.get(i).getSubComponentCheckbox().setSelected(false);
+									device.graphsToUpdate.remove(component.getgCondition().subComponentList.get(i));
+									device.removeFromDataset(component.getgCondition().subComponentList.get(i));
 								}
 							}
 						}
@@ -1579,21 +1586,21 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									{
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp(),
 														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue(),
-														 device.getLastTimestamp());
+														 device.getLastTimestamp(), device.categoryAxesValues);
 									}
 									if (serie.SEC == 1) //Event
 									{
 										System.out.println("event serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp(),
 														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue(),
-														 device.getLastTimestamp());
+														 device.getLastTimestamp(), device.categoryAxesValues);
 									}
 									if (serie.SEC == 2) // Condition
 									{
 										System.out.println("condition serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
 										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp(),
 														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart(),
-														 device.getLastTimestamp());
+														 device.getLastTimestamp(), device.categoryAxesValues);
 									}
 								}
 							}
@@ -1650,9 +1657,13 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							else if (toggleAbaGraph.isSelected())
 							{
 								System.out.println("Iniciando atualizador grafico");
-								TimeSeriesCollection numDataset = new TimeSeriesCollection();
-								TimeSeriesCollection symbolDataset = new TimeSeriesCollection();
-								
+								int i;
+								for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
+								if (i != device.categoryAxesValuesLenght)
+								{
+									device.defineSymbolAxis();
+									device.categoryAxesValuesLenght = i;
+								}
 							}
 						}
 						revalidate();

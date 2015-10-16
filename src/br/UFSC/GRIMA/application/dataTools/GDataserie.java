@@ -35,10 +35,11 @@ public class GDataserie
 	private TimeSeries serie;
 	private int[] range = new int[4];
 	public String[] categoryAxesValues = new String[30];
+	public Integer[] categoryAxesIndexs = new Integer[30];
 	
 	
 	
-	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent)
+ 	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent)
 	{
 		System.out.println("GDS: iniciando criação do ds");
 		setName(Name);
@@ -46,7 +47,7 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
-		range[2] = 3;
+		range[2] = 1;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -109,7 +110,7 @@ public class GDataserie
 		this.componentIndex = componentIndex;
 		this.subComponentIndex = subComponentIndex;
 		this.SEC = SEC;
-		range[2] = 3;
+		range[2] = 1;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
 		if (this.getName() != null)
 		{
@@ -121,7 +122,7 @@ public class GDataserie
 		}
 		System.out.println("GDS: setando nome na dataserie: " + this.serie.getKey());
 	}
-	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime)
+	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime, String[] deviceList)
 	{
 		Millisecond time = new Millisecond(xtime.getMillisecond(), xtime.getSecond(), xtime.getMinute(), xtime.getHour(), xtime.getDay(), xtime.getMonth(), xtime.getYear());
 		Millisecond inicialTime = new Millisecond(0, creationTime.getSecond(), creationTime.getMinute(), creationTime.getHour(), creationTime.getDay(), creationTime.getMonth(), creationTime.getYear());
@@ -147,7 +148,7 @@ public class GDataserie
 			{
 				this.categoryChart = true;
 				System.out.println("GDS:             category chart identificado, chamando getCategoryPosition.");
-				serie.addOrUpdate(time, getCategoryPosition(yValue));
+				serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 			}
 		}
 		else if (categoryChart)
@@ -164,7 +165,7 @@ public class GDataserie
 			{
 				time = inicialTime;
 			}
-			serie.addOrUpdate(time, getCategoryPosition(yValue));
+			serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 		}
 		else if (numericChart)
 		{
@@ -178,7 +179,7 @@ public class GDataserie
 			}
 			if(yValue.toUpperCase().equals("UNAVAILABLE"))
 			{
-				serie.add(time, null);
+				serie.addOrUpdate(time, null);
 				System.out.println("nulo");
 			}
 			else
@@ -215,22 +216,24 @@ public class GDataserie
 					{
 						if (!numericChart)
 						{
-							serie.add(time0, serie.getValue(i));
+							serie.addOrUpdate(time0, serie.getValue(i));
 						}
 						if (numericChart)
 						{
-							////faz uma aproximacao linear em t0
-//							double y1 = serie.getValue(i).doubleValue();
-//							double y2 = serie.getValue(i+1).doubleValue();
-//							Millisecond t1 = (Millisecond) serie.getTimePeriod(i);
-//							Millisecond t2 = (Millisecond) serie.getTimePeriod(i+1);
-//							long x0 = time0.getMillisecond() + time0.getSecond().getSecond()*1000 + time0.getSecond().getMinute().getMinute()*60000 + time0.getSecond().getMinute().getHour().getHour()*3600000 + time0.getSecond().getMinute().getHour().getDay().getDayOfMonth()*86400000 + time0.getSecond().getMinute().getHour().getDay().getMonth()*86400000 + time0.getMillisecond();
-//							long x1;
-//							long x2;
-//							float a =  (float) ((y2 - y1 )/(1.0*x2 - 1.0x1));
-//							float b = (float) (y1 - a*x1);
-//							float yn = a*x0 + b;
-//							serie.addOrUpdate(time0, yn);
+							//faz uma aproximacao linear em t0
+							double y1 = serie.getValue(i).doubleValue();
+							double y2 = serie.getValue(i+1).doubleValue();
+							long x0 = time0.getLastMillisecond();
+							long x1 = serie.getTimePeriod(i).getLastMillisecond();
+							long x2 = serie.getTimePeriod(i+1).getLastMillisecond();
+							double a =  (double) ((y2 - y1 )/(x2 - x1));
+							double b = (double) (y1 - a*x1);
+							double yn = a*x0 + b;
+							serie.addOrUpdate(time0, yn);
+						}
+						if (categoryChart)
+						{
+							serie.addOrUpdate(time0, serie.getValue(i - 1));
 						}
 						serie.delete(0, i);
 					}
@@ -238,7 +241,7 @@ public class GDataserie
 			}
 		}
 	}
-	public int getCategoryPosition (String string)
+	public int getCategoryPosition (String string, String[] deviceList)
 	{
 		System.out.println("GDS: Inicializando getCategoryPosition, iniciando for: "  + this.categoryAxesValues.length + ", string: " + string);
 		if (axesOutOfRange)
@@ -253,7 +256,7 @@ public class GDataserie
 			if (string.equals(categoryAxesValues[i]))
 			{
 				System.out.println("GDS:      returning index " + i + " com string: " + categoryAxesValues[i]);
-				return i;
+				return categoryAxesIndexs[i];
 			}
 		}
 		if (i == 30)
@@ -264,7 +267,19 @@ public class GDataserie
 		}
 		System.out.println("GDS:       Creating new string on axis: " + string + " na posição " + i);
 		categoryAxesValues[i]= string;
-		return i;
+		int j;
+		for (j = 0; i< deviceList.length && deviceList[j]!= null;j++)
+		{
+			if(string.equals(deviceList[j]))
+			{
+				categoryAxesIndexs[i] = j;
+				return j;
+			}
+		}
+		deviceList[j] = string;
+		categoryAxesValues[i] = string;
+		categoryAxesIndexs[i] = j;
+		return j;
 	}
 	
 	public String getName() 

@@ -22,6 +22,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYStepAreaRenderer;
+import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
@@ -43,7 +44,10 @@ public class GDevice
 	
 	private TimeSeriesCollection numDataset = new TimeSeriesCollection();
 	private TimeSeriesCollection symbolDataset = new TimeSeriesCollection();
+	private JPanel numPanel;
+	private JPanel symbolPanel;
 	public String[] categoryAxesValues = new String[1000];
+	public int categoryAxesValuesLenght;
 	
 	public ArrayList<GSubComponent> valuesToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> sampleRequestList = new ArrayList<GDataserie>();
@@ -129,6 +133,17 @@ public class GDevice
 			
 		}
 	}
+	public void removeFromDataset(GSubComponent subComponent)
+	{
+		if(subComponent.getDataserie().isNumericChart())
+		{
+			numDataset.removeSeries(subComponent.getDataserie().getSerie());
+		}
+		else if (subComponent.getDataserie().isCategoryChart())
+		{
+			symbolDataset.removeSeries(subComponent.getDataserie().getSerie());
+		}
+	}
 	public void setGraphCharts ()
 	{
 		graphPanel.setLayout(new GridBagLayout());
@@ -137,18 +152,36 @@ public class GDevice
 		((GridBagLayout)graphPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
 		((GridBagLayout)graphPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 		JFreeChart numericChart = ChartFactory.createTimeSeriesChart("Numeric Chart", "Time", "Values", numDataset, true, false, false);
-		ChartPanel panel1 = new ChartPanel(numericChart);
-		panel1.setVisible(true);
+		numPanel = new ChartPanel(numericChart);
+		numPanel.setVisible(true);
 		
 		DateAxis xAxis = new DateAxis();
 		ValueAxis yAxis = new SymbolAxis("Status", categoryAxesValues);
 		XYItemRenderer renderer = new XYStepAreaRenderer();
 		XYPlot plot = new XYPlot(symbolDataset, xAxis, yAxis, renderer);
 		JFreeChart categoryChart = new JFreeChart("Category Chart", new Font("Tahoma", 0, 18), plot, true);
-		ChartPanel panel2 = new ChartPanel(categoryChart);
+		symbolPanel = new ChartPanel(categoryChart);
 		
-		graphPanel.add(panel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
-		graphPanel.add(panel2, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		graphPanel.add(numPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		graphPanel.add(symbolPanel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+	}
+	public void defineSymbolAxis()
+	{
+		int i = 0;
+		for(i = 0; i<categoryAxesValues.length && categoryAxesValues[i]!= null; i++);
+		String[] symbolParameter = new String[i];
+		for(int j = 0; j < i; j++)
+		{
+			symbolParameter[j] = categoryAxesValues[j];
+		}
+		graphPanel.remove(symbolPanel);
+		DateAxis xAxis = new DateAxis();
+		ValueAxis yAxis = new SymbolAxis("Status", symbolParameter);
+		XYStepRenderer renderer = new XYStepRenderer();
+		XYPlot plot = new XYPlot(symbolDataset, xAxis, yAxis, renderer);
+		JFreeChart categoryChart = new JFreeChart("Category Chart", new Font("Tahoma", 0, 18), plot, true);
+		symbolPanel = new ChartPanel(categoryChart);
+		graphPanel.add(symbolPanel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
 	}
 
 	public XMLGregorianCalendar getLastTimestamp() {
