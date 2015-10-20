@@ -1606,7 +1606,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							}
 							catch (Exception e)
 							{
-								System.out.println("seriesToUpdate range changed in execution\n"+e);
+								System.out.println("seriesToUpdate range changed in execution\n" + e);
 							}
 							if (toggleAbaValues.isSelected())
 							{
@@ -1954,5 +1954,4 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	{
 		this.agent = agent;
 	}
-////////////////////////////////////////////////////////////	
 }

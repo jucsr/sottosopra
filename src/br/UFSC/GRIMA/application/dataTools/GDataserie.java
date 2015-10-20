@@ -112,6 +112,10 @@ public class GDataserie
 		this.SEC = SEC;
 		range[2] = 1;
 		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
+		for (int i = 0; i<categoryAxesValues.length; i++)
+		{
+			categoryAxesValues[i] = null;
+		}
 		if (this.getName() != null)
 		{
 			this.serie = new TimeSeries(this.name);
@@ -156,14 +160,10 @@ public class GDataserie
 			System.out.println("GDS:      categoryChart pre definido");
 			if(serie.getItemCount()>0)
 			{
-				if (yValue.equals(categoryAxesValues[Math.round(Float.parseFloat(getLastValue()))]))
+				if (yValue.equals(deviceList[Math.round(Float.parseFloat(getLastValue()))]))
 				{
 					time = inicialTime;
 				}
-			}
-			if (yValue.equals(categoryAxesValues[Math.round(Float.parseFloat(getLastValue()))]))
-			{
-				time = inicialTime;
 			}
 			serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 		}
@@ -233,7 +233,7 @@ public class GDataserie
 						}
 						if (categoryChart)
 						{
-							serie.addOrUpdate(time0, serie.getValue(i - 1));
+							serie.addOrUpdate(time0, serie.getValue(i));
 						}
 						serie.delete(0, i);
 					}
@@ -250,14 +250,14 @@ public class GDataserie
 			return 0;
 		}
 		int i;
-		for ( i=0; i< this.categoryAxesValues.length && categoryAxesValues[i]!= null;i++)
+		for ( i=0; (i< this.categoryAxesValues.length) && (categoryAxesValues[i] != (null)); i++)
 		{
-			System.out.println("GDS:       " + i + "o loop. valor corrente na lista de strings: " + categoryAxesValues[i]);
-			if (string.equals(categoryAxesValues[i]))
-			{
-				System.out.println("GDS:      returning index " + i + " com string: " + categoryAxesValues[i]);
-				return categoryAxesIndexs[i];
-			}
+				System.out.println("GDS:       " + i + "o loop. valor corrente na lista de strings: " + categoryAxesValues[i]);
+				if (string.equals(categoryAxesValues[i]))
+				{
+					System.out.println("GDS:      returning index " + i + " com string: " + categoryAxesValues[i]);
+					return categoryAxesIndexs[i];
+				}
 		}
 		if (i == 30)
 		{
@@ -266,9 +266,8 @@ public class GDataserie
 			return 0;
 		}
 		System.out.println("GDS:       Creating new string on axis: " + string + " na posição " + i);
-		categoryAxesValues[i]= string;
 		int j;
-		for (j = 0; i< deviceList.length && deviceList[j]!= null;j++)
+		for (j = 0; (i< deviceList.length) && (deviceList[j]!= null); j++)
 		{
 			if(string.equals(deviceList[j]))
 			{
@@ -281,7 +280,6 @@ public class GDataserie
 		categoryAxesIndexs[i] = j;
 		return j;
 	}
-	
 	public String getName() 
 	{
 		return name;
