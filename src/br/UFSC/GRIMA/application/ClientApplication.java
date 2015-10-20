@@ -1628,8 +1628,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											}
 											else if (subComponent.getDataserie().isCategoryChart() )
 											{
-											//	value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
-												value = subComponent.getDataserie().categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
+												value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
 											}
 											else if (subComponent.getDataserie().isNumericChart())
 											{
