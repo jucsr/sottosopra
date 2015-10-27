@@ -1,6 +1,7 @@
 package br.UFSC.GRIMA.application.dataTools;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -39,70 +40,7 @@ public class GDataserie
 	
 	
 	
- 	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent)
-	{
-		System.out.println("GDS: iniciando criação do ds");
-		setName(Name);
-		setDataItemId(dataItemId);
-		this.componentIndex = componentIndex;
-		this.subComponentIndex = subComponentIndex;
-		this.SEC = SEC;
-		range[2] = 1;
-		System.out.println("GDS: setando valores. nome, id, comp.index, sc.index , sec, categoryAxes.: " + Name + " " + this.dataItemId + " " + this.componentIndex + " " + this.subComponentIndex + " " + this.SEC + " " + this.categoryAxesValues);
-		if (this.getName() != null)
-		{
-			this.serie = new TimeSeries(this.name);
-		}
-		else
-		{
-			this.serie = new TimeSeries(dataItemId);
-		}
-		System.out.println("GDS: setando nome na dataserie: " + this.serie.getKey());
-		try
-		{
-			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-			Unmarshaller u = jc.createUnmarshaller();
-			URL url = new URL(agent.getIP() + "/sample?path=//DataItem[@id='" + dataItemId + "']" );
-			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-//			if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().isEmpty())
-//			{
-//				
-//				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue());
-//				}
-//			}
-//			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().isEmpty())
-//			{
-//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue());
-//				}
-//			}
-//			else if (!element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().isEmpty())
-//			{
-//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getValue());
-//				}
-//			}
-//			else
-//			{
-//				System.out.println("Empty Sample request. " + dataItemId);
-//			}
-		}
-		catch(Exception connectionError)
-		{
-			System.out.println(connectionError);
-		    JOptionPane.showMessageDialog(null, "Connection Lost ds", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		
-		
-	}
-	public GDataserie(String Name, String dataItemId,  int componentIndex, int SEC, int subComponentIndex)
+ 	public GDataserie(String Name, String dataItemId, int componentIndex, int SEC, int subComponentIndex, Agent agent, String[] deviceList)
 	{
 		System.out.println("GDS: iniciando criação do ds");
 		setName(Name);
@@ -125,11 +63,76 @@ public class GDataserie
 			this.serie = new TimeSeries(dataItemId);
 		}
 		System.out.println("GDS: setando nome na dataserie: " + this.serie.getKey());
+//		try
+//		{
+//			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+//			Unmarshaller u = jc.createUnmarshaller();
+//			URL url = new URL(agent.getIP() + "/sample?path=//DataItem[@id='" + dataItemId + "']" );
+//			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+//			System.out.println("");
+//			try
+//			{
+//				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue(),
+//							   element.getValue().getHeader().getCreationTime(),
+//							   deviceList);
+//				}
+//				System.out.println("");
+//			}
+//			catch(Exception e)
+//			{
+//				System.out.println(e);
+//				System.out.println("Empty Sample");
+//			}
+//			try
+//			{
+//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue(),
+//							   element.getValue().getHeader().getCreationTime(),
+//							   deviceList);
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				System.out.println(e);
+//				System.out.println("Empty Event");
+//			}
+//			try
+//			{
+//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
+//				{
+//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
+//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getName().getLocalPart(),
+//							   element.getValue().getHeader().getCreationTime(),
+//							   deviceList);
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				System.out.println(e);
+//				System.out.println("Empty Sample");
+//			}
+//		}
+//		catch(Exception connectionError)
+//		{
+//			System.out.println(connectionError);
+//		    JOptionPane.showMessageDialog(null, "Connection Lost ds", "Error", JOptionPane.ERROR_MESSAGE);
+//		}
+//		
+		
 	}
 	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime, String[] deviceList)
 	{
 		Millisecond time = new Millisecond(xtime.getMillisecond(), xtime.getSecond(), xtime.getMinute(), xtime.getHour(), xtime.getDay(), xtime.getMonth(), xtime.getYear());
 		Millisecond inicialTime = new Millisecond(0, creationTime.getSecond(), creationTime.getMinute(), creationTime.getHour(), creationTime.getDay(), creationTime.getMonth(), creationTime.getYear());
+		addToSerie1(time, yValue, inicialTime, deviceList);
+	}
+	public void addToSerie1(Millisecond time, String yValue, Millisecond inicialTime, String[] deviceList)
+	{
 		if (!categoryChart && !numericChart)
 		{
 			time = inicialTime;
@@ -151,7 +154,7 @@ public class GDataserie
 			catch (Exception e)
 			{
 				this.categoryChart = true;
-				System.out.println("GDS:             category chart identificado, chamando getCategoryPosition.");
+				System.out.println("GDS:             category chart identificado, chamando getCategoryPosition." + yValue);
 				serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 			}
 		}
@@ -262,7 +265,7 @@ public class GDataserie
 		if (i == 30)
 		{
 			axesOutOfRange = true;
-			categoryAxesValues[0] = string;
+			categoryAxesValues[0] = new String(string);
 			return 0;
 		}
 		System.out.println("GDS:       Creating new string on axis: " + string + " na posição " + i);
@@ -272,13 +275,61 @@ public class GDataserie
 			if(string.equals(deviceList[j]))
 			{
 				categoryAxesIndexs[i] = j;
+				categoryAxesValues[i] = new String(string);
 				return j;
 			}
 		}
-		deviceList[j] = string;
-		categoryAxesValues[i] = string;
+		deviceList[j] = new String(string);
+		categoryAxesValues[i] = new String(string);
 		categoryAxesIndexs[i] = j;
 		return j;
+	}
+	public void redefineAllRegisters(XMLGregorianCalendar creationTime, String[] deviceList)
+	{
+		Millisecond inicialTime = new Millisecond(0, creationTime.getSecond(), creationTime.getMinute(), creationTime.getHour(), creationTime.getDay(), creationTime.getMonth(), creationTime.getYear());
+		int[] numberArray = new int[30];
+		String[] symbolArray = new String[30];
+		categoryChart = false;
+		for (int i = 0; i < 30; i++)
+		{
+			if (categoryAxesIndexs[i]!= null)	numberArray[i]= categoryAxesIndexs[i].intValue();
+			symbolArray[i] = categoryAxesValues[i];
+		}
+		if (symbolArray[0]== null)
+			System.out.println("");
+		categoryAxesIndexs = new Integer[30];
+		categoryAxesValues = new String[30];
+		ArrayList<Millisecond> timeList = new ArrayList<Millisecond>();
+		ArrayList<String> valueList = new ArrayList<String>();
+		for(int i = 0; i< serie.getItemCount(); i++)
+		{
+			int index = 0;
+			for(int j = 0; j < numberArray.length; j++)
+			{
+				index = serie.getValue(i).intValue();
+				System.out.println(j +"ffff" + (numberArray[j] == index));
+				if (numberArray[j] == index)
+				{
+					index = j;
+					break;
+				}
+			}
+			timeList.add((Millisecond)serie.getTimePeriod(i));
+			valueList.add(symbolArray[index]);
+		}
+		serie.clear();
+
+		while(!valueList.isEmpty())
+		{
+			System.out.println(valueList.get(0));
+			System.out.println(timeList.get(0).toString());
+			if (valueList.get(0) == null)
+				System.out.println("");
+			addToSerie1(timeList.get(0), valueList.get(0), inicialTime, deviceList);
+			timeList.remove(0);
+			valueList.remove(0);
+		
+		}
 	}
 	public String getName() 
 	{

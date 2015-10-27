@@ -6,9 +6,14 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.border.EtchedBorder;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -23,9 +28,11 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYStepAreaRenderer;
 import org.jfree.chart.renderer.xy.XYStepRenderer;
+import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import com.sun.codemodel.JLabel;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 
@@ -54,7 +61,14 @@ public class GDevice
 	public ArrayList<GSubComponent> graphsToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> seriesToUpdate = new ArrayList<GDataserie>();
 	
-	public GDevice (String name, String uuid)
+	///gambiarra
+	public JToggleButton button = new JToggleButton();
+	public double energia = 0;
+	public String[] lista = new String[]{};
+	public JComboBox julio;
+	public javax.swing.JTextField result = new javax.swing.JTextField();
+	
+ 	public GDevice (String name, String uuid)
 	{
 		this.name = name;
 		this.uuid = uuid;
@@ -74,8 +88,7 @@ public class GDevice
 		informationPanel.setBorder(new EtchedBorder());
 		informationPanel.setAlignmentY(0.0F);
 		informationPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-	}
-	
+	}	
 	public String getName() 
 	{
 		return name;
@@ -83,19 +96,15 @@ public class GDevice
 	public String getUuid() {
 		return uuid;
 	}
-
 	public TimeSeriesCollection getNumDataset() {
 		return numDataset;
 	}
-
 	public void setNumDataset(TimeSeriesCollection numDataset) {
 		this.numDataset = numDataset;
 	}
-
 	public TimeSeriesCollection getSymbolDataset() {
 		return symbolDataset;
 	}
-
 	public void setSymbolDataset(TimeSeriesCollection symbolDataset) {
 		this.symbolDataset = symbolDataset;
 	}
@@ -164,6 +173,34 @@ public class GDevice
 		
 		graphPanel.add(numPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
 		graphPanel.add(symbolPanel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		
+		///gambiarra
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		((GridBagLayout)panel.getLayout()).columnWidths = new int[] {10, 0, 0};
+		((GridBagLayout)panel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+		((GridBagLayout)panel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+		((GridBagLayout)panel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+		graphPanel.add(panel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		panel.add(button, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				// TODO Auto-generated method stub
+				JToggleButton button = (JToggleButton) e.getSource();
+				if (button.isSelected())
+				{
+					energia = 0;
+				}
+			}
+		});
+		result = new javax.swing.JTextField();
+		panel.add(result, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
+		julio = new JComboBox();
+		panel.add(julio, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
 	}
 	public void defineSymbolAxis()
 	{
@@ -191,6 +228,4 @@ public class GDevice
 	public void setLastTimestamp(XMLGregorianCalendar lastTimestamp) {
 		this.lastTimestamp = lastTimestamp;
 	}
-
-	
 }

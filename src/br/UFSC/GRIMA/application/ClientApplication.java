@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -444,7 +445,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getSamples().getSample().get(i).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
 																				  jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId(),
-																				  button.getIndex(), 0, i);
+																				  button.getIndex(), 0, i, agent, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(i).getValue().getName(), 
 																						   jaxComponent.getSamples().getSample().get(i).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
@@ -513,7 +514,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getEvents().getEvent().get(i).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
 																				  jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId(),
-													  							  button.getIndex(), 1, i);
+													  							  button.getIndex(), 1, i, agent, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(i).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(i).getValue().getDataItemId());
 											subComponent.setDataserie(dataserie);
@@ -581,7 +582,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(i +"o loop, name:" + jaxComponent.getCondition().getCondition().get(i).getValue().getName() + " id: " + jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId() + " componentIndex: " + button.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(),  
 																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(),
-																				  button.getIndex(), 2, i);
+																				  button.getIndex(), 2, i, agent, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
 															   							   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
 											subComponent.setDataserie(dataserie);
@@ -998,7 +999,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(j +"o loop, name:" + jaxComponent.getSamples().getSample().get(j).getValue().getName() + " id: " + jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
 																				  jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId(),
-																				  checkbox.getIndex(), 0, j);
+																				  checkbox.getIndex(), 0, j, agent, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getSamples().getSample().get(j).getValue().getName(), 
 																						   jaxComponent.getSamples().getSample().get(j).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
@@ -1063,7 +1064,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											System.out.println(j +"o loop, name:" + jaxComponent.getEvents().getEvent().get(j).getValue().getName() + " id: " + jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId() + " componentIndex: " + checkbox.getIndex() );
 											GDataserie dataserie = new GDataserie(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																				  jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId(),
-																				  checkbox.getIndex(), 1, j);
+																				  checkbox.getIndex(), 1, j, agent, device.categoryAxesValues);
 											GSubComponent subComponent = new GSubComponent(jaxComponent.getEvents().getEvent().get(j).getValue().getName(), 
 																						   jaxComponent.getEvents().getEvent().get(j).getValue().getDataItemId());
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
@@ -1084,7 +1085,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											subCheckbox.setSubComponentIndex(j);
 											subCheckbox.addActionListener(new ActionListener() 
 											{
-												
 												@Override
 												public void actionPerformed(ActionEvent e) 
 												{
@@ -1128,7 +1128,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 																						   jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId());
 											GDataserie dataserie = new GDataserie(jaxComponent.getCondition().getCondition().get(i).getValue().getName(), 
 																				  jaxComponent.getCondition().getCondition().get(i).getValue().getDataItemId(), 
-																				  checkbox.getIndex(), 2, i);
+																				  checkbox.getIndex(), 2, i, agent, device.categoryAxesValues);
 											System.out.println("criados ds e subcomponent" + dataserie + " " + subComponent);
 											subComponent.setDataserie(dataserie);
 											final GCheckbox subCheckbox = new GCheckbox();
@@ -1259,7 +1259,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		revalidate();
 		repaint();
 	}
-
 	public void probe() throws JAXBException, MalformedURLException
 	{
 		JAXBContext jc = JAXBContext.newInstance(MTConnectDevicesType.class);
@@ -1628,7 +1627,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											}
 											else if (subComponent.getDataserie().isCategoryChart() )
 											{
-												value = device.categoryAxesValues[(int) Double.parseDouble((subComponent.getDataserie().getLastValue()))];
+												value = device.categoryAxesValues[(int) Double.parseDouble(subComponent.getDataserie().getLastValue())];
 											}
 											else if (subComponent.getDataserie().isNumericChart())
 											{
@@ -1656,14 +1655,72 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							else if (toggleAbaGraph.isSelected())
 							{
 								System.out.println("Iniciando atualizador grafico");
-								int i;
-								for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
-								if (i != device.categoryAxesValuesLenght)
+								boolean resetAxis = false;
+								int limit = device.graphsToUpdate.size();
+								for (int j = 0; j < limit; j++)
 								{
-									device.defineSymbolAxis();
-									device.categoryAxesValuesLenght = i;
+									if (device.graphsToUpdate.get(j).getDataserie().isAxesOutOfRange())
+									{
+										resetAxis = true;
+										device.getSymbolDataset().removeSeries(device.graphsToUpdate.get(j).getDataserie().getSerie());
+										device.graphsToUpdate.remove(j);
+										j--;
+										limit--;
+									}
+								}
+								if (resetAxis)
+								{
+									for(int i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++)
+									{
+										device.categoryAxesValues[i] = null;
+									}
+									for(int i = 0; i< device.graphsToUpdate.size(); i++)
+									{
+										device.graphsToUpdate.get(i).getDataserie().redefineAllRegisters(device.getLastTimestamp(), device.categoryAxesValues);
+									}
+								}
+								else
+								{
+									int i;
+									for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
+									if (i != device.categoryAxesValuesLenght)
+									{
+										device.defineSymbolAxis();
+										device.categoryAxesValuesLenght = i;
+									}
 								}
 							}
+							int j;
+							String[] lista = new String[device.graphsToUpdate.size()];
+							for (int i = 0; i < device.graphsToUpdate.size(); i++)
+							{
+								lista[i] = new String(device.graphsToUpdate.get(i).getDataserie().getDataItemId());
+							}
+							if (device.lista.length != lista.length) 
+							{
+								device.lista = lista;
+								device.julio.setModel(new DefaultComboBoxModel(lista));
+							}
+							System.out.println(device.lista.length != lista.length);
+							if (device.button.isSelected())
+							{
+								String name = device.lista[device.julio.getSelectedIndex()];
+								TimeSeries serie = null;
+								for (int i= 0; i < device.graphsToUpdate.size(); i++)
+								{
+									if (device.graphsToUpdate.get(i).getDataserie().getDataItemId().equals(name))
+									{
+										serie = device.graphsToUpdate.get(i).getDataserie().getSerie();
+										break;
+									}
+								}
+								System.out.println("achou a serie: " + serie.getKey());
+								long deltat = serie.getTimePeriod(serie.getItemCount() - 1).getFirstMillisecond() - serie.getTimePeriod(serie.getItemCount() - 2).getFirstMillisecond();
+								device.energia = device.energia + (deltat*(double)serie.getValue(serie.getItemCount() - 1))/1000.0;
+								device.result.setVisible(true);
+								device.result.setText("" + device.energia);
+							}
+							
 						}
 						revalidate();
 						repaint();
@@ -1671,6 +1728,8 @@ public class ClientApplication extends BeginWindow implements ActionListener
 				}
 				catch(Exception connectionError)
 				{
+					System.out.println(connectionError);
+					connectionError.printStackTrace();
 				    JOptionPane.showMessageDialog(null, "Connection Lost", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
