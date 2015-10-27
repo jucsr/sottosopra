@@ -145,7 +145,7 @@ public class GDataserie
 				}
 				else
 				{
-					double numValue =  Double.parseDouble(yValue);
+					double numValue =  ((Double)(Double.parseDouble(yValue.replace(',', '.')))).doubleValue();
 					this.numericChart = true;
 					System.out.println("GDS:            numeric chart identificado: " + numValue);
 					serie.addOrUpdate(time, numValue);
@@ -154,6 +154,7 @@ public class GDataserie
 			catch (Exception e)
 			{
 				this.categoryChart = true;
+				e.printStackTrace();
 				System.out.println("GDS:             category chart identificado, chamando getCategoryPosition." + yValue);
 				serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 			}
@@ -175,7 +176,7 @@ public class GDataserie
 			System.out.print("GDS:     numchart pre efinido. adicionando ");
 			if(serie.getItemCount()>0)
 			{
-				if (serie.getValue(serie.getItemCount()-1).equals(Double.parseDouble(yValue)))
+				if (serie.getValue(serie.getItemCount()-1).equals(((Double)(Double.parseDouble(yValue.replace(',', '.')))).doubleValue()))
 				{
 					time = inicialTime;
 				}
@@ -187,7 +188,7 @@ public class GDataserie
 			}
 			else
 			{
-				double numValue =  Double.parseDouble(yValue);
+				double numValue =  ((Double)(Double.parseDouble(yValue.replace(',', '.')))).doubleValue();
 				System.out.println("GDS:      valor, tempo" + numValue + " " + time.toString());
 				serie.addOrUpdate(time, numValue);
 			}
