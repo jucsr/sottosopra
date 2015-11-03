@@ -1676,7 +1676,10 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									}
 									for(int i = 0; i< device.graphsToUpdate.size(); i++)
 									{
-										device.graphsToUpdate.get(i).getDataserie().redefineAllRegisters(device.getLastTimestamp(), device.categoryAxesValues);
+										if (!device.graphsToUpdate.get(i).getDataserie().isNumericChart())
+										{
+											device.graphsToUpdate.get(i).getDataserie().redefineAllRegisters(device.getLastTimestamp(), device.categoryAxesValues);
+										}
 									}
 								}
 								else

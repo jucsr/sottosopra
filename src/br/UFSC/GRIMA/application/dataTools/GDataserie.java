@@ -135,7 +135,8 @@ public class GDataserie
 	{
 		if (!categoryChart && !numericChart)
 		{
-			time = inicialTime;
+			if (inicialTime != null)
+				time = inicialTime;
 			try
 			{
 				if(yValue.toUpperCase().equals("UNAVAILABLE"))
@@ -154,7 +155,6 @@ public class GDataserie
 			catch (Exception e)
 			{
 				this.categoryChart = true;
-				e.printStackTrace();
 				System.out.println("GDS:             category chart identificado, chamando getCategoryPosition." + yValue);
 				serie.addOrUpdate(time, getCategoryPosition(yValue, deviceList));
 			}
@@ -164,7 +164,7 @@ public class GDataserie
 			System.out.println("GDS:      categoryChart pre definido");
 			if(serie.getItemCount()>0)
 			{
-				if (yValue.equals(deviceList[Math.round(Float.parseFloat(getLastValue()))]))
+				if (yValue.equals(deviceList[Math.round(Float.parseFloat(getLastValue()))]) && (inicialTime != null))
 				{
 					time = inicialTime;
 				}
@@ -176,7 +176,7 @@ public class GDataserie
 			System.out.print("GDS:     numchart pre efinido. adicionando ");
 			if(serie.getItemCount()>0)
 			{
-				if (serie.getValue(serie.getItemCount()-1).equals(((Double)(Double.parseDouble(yValue.replace(',', '.')))).doubleValue()))
+				if (serie.getValue(serie.getItemCount()-1).equals(((Double)(Double.parseDouble(yValue.replace(',', '.')))).doubleValue())  && (inicialTime != null))
 				{
 					time = inicialTime;
 				}
@@ -207,39 +207,42 @@ public class GDataserie
 		}
 		System.out.println("###################tamanho da lista: " + serie.getItemCount());
 		/////Descarta registros antigos
-		Millisecond time0 = new Millisecond(0, inicialTime.getSecond().getSecond() - range[3], inicialTime.getSecond().getMinute().getMinute() - range[2], inicialTime.getSecond().getMinute().getHour().getHour() - range[1], inicialTime.getSecond().getMinute().getHour().getDay().getDayOfMonth() - range[0], inicialTime.getSecond().getMinute().getHour().getDay().getMonth(), inicialTime.getSecond().getMinute().getHour().getDay().getYear());
-		if(serie.getItemCount() > 1)
+		if (inicialTime != null)
 		{
-			for (int i=0; i < serie.getItemCount() - 1;i++)
+			Millisecond time0 = new Millisecond(0, inicialTime.getSecond().getSecond() - range[3], inicialTime.getSecond().getMinute().getMinute() - range[2], inicialTime.getSecond().getMinute().getHour().getHour() - range[1], inicialTime.getSecond().getMinute().getHour().getDay().getDayOfMonth() - range[0], inicialTime.getSecond().getMinute().getHour().getDay().getMonth(), inicialTime.getSecond().getMinute().getHour().getDay().getYear());
+			if(serie.getItemCount() > 1)
 			{
-				if (time0.compareTo(serie.getTimePeriod(i)) <=0)
-					break;
-				else if (time0.compareTo(serie.getTimePeriod(i)) > 0 && time0.compareTo(serie.getTimePeriod(i+1)) < 0)
+				for (int i=0; i < serie.getItemCount() - 1;i++)
 				{
-					if (!axesOutOfRange)
+					if (time0.compareTo(serie.getTimePeriod(i)) <=0)
+						break;
+					else if (time0.compareTo(serie.getTimePeriod(i)) > 0 && time0.compareTo(serie.getTimePeriod(i+1)) < 0)
 					{
-						if (!numericChart)
+						if (!axesOutOfRange)
 						{
-							serie.addOrUpdate(time0, serie.getValue(i));
+							if (!numericChart)
+							{
+								serie.addOrUpdate(time0, serie.getValue(i));
+							}
+							if (numericChart)
+							{
+								//faz uma aproximacao linear em t0
+								double y1 = serie.getValue(i).doubleValue();
+								double y2 = serie.getValue(i+1).doubleValue();
+								long x0 = time0.getLastMillisecond();
+								long x1 = serie.getTimePeriod(i).getLastMillisecond();
+								long x2 = serie.getTimePeriod(i+1).getLastMillisecond();
+								double a =  (double) ((y2 - y1 )/(x2 - x1));
+								double b = (double) (y1 - a*x1);
+								double yn = a*x0 + b;
+								serie.addOrUpdate(time0, yn);
+							}
+							if (categoryChart)
+							{
+								serie.addOrUpdate(time0, serie.getValue(i));
+							}
+							serie.delete(0, i);
 						}
-						if (numericChart)
-						{
-							//faz uma aproximacao linear em t0
-							double y1 = serie.getValue(i).doubleValue();
-							double y2 = serie.getValue(i+1).doubleValue();
-							long x0 = time0.getLastMillisecond();
-							long x1 = serie.getTimePeriod(i).getLastMillisecond();
-							long x2 = serie.getTimePeriod(i+1).getLastMillisecond();
-							double a =  (double) ((y2 - y1 )/(x2 - x1));
-							double b = (double) (y1 - a*x1);
-							double yn = a*x0 + b;
-							serie.addOrUpdate(time0, yn);
-						}
-						if (categoryChart)
-						{
-							serie.addOrUpdate(time0, serie.getValue(i));
-						}
-						serie.delete(0, i);
 					}
 				}
 			}
@@ -322,13 +325,13 @@ public class GDataserie
 
 		while(!valueList.isEmpty())
 		{
-			System.out.println(valueList.get(0));
-			System.out.println(timeList.get(0).toString());
-			if (valueList.get(0) == null)
+			System.out.println(valueList.get(valueList.size() - 1));
+			System.out.println(timeList.get(timeList.size() - 1).toString());
+			if (valueList.get(valueList.size() - 1) == null)
 				System.out.println("");
-			addToSerie1(timeList.get(0), valueList.get(0), inicialTime, deviceList);
-			timeList.remove(0);
-			valueList.remove(0);
+			addToSerie1(timeList.get(timeList.size() - 1), valueList.get(valueList.size() - 1), null, deviceList);
+			timeList.remove(timeList.size() - 1);
+			valueList.remove(valueList.size() - 1);
 		
 		}
 	}
