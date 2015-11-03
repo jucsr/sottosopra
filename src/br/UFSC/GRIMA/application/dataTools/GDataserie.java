@@ -310,6 +310,7 @@ public class GDataserie
 			int index = 0;
 			for(int j = 0; j < numberArray.length; j++)
 			{
+				System.out.println(i + "gggg" + serie.getKey());
 				index = serie.getValue(i).intValue();
 				System.out.println(j +"ffff" + (numberArray[j] == index));
 				if (numberArray[j] == index)

@@ -1676,7 +1676,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									}
 									for(int i = 0; i< device.graphsToUpdate.size(); i++)
 									{
-										if (!device.graphsToUpdate.get(i).getDataserie().isNumericChart())
+										if (device.graphsToUpdate.get(i).getDataserie().isCategoryChart())
 										{
 											device.graphsToUpdate.get(i).getDataserie().redefineAllRegisters(device.getLastTimestamp(), device.categoryAxesValues);
 										}
