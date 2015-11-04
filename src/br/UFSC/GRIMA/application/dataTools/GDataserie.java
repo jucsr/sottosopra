@@ -63,67 +63,68 @@ public class GDataserie
 			this.serie = new TimeSeries(dataItemId);
 		}
 		System.out.println("GDS: setando nome na dataserie: " + this.serie.getKey());
-//		try
-//		{
-//			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
-//			Unmarshaller u = jc.createUnmarshaller();
-//			URL url = new URL(agent.getIP() + "/sample?path=//DataItem[@id='" + dataItemId + "']" );
-//			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
-//			System.out.println("");
-//			try
-//			{
-//				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue(),
-//							   element.getValue().getHeader().getCreationTime(),
-//							   deviceList);
-//				}
-//				System.out.println("");
-//			}
-//			catch(Exception e)
-//			{
-//				System.out.println(e);
-//				System.out.println("Empty Sample");
-//			}
-//			try
-//			{
-//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue(),
-//							   element.getValue().getHeader().getCreationTime(),
-//							   deviceList);
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//				System.out.println(e);
-//				System.out.println("Empty Event");
-//			}
-//			try
-//			{
-//				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
-//				{
-//					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
-//							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getName().getLocalPart(),
-//							   element.getValue().getHeader().getCreationTime(),
-//							   deviceList);
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//				System.out.println(e);
-//				System.out.println("Empty Sample");
-//			}
-//		}
-//		catch(Exception connectionError)
-//		{
-//			System.out.println(connectionError);
-//		    JOptionPane.showMessageDialog(null, "Connection Lost ds", "Error", JOptionPane.ERROR_MESSAGE);
-//		}
-//		
-		
+		try
+		{
+			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
+			Unmarshaller u = jc.createUnmarshaller();
+			URL url = new URL(agent.getIP() + "/sample?path=//DataItem[@id='" + dataItemId + "']&count=10000" );  ////////problemas com registramento antigo de dados
+			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
+			System.out.println("");
+			try
+			{
+				for(int i=0;i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().size();i++)
+				{
+					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getTimestamp(), 
+							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getSamples().getSample().get(i).getValue().getValue(),
+							   element.getValue().getHeader().getCreationTime(),
+							   deviceList);
+				}
+				System.out.println("");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				System.out.println("Empty Sample");
+			}
+			try
+			{
+				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().size();i++)
+				{
+					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getTimestamp(),
+							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getEvents().getEvent().get(i).getValue().getValue(),
+							   element.getValue().getHeader().getCreationTime(),
+							   deviceList);
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				System.out.println("Empty Event");
+			}
+			try
+			{
+				for (int i=0; i<element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().size();i++)
+				{
+					addToSerie(element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getValue().getTimestamp(),
+							   element.getValue().getStreams().getDeviceStream().get(0).getComponentStream().get(0).getCondition().getCondition().get(i).getName().getLocalPart(),
+							   element.getValue().getHeader().getCreationTime(),
+							   deviceList);
+				}
+				System.out.println("");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				System.out.println("Empty condition");
+			}
+			System.out.println("");
+		}
+		catch(Exception connectionError)
+		{
+			connectionError.printStackTrace();
+			System.out.println(connectionError);
+		    JOptionPane.showMessageDialog(null, "Connection Lost ds", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	public void addToSerie(XMLGregorianCalendar xtime, String yValue, XMLGregorianCalendar creationTime, String[] deviceList)
 	{
