@@ -34,8 +34,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jboss.ejb.plugins.JaccAuthorizationInterceptor;
+import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
@@ -55,6 +57,7 @@ import br.UFSC.GRIMA.application.dataTools.GDevice;
 import br.UFSC.GRIMA.application.dataTools.GEvent;
 import br.UFSC.GRIMA.application.dataTools.GSample;
 import br.UFSC.GRIMA.application.dataTools.GSubComponent;
+import br.UFSC.GRIMA.application.dataTools.SQLConnection;
 
 
 public class ClientApplication extends BeginWindow implements ActionListener
@@ -1581,26 +1584,67 @@ public class ClientApplication extends BeginWindow implements ActionListener
 								{
 									System.out.print("    " + i + "o loop: ");
 									GDataserie serie = device.seriesToUpdate.get(i);
+									XMLGregorianCalendar time = null;
+									String value = null;
+									String subName = null;
 									if (serie.SEC == 0) //Sample
 									{
-										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue(),
-														 device.getLastTimestamp(), device.categoryAxesValues);
+										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp();
+										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue();
+										subName = device.componentStreamList.get(serie.componentIndex).getgSample().subComponentList.get(serie.subComponentIndex).getName();
 									}
 									if (serie.SEC == 1) //Event
 									{
-										System.out.println("event serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue());
-										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue(),
-														 device.getLastTimestamp(), device.categoryAxesValues);
+										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp();
+										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue();
+										subName = device.componentStreamList.get(serie.componentIndex).getgEvent().subComponentList.get(serie.subComponentIndex).getName();
 									}
 									if (serie.SEC == 2) // Condition
 									{
-										System.out.println("condition serie, adicionando tempo e valor: " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp() + " " + currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart());
-										serie.addToSerie(currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp(),
-														 currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart(),
-														 device.getLastTimestamp(), device.categoryAxesValues);
+										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp();
+										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart();
+										subName = device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getName();
 									}
+									if (serie.getSerie().getItemCount() != 0)
+									{
+										if (value.toUpperCase().equals("UNAVAILABLE"))
+										{
+											if (serie.getSerie().getValue(serie.getSerie().getItemCount() - 1) != null)
+											{
+												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
+															  subName, value, time);
+											}
+										}
+										else if (serie.isNumericChart())
+										{
+											if (!serie.getSerie().getValue(serie.getSerie().getItemCount() - 1).toString().equals(value))
+											{
+												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
+														  subName, value, time);
+											}
+										}
+										else if (serie.isCategoryChart())
+										{
+											String string = device.categoryAxesValues[Math.round(Float.parseFloat(serie.getLastValue()))];
+											if (!value.equals(string))
+											{
+												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
+														  subName, value, time);
+											}
+										}
+										else
+										{
+											addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
+													  subName, value, time);
+										}
+									}
+									else
+									{
+										System.out.println("Uepaaaa !!!!!!!!!!!!!!!!!!!!!!!!!!!");
+										addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
+												  subName, value, time);
+									}
+									serie.addToSerie(time, value, device.getLastTimestamp(), device.categoryAxesValues);
 								}
 							}
 							catch (Exception e)
@@ -2014,5 +2058,20 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	public void setAgent(Agent agent) 
 	{
 		this.agent = agent;
+	}
+	public void addToDataBase(String component, String subcomponent, String value, XMLGregorianCalendar time)
+	{
+		try
+		{
+			java.sql.Statement statement = device.getConn().getConn().createStatement();
+			statement.executeUpdate(
+				   "INSERT INTO Registers (value, subcomponent, component, device, year, month, day, hour, minute, second, milisecond)" +
+				   "VALUES ('" + value + "','" + subcomponent + "','" + component + "','" +  device.getName() + "'," + time.getYear() + "," +   time.getMonth() + "," + time.getDay() + "," +  time.getHour() + "," + time.getMinute() + ","  + time.getSecond() + "," + time.getMillisecond() + ");"
+				   );
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

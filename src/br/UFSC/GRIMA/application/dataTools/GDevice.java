@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.Statement;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -61,6 +62,9 @@ public class GDevice
 	public ArrayList<GSubComponent> graphsToUpdate = new ArrayList<GSubComponent>();
 	public ArrayList<GDataserie> seriesToUpdate = new ArrayList<GDataserie>();
 	
+	SQLConnection conn = null;
+	java.sql.Statement statement = null;
+	
 	///gambiarra
 	public JToggleButton button = new JToggleButton();
 	public double energia = 0;
@@ -88,6 +92,44 @@ public class GDevice
 		informationPanel.setBorder(new EtchedBorder());
 		informationPanel.setAlignmentY(0.0F);
 		informationPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		// SQL Set
+		conn = new SQLConnection();
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn.setConn("150.162.105.1", "mtcTest", "webcad", "julio123");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			statement = conn.getConn().createStatement();
+			statement.executeUpdate(
+					   "CREATE TABLE Registers ("+
+					    "	 	Id  int NULL AUTO_INCREMENT,"+
+						"	    PRIMARY KEY (Id),"+
+						" 	    value  varchar(255) NULL ,"+
+						" 	    subcomponent  varchar(255) NULL ,"+
+						"  	    component  varchar(255) NULL ,"+
+						"	    device  varchar(255) NULL,"+
+						"		year  int NULL ,"+
+						"		month  int NULL ,"+
+						"		day  int NULL ,"+
+						"		hour  int NULL ,"+
+						"		minute  int NULL ,"+
+						"		second int NULL ,"+
+						"		milisecond  double NULL"+ 
+						"	   )"+
+						"	   ;");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}	
 	public String getName() 
 	{
@@ -227,5 +269,13 @@ public class GDevice
 
 	public void setLastTimestamp(XMLGregorianCalendar lastTimestamp) {
 		this.lastTimestamp = lastTimestamp;
+	}
+	public SQLConnection getConn()
+	{
+		return this.conn;
+	}
+	public java.sql.Statement getStatement()
+	{
+		return statement;
 	}
 }
