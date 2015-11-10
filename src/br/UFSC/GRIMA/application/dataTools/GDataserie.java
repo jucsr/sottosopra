@@ -133,39 +133,6 @@ public class GDataserie
 	}
 	public void addToSerie1(Millisecond time, String yValue, Millisecond inicialTime, String[] deviceList)
 	{
-		if (serie.getItemCount() != 0)
-		{
-			if (yValue.toUpperCase().equals("UNAVAILABLE"))
-			{
-				if (serie.getValue(serie.getItemCount() - 1) != null)
-				{
-					//add sql
-				}
-			}
-			else if (numericChart)
-			{
-				if (!serie.getValue(serie.getItemCount() - 1).toString().equals(yValue))
-				{
-					//add sql
-				}
-			}
-			else if (categoryChart)
-			{
-				String string = deviceList[Math.round(Float.parseFloat(getLastValue()))];
-				if (!yValue.equals(string))
-				{
-					//add sql
-				}
-			}
-			else
-			{
-				//add sql
-			}
-		}
-		else
-		{
-			//add sql
-		}
 		if (!categoryChart && !numericChart)
 		{
 			if (inicialTime != null)

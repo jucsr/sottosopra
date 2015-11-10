@@ -1576,7 +1576,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 	 					{
 							//atualiza Series de dados
 							device.setLastTimestamp(currentt.getHeader().getCreationTime());
-							System.out.println("############################################################################################################################" + device.getLastTimestamp().toString());
 							try
 							{
 								System.out.println("atualizando series:" + device.seriesToUpdate.size());
@@ -1587,23 +1586,33 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									XMLGregorianCalendar time = null;
 									String value = null;
 									String subName = null;
+									String name = device.componentStreamList.get(serie.componentIndex).getComponent() + "-" + device.componentStreamList.get(serie.componentIndex).getName();
 									if (serie.SEC == 0) //Sample
 									{
 										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getTimestamp();
 										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getSamples().getSample().get(serie.subComponentIndex).getValue().getValue();
-										subName = device.componentStreamList.get(serie.componentIndex).getgSample().subComponentList.get(serie.subComponentIndex).getName();
+										if (device.componentStreamList.get(serie.componentIndex).getgSample().subComponentList.get(serie.subComponentIndex).getName() != null)
+											subName = device.componentStreamList.get(serie.componentIndex).getgSample().subComponentList.get(serie.subComponentIndex).getName();
+										else 
+											subName = device.componentStreamList.get(serie.componentIndex).getgSample().subComponentList.get(serie.subComponentIndex).getID();
 									}
 									if (serie.SEC == 1) //Event
 									{
 										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getTimestamp();
 										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getEvents().getEvent().get(serie.subComponentIndex).getValue().getValue();
-										subName = device.componentStreamList.get(serie.componentIndex).getgEvent().subComponentList.get(serie.subComponentIndex).getName();
+										if (device.componentStreamList.get(serie.componentIndex).getgEvent().subComponentList.get(serie.subComponentIndex).getName() != null)
+											subName = device.componentStreamList.get(serie.componentIndex).getgEvent().subComponentList.get(serie.subComponentIndex).getName();
+										else 
+											subName = device.componentStreamList.get(serie.componentIndex).getgEvent().subComponentList.get(serie.subComponentIndex).getID();
 									}
 									if (serie.SEC == 2) // Condition
 									{
 										time = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getValue().getTimestamp();
 										value = currentt.getStreams().getDeviceStream().get(0).getComponentStream().get(serie.componentIndex).getCondition().getCondition().get(serie.subComponentIndex).getName().getLocalPart();
-										subName = device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getName();
+										if (device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getName() != null)
+											subName = device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getName();
+										else 
+											subName = device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getID();
 									}
 									if (serie.getSerie().getItemCount() != 0)
 									{
@@ -1611,16 +1620,15 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										{
 											if (serie.getSerie().getValue(serie.getSerie().getItemCount() - 1) != null)
 											{
-												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
-															  subName, value, time);
+												addToDataBase(name, subName, value, time);
 											}
 										}
 										else if (serie.isNumericChart())
 										{
-											if (!serie.getSerie().getValue(serie.getSerie().getItemCount() - 1).toString().equals(value))
+											double numValue =  ((Double)(Double.parseDouble(value.replace(',', '.')))).doubleValue();
+											if (!(numValue == (Double) serie.getSerie().getValue(serie.getSerie().getItemCount() - 1)))
 											{
-												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
-														  subName, value, time);
+												addToDataBase(name, subName, value, time);
 											}
 										}
 										else if (serie.isCategoryChart())
@@ -1628,21 +1636,17 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											String string = device.categoryAxesValues[Math.round(Float.parseFloat(serie.getLastValue()))];
 											if (!value.equals(string))
 											{
-												addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
-														  subName, value, time);
+												addToDataBase(name, subName, value, time);
 											}
 										}
 										else
 										{
-											addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
-													  subName, value, time);
+											addToDataBase(name, subName, value, time);
 										}
 									}
 									else
 									{
-										System.out.println("Uepaaaa !!!!!!!!!!!!!!!!!!!!!!!!!!!");
-										addToDataBase(device.componentStreamList.get(serie.componentIndex).getName(), 
-												  subName, value, time);
+										addToDataBase(name, subName, value, time);
 									}
 									serie.addToSerie(time, value, device.getLastTimestamp(), device.categoryAxesValues);
 								}
@@ -1700,24 +1704,28 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							{
 								System.out.println("Iniciando atualizador grafico");
 								boolean resetAxis = false;
-								int limit = device.graphsToUpdate.size();
+								int limit = device.seriesToUpdate.size();
 								for (int j = 0; j < limit; j++)
 								{
-									if (device.graphsToUpdate.get(j).getDataserie().isAxesOutOfRange())
+									if (device.seriesToUpdate.get(j).isAxesOutOfRange())
 									{
 										resetAxis = true;
-										device.getSymbolDataset().removeSeries(device.graphsToUpdate.get(j).getDataserie().getSerie());
-										device.graphsToUpdate.remove(j);
+										device.getSymbolDataset().removeSeries(device.seriesToUpdate.get(j).getSerie());
+										for (int i = 0; i< device.graphsToUpdate.size(); i++)
+										{
+											if (device.graphsToUpdate.get(i).getDataserie().equals(device.seriesToUpdate.get(j)))
+											{
+												device.graphsToUpdate.remove(i);
+												break;
+											}
+										}
 										j--;
 										limit--;
 									}
 								}
 								if (resetAxis)
 								{
-									for(int i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++)
-									{
-										device.categoryAxesValues[i] = null;
-									}
+									device.categoryAxesValues = new String[1000];
 									for(int i = 0; i< device.graphsToUpdate.size(); i++)
 									{
 										if (device.graphsToUpdate.get(i).getDataserie().isCategoryChart())
@@ -1726,18 +1734,17 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										}
 									}
 								}
-								else
+								int i;
+								for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
+								if (i != device.categoryAxesValuesLenght)
 								{
-									int i;
-									for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
-									if (i != device.categoryAxesValuesLenght)
-									{
-										device.defineSymbolAxis();
-										device.categoryAxesValuesLenght = i;
-									}
+									device.defineSymbolAxis();
+									device.categoryAxesValuesLenght = i;
 								}
+								
 							}
-							int j;
+							
+							//////////gambiarra///////////////////
 							String[] lista = new String[device.graphsToUpdate.size()];
 							for (int i = 0; i < device.graphsToUpdate.size(); i++)
 							{
