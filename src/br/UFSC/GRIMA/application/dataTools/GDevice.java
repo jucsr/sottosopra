@@ -55,6 +55,7 @@ public class GDevice
 	private JPanel numPanel;
 	private JPanel symbolPanel;
 	public String[] categoryAxesValues = new String[1000];
+	public String[] symbolParameter;
 	public int categoryAxesValuesLenght;
 	
 	public ArrayList<GSubComponent> valuesToUpdate = new ArrayList<GSubComponent>();
@@ -248,7 +249,7 @@ public class GDevice
 	{
 		int i = 0;
 		for(i = 0; i<categoryAxesValues.length && categoryAxesValues[i]!= null; i++);
-		String[] symbolParameter = new String[i];
+		symbolParameter = new String[i];
 		for(int j = 0; j < i; j++)
 		{
 			symbolParameter[j] = categoryAxesValues[j];
@@ -262,11 +263,9 @@ public class GDevice
 		symbolPanel = new ChartPanel(categoryChart);
 		graphPanel.add(symbolPanel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,5,0), 0, 0));
 	}
-
 	public XMLGregorianCalendar getLastTimestamp() {
 		return lastTimestamp;
 	}
-
 	public void setLastTimestamp(XMLGregorianCalendar lastTimestamp) {
 		this.lastTimestamp = lastTimestamp;
 	}

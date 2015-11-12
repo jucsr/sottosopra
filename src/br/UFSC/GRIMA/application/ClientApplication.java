@@ -1556,7 +1556,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
 	}
 	
-	SwingWorker worker = new SwingWorker() 
+	SwingWorker worker = new SwingWorker()  
 	{
 		protected Object doInBackground() throws Exception
 		{
@@ -1703,29 +1703,31 @@ public class ClientApplication extends BeginWindow implements ActionListener
 							else if (toggleAbaGraph.isSelected())
 							{
 								System.out.println("Iniciando atualizador grafico");
-								boolean resetAxis = false;
-								int limit = device.seriesToUpdate.size();
-								for (int j = 0; j < limit; j++)
-								{
-									if (device.seriesToUpdate.get(j).isAxesOutOfRange())
-									{
-										resetAxis = true;
-										device.getSymbolDataset().removeSeries(device.seriesToUpdate.get(j).getSerie());
-										for (int i = 0; i< device.graphsToUpdate.size(); i++)
-										{
-											if (device.graphsToUpdate.get(i).getDataserie().equals(device.seriesToUpdate.get(j)))
-											{
-												device.graphsToUpdate.remove(i);
-												break;
-											}
-										}
-										j--;
-										limit--;
-									}
-								}
-								if (resetAxis)
-								{
-									device.categoryAxesValues = new String[1000];
+//								boolean resetAxis = false;
+//								int limit = device.seriesToUpdate.size();
+//								for (int j = 0; j < limit; j++)
+//								{
+//									if (device.seriesToUpdate.get(j).isAxesOutOfRange())
+//									{
+//										resetAxis = true;
+//										device.getSymbolDataset().removeSeries(device.seriesToUpdate.get(j).getSerie());
+//										for (int i = 0; i< device.graphsToUpdate.size(); i++)
+//										{
+//											if (device.graphsToUpdate.get(i).getDataserie().equals(device.seriesToUpdate.get(j)))
+//											{
+//												device.graphsToUpdate.remove(i);
+//												break;
+//											}
+//										}
+//										j--;
+//										limit--;
+//									}
+//								}
+//								
+//								if (resetAxis)
+//								{
+									for(int i = 0; i < device.categoryAxesValues.length; i++)
+										device.categoryAxesValues[i] = null;
 									for(int i = 0; i< device.graphsToUpdate.size(); i++)
 									{
 										if (device.graphsToUpdate.get(i).getDataserie().isCategoryChart())
@@ -1733,7 +1735,7 @@ public class ClientApplication extends BeginWindow implements ActionListener
 											device.graphsToUpdate.get(i).getDataserie().redefineAllRegisters(device.getLastTimestamp(), device.categoryAxesValues);
 										}
 									}
-								}
+//								}
 								int i;
 								for(i = 0; i < device.categoryAxesValues.length && device.categoryAxesValues[i] != null; i++);
 								if (i != device.categoryAxesValuesLenght)
@@ -1741,7 +1743,6 @@ public class ClientApplication extends BeginWindow implements ActionListener
 									device.defineSymbolAxis();
 									device.categoryAxesValuesLenght = i;
 								}
-								
 							}
 							
 							//////////gambiarra///////////////////

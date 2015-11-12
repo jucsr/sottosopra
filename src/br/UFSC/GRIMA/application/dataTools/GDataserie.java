@@ -301,8 +301,11 @@ public class GDataserie
 		}
 		if (symbolArray[0]== null)
 			System.out.println("");
-		categoryAxesIndexs = new Integer[30];
-		categoryAxesValues = new String[30];
+		for(int i = 0; i < categoryAxesValues.length; i++)
+		{
+			categoryAxesIndexs[i] = null;
+			categoryAxesValues[i] = null;
+		}
 		ArrayList<Millisecond> timeList = new ArrayList<Millisecond>();
 		ArrayList<String> valueList = new ArrayList<String>();
 		for(int i = 0; i< serie.getItemCount(); i++)
