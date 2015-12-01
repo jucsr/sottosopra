@@ -1614,41 +1614,35 @@ public class ClientApplication extends BeginWindow implements ActionListener
 										else 
 											subName = device.componentStreamList.get(serie.componentIndex).getgCondition().subComponentList.get(serie.subComponentIndex).getID();
 									}
-									if (serie.getSerie().getItemCount() != 0)
+									serie.addToSerie(time, value, device.getLastTimestamp(), device.categoryAxesValues);
+									if (serie.getSerie().getItemCount() > 1)
 									{
-										if (value.toUpperCase().equals("UNAVAILABLE"))
+										if(serie.getSerie().getValue(serie.getSerie().getItemCount() - 1) == null)
 										{
-											if (serie.getSerie().getValue(serie.getSerie().getItemCount() - 1) != null)
-											{
-												addToDataBase(name, subName, value, time);
-											}
-										}
-										else if (serie.isNumericChart())
-										{
-											double numValue =  ((Double)(Double.parseDouble(value.replace(',', '.')))).doubleValue();
-											if (!(numValue == (Double) serie.getSerie().getValue(serie.getSerie().getItemCount() - 1)))
-											{
-												addToDataBase(name, subName, value, time);
-											}
-										}
-										else if (serie.isCategoryChart())
-										{
-											String string = device.categoryAxesValues[Math.round(Float.parseFloat(serie.getLastValue()))];
-											if (!value.equals(string))
+											if(serie.getSerie().getValue(serie.getSerie().getItemCount() - 2) != null)
 											{
 												addToDataBase(name, subName, value, time);
 											}
 										}
 										else
 										{
-											addToDataBase(name, subName, value, time);
+											if (!serie.getSerie().getValue(serie.getSerie().getItemCount() - 1).equals(serie.getSerie().getValue(serie.getSerie().getItemCount() - 2)))
+											{
+												if(serie.isCategoryChart())
+												{
+													if (value.equals(device.categoryAxesValues[(int) Double.parseDouble(serie.getLastValue())]))
+														addToDataBase(name, subName, value, time);
+												}
+												else
+													addToDataBase(name, subName, value, time);
+											}
 										}
 									}
-									else
+									else if (serie.getSerie().getItemCount() == 1)
 									{
 										addToDataBase(name, subName, value, time);
 									}
-									serie.addToSerie(time, value, device.getLastTimestamp(), device.categoryAxesValues);
+									
 								}
 							}
 							catch (Exception e)
